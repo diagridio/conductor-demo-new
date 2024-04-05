@@ -55,6 +55,22 @@ namespace OrderProcessorService.Workflows
                     new Notification($"Failed to updated loyalty points for {order.FirstName} {order.LastName}"));
                 return new OrderResult(Processed: false);
             }
+            
+            // Determine if there is enough of the item available for purchase by checking the inventory
+              await context.CallActivityAsync<OrderResult>(
+                nameof(OrderHandlerActivity),
+                new OrderInput(OrderRequestType.MakeLine, order));
+                //this.defaultActivityRetryOptions);
+            
+            // If there is insufficient inventory, fail and let the user know 
+            if (!result.Processed)
+            {
+                // End the workflow here since we don't have sufficient inventory
+                await context.CallActivityAsync(
+                    nameof(NotifyActivity),
+                    new Notification($"Failed to complete make-line process for order {order.OrderId}"));
+                return new OrderResult(Processed: false);
+            }
 
             // Let them know their order was processed
             await context.CallActivityAsync(
@@ -64,7 +80,6 @@ namespace OrderProcessorService.Workflows
             // End the workflow with a success result
             return new OrderResult(Processed: true);
         }
-
 
     }
 }
