@@ -1,0 +1,36 @@
+package main
+
+import (
+	"net/http"
+
+	"github.com/go-chi/chi/v5"
+	"github.com/go-chi/chi/v5/middleware"
+	"github.com/go-chi/cors"
+)
+
+func (app *Config) routes() http.Handler {
+	mux := chi.NewRouter()
+
+	// specify who is allowed to access the API
+	mux.Use(cors.Handler(cors.Options{
+		AllowedOrigins:   []string{"*"},                                                       // allow all origins
+		AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},                 // allow only REST requests
+		AllowedHeaders:   []string{"Accept", "Authorization", "Content-Type", "X-CSRF-Token"}, // allow only these headers
+		ExposedHeaders:   []string{"Link"},                                                    // allow only these headers to be exposed
+		AllowCredentials: true,
+		MaxAge:           300,
+	}))
+
+	mux.Use(middleware.Heartbeat("/healthz")) // add a heartbeat endpoint
+
+	mux.Get("/dapr/subscribe", app.HandleDaprEndpoint)
+
+	mux.Post("/orders", app.HandleAddOrderToMakeLine) // handle subscription to add order to make line
+
+	mux.Get("/orders/{storeId}", app.HandleGetOrdersByStoreID) // get all orders by store ID
+
+	mux.Delete("/orders/{storeId}/{orderId}", app.HandleDeleteOrder) // delete order by order ID
+
+	return mux
+
+}

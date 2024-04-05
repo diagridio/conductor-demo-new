@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: make-line-service
+  namespace: oms
+  labels:
+    app: make-line-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: make-line-service
+  template:
+    metadata:
+      labels:
+        app: make-line-service
+      annotations:
+        dapr.io/enabled: "true"
+        dapr.io/app-id: "make-line-service"
+        dapr.io/app-port: "80"
+        dapr.io/config: "config"
+        dapr.io/http-max-request-size: "16"
+    spec:
+      containers:
+        - name: make-line-service
+          image:  "rochabr/make-line-service:1.0.1"
+          env:
+          - name: APP_PORT
+            value: "80"
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "200m"
+            limits:
+              memory: "512Mi"
+              cpu: "1"
+          ports:
+            - containerPort: 80
+          imagePullPolicy: Always
+          startupProbe:
+            httpGet:
+              path: /healthz
+              port: 80
+            failureThreshold: 6
+            periodSeconds: 10
