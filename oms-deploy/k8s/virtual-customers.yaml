@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: virtual-customers
+  namespace: oms
+  labels:
+    app: virtual-customers
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: virtual-customers
+  template:
+    metadata:
+      labels:
+        app: virtual-customers
+      annotations:
+        dapr.io/enabled: "true"
+        dapr.io/app-id: "virtual-customers"
+        dapr.io/config: "config"
+    spec:
+      containers:
+        - name: virtual-customers
+          image: "rochabr/virtual-customer:1.0.2"
+          imagePullPolicy: Always
+          env:
+          - name: STORE_ID
+            value: "Seattle"
+          - name: MAX_ITEM_QUANTITY
+            value: "2"
+          - name: MIN_SEC_TO_PLACE_ORDER
+            value: "1"
+          - name: MAX_SEC_TO_PLACE_ORDER
+            value: "2"
+          - name: MIN_SEC_BETWEEN_ORDERS
+            value: "1"
+          - name: MAX_SEC_BETWEEN_ORDERS
+            value: "2"
+          - name: NUM_ORDERS
+            value: "500"

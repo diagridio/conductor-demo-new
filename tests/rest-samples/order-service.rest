@@ -1,0 +1,95 @@
+@order-service = 127.0.0.1:5100
+@order-service-dapr = 127.0.0.1:5180
+@receipt-generation-service-dapr = 127.0.0.1:5380
+@storeId = Seattle
+@pubsubName="oms.pubsub"
+@minikube-service = 127.0.0.1:59266
+
+### Get Products using sidecar
+GET http://localhost:5180/v1.0/invoke/order-service/method/product
+
+### Create an order via order-service POST
+POST http://{{minikube-service}}/order
+Content-Type: application/json
+ 
+{
+    "storeId": "{{storeId}}",
+    "firstName": "John 'Hannibal'",
+    "lastName": "Smith",
+    "loyaltyId": "42",
+    "orderItems": [
+        {
+            "productId": 1,
+            "quantity": 1
+        },
+        {
+            "productId": 2,
+            "quantity": 1
+        },
+        {
+            "productId": 3,
+            "quantity": 3
+        }
+    ]
+}
+
+
+
+### Get Products
+GET http://{{order-service}}/product
+
+### Publish an order via order-service dapr sidecar
+POST http://{{order-service-dapr}}/v1.0/publish/oms.pubsub/orders
+Content-Type: application/json
+
+{
+    "orderId": "{{$guid }}",
+    "orderDate": "{{$datetime iso8601}}",
+    "storeId": "{{storeId}}",
+    "firstName": "John 'Hannibal'",
+    "lastName": "Smith",
+    "loyaltyId": "42",
+    "orderTotal": 2.99,
+    "orderItems": [{
+        "menuItemId": 1,
+        "menuItemName": "Americano",
+        "quantity": 1
+    }]
+}
+
+### Send receipt
+POST http://{{receipt-generation-service-dapr}}/v1.0/bindings/oms.binding.receipt
+Content-Type: application/json
+
+{
+    "data": {
+        "orderId": "42f79434-3d04-40e1-b1fa-d0875fe7a9e5",
+        "orderDate": 1601935128273,
+        "storeId": "Seattle",
+        "firstName": "John 'Hannibal'",
+        "lastName": "Smith",
+        "loyaltyId": "43",
+        "orderItems": [
+            {
+                "menuItemId": 1,
+                "menuItemName": "Americano",
+                "quantity": 1
+            },
+            {
+                "menuItemId": 2,
+                "menuItemName": "Caramel Macchiato",
+                "quantity": 1
+            },
+            {
+                "menuItemId": 3,
+                "menuItemName": "Latte",
+                "quantity": 3
+            }
+        ],
+        "orderTotal": 19.95
+    },
+    "operation": "create",
+    "metadata": {
+        "key": "42f79434-3d04-40e1-b1fa-d0875fe7a9e5"
+    }
+}

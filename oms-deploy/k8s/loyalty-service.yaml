@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: loyalty-service
+  namespace: oms
+  labels:
+    app: loyalty-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: loyalty-service
+  template:
+    metadata:
+      labels:
+        app: loyalty-service
+      annotations:
+        dapr.io/enabled: "true"
+        dapr.io/app-id: "loyalty-service"
+        dapr.io/app-port: "80"
+        dapr.io/config: "config"
+    spec:
+      containers:
+        - name: loyalty-service
+          image: "rochabr/loyalty-service:1.0.3"
+          env:
+          - name: APP_PORT
+            value: "80"
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "200m"
+            limits:
+              memory: "512Mi"
+              cpu: "1"
+          ports:
+            - containerPort: 80
+          imagePullPolicy: Always
+          startupProbe:
+            httpGet:
+              path: /healthz
+              port: 80
+            failureThreshold: 6
+            periodSeconds: 10

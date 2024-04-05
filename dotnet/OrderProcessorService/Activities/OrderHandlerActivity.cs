@@ -1,0 +1,78 @@
+using Dapr.Client;
+using Dapr.Workflow;
+using Microsoft.Extensions.Logging;
+using OrderProcessorService.Models;
+using Microsoft.AspNetCore.Mvc;
+using System.Diagnostics;
+
+namespace OrderProcessorService.Activities
+{
+    public class OrderHandlerActivity : WorkflowActivity<OrderInput, object>
+    {
+        readonly ILogger _logger;
+        readonly DaprClient _client;
+
+        private const string LoyaltyServiceId = "loyalty-service";
+        private const string ReceiptServiceId = "receipt-generation-service";
+
+        public OrderHandlerActivity(ILoggerFactory loggerFactory, DaprClient client)
+        {
+            _logger = loggerFactory.CreateLogger<OrderHandlerActivity>();
+            _client = client;
+        }
+
+        public override async Task<object> RunAsync(WorkflowActivityContext context, OrderInput req)
+        {
+            
+            if (req.requestType == OrderRequestType.Loyalty) {
+                return await HandleLoyaltyRequest(req.orderSummary);
+            }
+            else if (req.requestType == OrderRequestType.Receipt) {
+                return await HandleReceiptRequest(req.orderSummary);
+            }
+            else{
+                return new OrderResult(Processed: false);
+            }
+        }
+
+        private async Task<OrderResult> HandleLoyaltyRequest(OrderSummary orderSummary){
+            _logger.LogInformation("Processing loyalty points {orderId}.",orderSummary.OrderId);
+
+            var request = _client.CreateInvokeMethodRequest<Object>(LoyaltyServiceId, "loyalty", orderSummary);
+            var response = await _client.InvokeMethodWithResponseAsync(request);
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    _logger.LogInformation("Loyalty update was unsuccessful: {0} {1} {2}", (int)response.StatusCode, response.StatusCode, await response.Content.ReadAsStringAsync());
+                    return new OrderResult(Processed: false);
+                }
+                else
+                {
+                    _logger.LogInformation("Loyalty updaed for {3}: {0} {1}.", orderSummary.FirstName, orderSummary.LastName, orderSummary.LoyaltyId);
+                    return new OrderResult(Processed:true);
+                    
+                }
+        }
+
+         private async Task<OrderResult> HandleReceiptRequest(OrderSummary orderSummary){
+            _logger.LogInformation(
+                "Generating receipt for {orderId}.",
+                orderSummary.OrderId);
+
+            var request = _client.CreateInvokeMethodRequest<Object>(ReceiptServiceId, "receipt", orderSummary);
+            var response = await _client.InvokeMethodWithResponseAsync(request);
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    _logger.LogInformation("Receipt generations was unsuccessful: {0} {1} {2}", (int)response.StatusCode, response.StatusCode, await response.Content.ReadAsStringAsync());
+                    return new OrderResult(Processed: false);
+                }
+                else
+                {
+                    _logger.LogInformation("Receipt generated for customer {0} {1}.", orderSummary.FirstName, orderSummary.LastName);
+                    return new OrderResult(Processed: true);
+                    
+                }
+        }
+    }
+}
