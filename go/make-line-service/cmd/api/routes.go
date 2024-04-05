@@ -23,9 +23,7 @@ func (app *Config) routes() http.Handler {
 
 	mux.Use(middleware.Heartbeat("/healthz")) // add a heartbeat endpoint
 
-	mux.Get("/dapr/subscribe", app.HandleDaprEndpoint)
-
-	mux.Post("/orders", app.HandleAddOrderToMakeLine) // handle subscription to add order to make line
+	mux.Post("/makeline", app.HandleAddOrderToMakeLine) // handle subscription to add order to make line
 
 	mux.Get("/orders/{storeId}", app.HandleGetOrdersByStoreID) // get all orders by store ID
 

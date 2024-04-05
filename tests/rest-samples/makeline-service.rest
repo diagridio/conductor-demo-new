@@ -1,4 +1,4 @@
-@makeline-service = 127.0.0.1:5007
+@makeline-service = 127.0.0.1:5200
 @storeId = Seattle
 
 ### Get all orders waiting to be made via makeline-service
@@ -13,4 +13,4 @@ GET http://0.0.0.0:5180/v1.0/invoke/order-service/method/orders/{{storeId}}
 
 
 ### Complete (delete) an order via makeline-service (NOTE: replace the GUID with an actual orderId)
-DELETE http://{{makeline-service}}/orders/{{storeId}}/ad961aef-2a61-4350-8772-1a28d30a75ae
+DELETE http://{{makeline-service}}/orders/{{storeId}}/df775eeb-fd6c-4c81-8ed5-4d0f579ddd86

@@ -10,9 +10,7 @@ import (
 
 const (
 	OrderCompletedTopic    = "ordercompleted"
-	OrderTopic             = "orders"
 	PubSubName             = "oms.pubsub"
-	OrderRoute             = "orders"
 	MakeLineStateStoreName = "oms.state.makeline"
 )
 
