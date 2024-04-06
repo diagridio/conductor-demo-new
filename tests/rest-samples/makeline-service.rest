@@ -13,4 +13,4 @@ GET http://0.0.0.0:5180/v1.0/invoke/order-service/method/orders/{{storeId}}
 
 
 ### Complete (delete) an order via makeline-service (NOTE: replace the GUID with an actual orderId)
-DELETE http://{{makeline-service}}/orders/{{storeId}}/df775eeb-fd6c-4c81-8ed5-4d0f579ddd86
+DELETE http://{{makeline-service}}/orders/{{storeId}}/b32f3d57-277a-40b0-a2f0-0ab2f056d654

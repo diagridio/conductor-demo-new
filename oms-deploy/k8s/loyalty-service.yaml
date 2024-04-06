@@ -22,7 +22,7 @@ spec:
     spec:
       containers:
         - name: loyalty-service
-          image: "rochabr/loyalty-service:1.0.3"
+          image: "rochabr/loyalty-service:1.0.4"
           env:
           - name: APP_PORT
             value: "80"

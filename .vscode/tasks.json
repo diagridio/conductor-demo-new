@@ -1,0 +1,82 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Build OrderProcessorService",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "build",
+                "${workspaceFolder}/dotnet/OrderProcessorService",
+                "/property:GenerateFullPaths=true",
+                "/consoleloggerparameters:NoSummary"
+            ],
+            "dependsOn": "Dapr OrderProcessorService",
+            "problemMatcher": "$msCompile",
+            "group": "build"
+        },
+        {
+            "label": "Build Solution",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "build",
+                "${workspaceFolder}",
+                "/property:GenerateFullPaths=true",
+                "/consoleloggerparameters:NoSummary"
+            ],
+            "problemMatcher": "$msCompile",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        },
+        {
+            "label": "Dapr OrderProcessorService",
+            "command": "dapr",
+            "args": [
+                "run",
+                "--app-id",
+                "order-processor-service",
+                "--components-path",
+                "${workspaceFolder}/components/local",
+                "--app-port",
+                "5700",
+                "--dapr-grpc-port",
+                "5701",
+                "--dapr-http-port",
+                "5780"
+            ],
+            "isBackground": true,
+            "problemMatcher": {
+                "pattern": [
+                    {
+                        "regexp": ".",
+                        "file": 1,
+                        "location": 2,
+                        "message": 3
+                    }
+                ],
+                "background": {
+                    "beginsPattern": "^.*Starting Dapr.*",
+                    "endsPattern": "^.*You're up and running!.*"
+                }
+            }
+        },
+        {
+            "label": "Dapr Stop OrderProcessorService",
+            "command": "dapr",
+            "args": [
+                "stop",
+                "order-processor-service"
+            ]
+        },
+        {
+            "label": "Dapr (All Services)",
+            "dependsOn": [
+                "Dapr OrderProcessorService"
+            ],
+            "problemMatcher": []
+        }
+    ]
+}

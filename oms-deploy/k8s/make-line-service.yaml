@@ -19,11 +19,11 @@ spec:
         dapr.io/app-id: "make-line-service"
         dapr.io/app-port: "80"
         dapr.io/config: "config"
-        dapr.io/http-max-request-size: "16"
+        # dapr.io/http-max-request-size: "16"
     spec:
       containers:
         - name: make-line-service
-          image:  "rochabr/make-line-service:1.0.1"
+          image:  "rochabr/make-line-service:1.0.2"
           env:
           - name: APP_PORT
             value: "80"

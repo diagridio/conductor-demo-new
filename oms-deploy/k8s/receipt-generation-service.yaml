@@ -22,7 +22,7 @@ spec:
     spec:
       containers:
         - name: receipt-generation-service
-          image: "rochabr/receipt-generation-service:1.0.3"
+          image: "rochabr/receipt-generation-service:1.0.4"
           env:
           - name: APP_PORT
             value: "80"

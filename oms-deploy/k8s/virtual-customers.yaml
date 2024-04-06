@@ -21,7 +21,7 @@ spec:
     spec:
       containers:
         - name: virtual-customers
-          image: "rochabr/virtual-customer:1.0.2"
+          image: "rochabr/virtual-customer:1.0.3"
           imagePullPolicy: Always
           env:
           - name: STORE_ID
@@ -29,12 +29,19 @@ spec:
           - name: MAX_ITEM_QUANTITY
             value: "2"
           - name: MIN_SEC_TO_PLACE_ORDER
-            value: "1"
+            value: "5"
           - name: MAX_SEC_TO_PLACE_ORDER
-            value: "2"
+            value: "7"
           - name: MIN_SEC_BETWEEN_ORDERS
-            value: "1"
+            value: "10"
           - name: MAX_SEC_BETWEEN_ORDERS
-            value: "2"
+            value: "20"
           - name: NUM_ORDERS
-            value: "500"
+            value: "200"
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "200m"
+            limits:
+              memory: "512Mi"
+              cpu: "1"
