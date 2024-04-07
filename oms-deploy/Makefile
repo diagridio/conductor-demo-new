@@ -1,8 +1,4 @@
-# LOYALTY_SERVICE_BINARY=loyaltyServiceApp
-# MAKE_LINE_SERVICE_BINARY=makeLineServiceApp
-# ORDER_SERVICE_BINARY=orderServiceApp
-# RECEIPT_GENERATION_SERVICE_BINARY=receiptGenerationServiceApp
-# VIRTUAL_CUSTOMER_BINARY=virtualCustomerApp
+REGISTRY=rochabr
 
 # ## up: starts all containers in the background without forcing build
 # up:
@@ -24,42 +20,43 @@
 # 	docker-compose down
 # 	@echo "Done!"
 
-# ## build_loyalty_service: builds the loyalty service binary as a linux executable
-# build_loyalty_service:
-# 	@echo "Building loyalty service binary..."
-# 	cd ../go/loyalty-service && env GOOS=linux CGO_ENABLED=0 go build -o ${LOYALTY_SERVICE_BINARY} ./cmd/api
-# 	@echo "Done!"
+## build_loyalty_service: builds the loyalty service binary container and push it to the registry
+build_loyalty_service:
+	@echo "Building loyalty service binary..."
+	docker buildx build --no-cache --platform=linux/amd64,linux/arm64 -t ${REGISTRY}/loyalty-service:latest --push ./../go/loyalty-service
+	@echo "Done!"
 
-# ## build_make_line_service: builds the make-line service binary as a linux executable
-# build_make_line_service:
-# 	@echo "Building make-line service binary..."
-# 	cd ../go/make-line-service && env GOOS=linux CGO_ENABLED=0 go build -o ${MAKE_LINE_SERVICE_BINARY} ./cmd/api
-# 	@echo "Done!"
+## build_make_line_service: builds the make-line service binary container and push it to the registry
+build_make_line_service:
+	@echo "Building make-line service binary..."
+	docker buildx build --no-cache --platform=linux/amd64,linux/arm64 -t ${REGISTRY}/make-line-service:latest --push ./../go/make-line-service	
+	@echo "Done!"
 
-# ## build_receipt_generation_service: builds the receipt generation service binary as a linux executable
-# build_receipt_generation_service:
-# 	@echo "Building receipt generation service binary..."
-# 	cd ../go/receipt-generation-service && env GOOS=linux CGO_ENABLED=0 go build -o ${RECEIPT_GENERATION_SERVICE_BINARY} ./cmd/api
-# 	@echo "Done!"
+## build_receipt_generation_service: builds the receipt generation service binary binary container and push it to the registry
+build_receipt_generation_service:
+	@echo "Building receipt generation service binary..."
+	docker buildx build --no-cache --platform=linux/amd64,linux/arm64 -t ${REGISTRY}/receipt-generation-service:latest --push ./../go/receipt-generation-service	
+	@echo "Done!"
 
-# ## build_virtual_customer_service: builds the virtual customer binary as a linux executable
-# build_virtual_customer:
-# 	@echo "Building virtual customer binary..."
-# 	cd ../go/virtual-customer && env GOOS=linux CGO_ENABLED=0 go build -o ${VIRTUAL_CUSTOMER_BINARY} ./cmd
-# 	@echo "Done!"
-
-## build_order_service: builds the order service binary as a linux executable
+## build_order_service: builds the order service binary binary container and push it to the registry
 build_order_service:
 	@echo "Building order service binary..."
-	docker buildx build --no-cache --platform=linux/amd64,linux/arm64 -t rochabr/order-service:1.0.6 --push ./../go/order-service
+	docker buildx build --no-cache --platform=linux/amd64,linux/arm64 -t ${REGISTRY}/order-service:latest --push ./../go/order-service
 	@echo "Done!"
 
-## build_order_processor_service: builds the order processor service container and puhsed it to the registry
+## build_order_processor_service: builds the order processor service container and push it to the registry
 build_order_processor_service:
 	@echo "Building order processor service binary..."
-	docker buildx build --no-cache --platform=linux/amd64,linux/arm64 -t rochabr/order-processor-service:test --push ./../dotnet/OrderProcessorService
+	docker buildx build --no-cache --platform=linux/amd64,linux/arm64 -t ${REGISTRY}/order-processor-service:latest --push ./../dotnet/OrderProcessorService
 	@echo "Done!"
 
-push_build: build_order_processor_service build_order_service
+## build_virtual_customer_service: builds the virtual customer binary container and push it to the registry
+build_virtual_customer:
+	@echo "Building virtual customer binary..."
+	docker buildx build --no-cache --platform=linux/amd64,linux/arm64 -t ${REGISTRY}/virtual-customer:latest --push ./../go/virtual-customer
+	@echo "Done!"
+
+# build and push all containers
+build_push: build_order_processor_service build_order_service build_loyalty_service build_make_line_service build build_virtual_customer build_receipt_generation_service
 	@echo "Building and pushing images to the registry..."
 	@echo "Done!"

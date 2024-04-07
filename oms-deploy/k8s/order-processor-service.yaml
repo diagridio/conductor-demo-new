@@ -29,7 +29,7 @@ spec:
     spec:
       containers:
         - name: loyalty-service
-          image: "rochabr/order-processor-service:test"
+          image: "rochabr/order-processor-service:latest"
           resources:
             requests:
               memory: "256Mi"

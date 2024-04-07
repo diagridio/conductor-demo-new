@@ -1,9 +1,16 @@
-FROM alpine:latest
+FROM --platform=$BUILDPLATFORM golang:latest AS build
+WORKDIR /src
+COPY . .
+RUN go mod download
+ARG TARGETOS TARGETARCH
+RUN CGO_ENABLED=0 GOOS=$TARGETOS GOARCH=$TARGETARCH go build -a -installsuffix cgo -o makeLineServiceApp ./cmd/api
 
-RUN mkdir /app
+FROM --platform=$BUILDPLATFORM alpine:latest AS final
+WORKDIR /root/
 
-COPY makeLineServiceApp /app
+COPY --from=build /src/makeLineServiceApp .
 
 EXPOSE 80
 
-CMD [ "/app/makeLineServiceApp" ]
+CMD ["./makeLineServiceApp"]
+
