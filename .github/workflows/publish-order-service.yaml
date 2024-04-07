@@ -1,0 +1,54 @@
+name: Publish Order Service
+
+on:
+  push:
+    branches:
+      - "make-line-update"
+    paths:
+      - "go/order-service/**"
+
+  workflow_dispatch:
+    
+jobs:
+  publish-docker-image:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: 'read'
+      id-token: 'write'
+    environment: development
+    env:
+      GCP_PROJECT_ID: '${{ secrets.GCP_PROJECT_ID }}'
+      GCP_DOCKER_REPOSITORY: '${{ secrets.GCP_DOCKER_REPOSITORY }}'
+      GCP_CONTAINER_REGISTRY_HOST: '${{ secrets.GCP_CONTAINER_REGISTRY_HOST }}'
+      IMAGE_NAME: '${{ secrets.IMAGE_NAME }}'
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Parse release version and set REL_VERSION
+      run: |
+        python ./.github/scripts/get_release_version.py ${{ github.event_name }}
+
+    - name: build-docker
+      run: |
+        echo $REL_VERSION > VERSION
+        docker buildx build --platform=linux/amd64,linux/arm64 -t ${GCP_CONTAINER_REGISTRY_HOST}/${GCP_PROJECT_ID}/${GCP_DOCKER_REPOSITORY}/${IMAGE_NAME}/order-service:${REL_VERSION} --push ./../go/virtual-customer
+
+    - id: 'auth'
+      name: Configure Google Credentials
+      uses: google-github-actions/auth@v0
+      with:
+        token_format: 'access_token'
+        workload_identity_provider: ${{ secrets.WORKLOAD_IDENTITY_PROVIDER}}
+        service_account: ${{ secrets.SERVICE_ACCOUNT}}
+        
+    - uses: 'docker/login-action@v2'
+      with:
+        registry: '${{ secrets.GCP_CONTAINER_REGISTRY_HOST }}'
+        username: 'oauth2accesstoken'
+        password: '${{ steps.auth.outputs.access_token }}'
+
+    - name: push-docker
+      env:
+        IMAGE_NAME: '${{ secrets.IMAGE_NAME }}'
+      run: |
+        docker push ${GCP_CONTAINER_REGISTRY_HOST}/${GCP_PROJECT_ID}/${GCP_DOCKER_REPOSITORY}/${IMAGE_NAME}/order-service:${REL_VERSION}
