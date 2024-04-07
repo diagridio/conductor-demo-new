@@ -8,16 +8,6 @@ import (
 	dapr "github.com/dapr/go-sdk/client"
 )
 
-const (
-	OrderTopic             = "orders"
-	PubSubName             = "oms.pubsub"
-	OrderRoute             = "orders"
-	LoyaltyStateStoreName  = "oms.state.loyalty"
-	MakeLineServiceAppId   = "make-line-service"
-	MinSecondsToPlaceOrder = 1
-	MaxSecondsToPlaceOrder = 3
-)
-
 type Config struct {
 	daprClient dapr.Client
 }
@@ -25,7 +15,7 @@ type Config struct {
 func main() {
 
 	//set app port
-	appPort := "5400"
+	appPort := "5500"
 	if value, ok := os.LookupEnv("APP_PORT"); ok {
 		appPort = value
 	}
