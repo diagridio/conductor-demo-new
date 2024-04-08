@@ -42,7 +42,10 @@ build_virtual_worker:
 	docker buildx build --no-cache --platform=linux/amd64,linux/arm64 -t ${REGISTRY}/virtual-worker:latest --push ./../go/virtual-worker
 	@echo "Done!"
 
-# build and push all containers
-build_push: build_order_processor_service build_order_service build_loyalty_service build_make_line_service build build_virtual_customer build_virtual_worker build_receipt_generation_service
+build_workflow: build_order_processor_service build_loyalty_service build_make_line_service build_receipt_generation_service
+	@echo "Building and pushing images to the registry..."
+	@echo "Done!"
+
+build_services: build_order_service build_virtual_customer build_virtual_worker
 	@echo "Building and pushing images to the registry..."
 	@echo "Done!"

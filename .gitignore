@@ -72,3 +72,6 @@ virtualCustomerApp
 # dotnet build
 bin/
 obj/
+
+# redis flusher
+/redis-flusher
