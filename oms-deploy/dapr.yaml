@@ -42,7 +42,7 @@ apps:
 
   - appDirPath: ./../dotnet/OrderProcessorService/
     appID: order-processor-service
-    appPort: 5007
+    appPort: 5700
     daprHTTPPort: 5780
     daprGRPCPort: 5701
     resourcesPaths:

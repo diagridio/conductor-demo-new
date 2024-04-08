@@ -1,4 +1,4 @@
-@OrderProcessorService_HostAddress = http://localhost:5007
+@OrderProcessorService_HostAddress = http://localhost:5700
 
 GET {{OrderProcessorService_HostAddress}}/Probes/healthz/
 Accept: application/json

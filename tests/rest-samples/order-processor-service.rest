@@ -1,4 +1,4 @@
-@order-processor-service = 127.0.0.1:5007
+@order-processor-service = 127.0.0.1:5700
 @order-processor-service-dapr = 127.0.0.1:3500
 
 
