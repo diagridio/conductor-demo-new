@@ -40,9 +40,9 @@ The containers are currently built for both ARM and AMD64 architectures.
 
 ### Running locally
 
-# To test the services locally, you can run the following command: 
+#### To test the services locally, you can run the following command: 
 
-    ```bash
+    ```
     cd go/order-service
     make run
-    ```
+    ``` 
