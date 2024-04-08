@@ -44,6 +44,7 @@ func populateConstants() {
 // Handles the update loyalty endpoint
 func (app *Config) HandleCompleteOrder(w http.ResponseWriter, r *http.Request) {
 
+	log.Printf("Starting virtual worker...")
 	populateConstants()
 
 	log.Printf("The VirtualWorker (%v) is checking orders on the make line...", storeId)

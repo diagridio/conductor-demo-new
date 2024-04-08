@@ -12,8 +12,11 @@ type Config struct {
 	daprClient dapr.Client
 }
 
+var appPort = "5500"
+
 func main() {
 
+	log.Printf("Yo...")
 	//set app port
 	appPort := "5500"
 	if value, ok := os.LookupEnv("APP_PORT"); ok {
