@@ -27,23 +27,6 @@ func (app *Config) routes() http.Handler {
 
 	mux.Get("/orders", app.HandleCompleteOrder) // Dapr subscription routes orders topic to this route
 
-	// // adding the binding handler
-
-	// http.HandleFunc("/scheduled", app.HandleCompleteOrder)
-
-	// // httpHandleFunc("/scheduled", func(w http.ResponseWriter, r *http.Request) {
-	// // 	fmt.Println("Scheduled endpoint called")
-	// // })
-
-	// http.ListenAndServe(":8080", nil)
-
-	// s := daprd.NewService(appPort)
-	// if err := s.AddBindingInvocationHandler("orders", app.HandleCompleteOrder); err != nil {
-	// 	log.Printf("Error adding binding handler: %v", err)
-	// } else {
-	// 	log.Println("Binding handler added successfully.")
-	// }
-
 	return mux
 
 }
