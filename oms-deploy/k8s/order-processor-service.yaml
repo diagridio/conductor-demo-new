@@ -28,7 +28,7 @@ spec:
         dapr.io/app-protocol: "http"
     spec:
       containers:
-        - name: loyalty-service
+        - name: order-processor-service
           image: "rochabr/order-processor-service:latest"
           resources:
             requests:

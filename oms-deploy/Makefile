@@ -1,25 +1,5 @@
 REGISTRY=rochabr
 
-# ## up: starts all containers in the background without forcing build
-# up:
-# 	@echo "Starting Docker images..."
-# 	docker-compose up -d
-# 	@echo "Docker images started!"
-
-# ## up_build: stops docker-compose (if running), builds all projects and starts docker compose
-# up_build: build_order_service build_receipt_generation_service build_loyalty_service build_virtual_customer build_make_line_service
-# 	@echo "Stopping docker images (if running...)"
-# 	docker-compose down
-# 	@echo "Building (when required) and starting docker images..."
-# 	docker-compose up --build -d
-# 	@echo "Docker images built and started!"
-
-# ## down: stop docker compose
-# down:
-# 	@echo "Stopping docker compose..."
-# 	docker-compose down
-# 	@echo "Done!"
-
 ## build_loyalty_service: builds the loyalty service binary container and push it to the registry
 build_loyalty_service:
 	@echo "Building loyalty service binary..."
@@ -56,7 +36,13 @@ build_virtual_customer:
 	docker buildx build --no-cache --platform=linux/amd64,linux/arm64 -t ${REGISTRY}/virtual-customer:latest --push ./../go/virtual-customer
 	@echo "Done!"
 
+## build_virtual_worker_service: builds the virtual worker binary container and push it to the registry
+build_virtual_worker:
+	@echo "Building virtual worker binary..."
+	docker buildx build --no-cache --platform=linux/amd64,linux/arm64 -t ${REGISTRY}/virtual-worker:latest --push ./../go/virtual-worker
+	@echo "Done!"
+
 # build and push all containers
-build_push: build_order_processor_service build_order_service build_loyalty_service build_make_line_service build build_virtual_customer build_receipt_generation_service
+build_push: build_order_processor_service build_order_service build_loyalty_service build_make_line_service build build_virtual_customer build_virtual_worker build_receipt_generation_service
 	@echo "Building and pushing images to the registry..."
 	@echo "Done!"

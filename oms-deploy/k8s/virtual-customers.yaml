@@ -29,13 +29,13 @@ spec:
           - name: MAX_ITEM_QUANTITY
             value: "2"
           - name: MIN_SEC_TO_PLACE_ORDER
-            value: "1"
+            value: "3"
           - name: MAX_SEC_TO_PLACE_ORDER
-            value: "5"
+            value: "7"
           - name: MIN_SEC_BETWEEN_ORDERS
-            value: "1"
+            value: "3"
           - name: MAX_SEC_BETWEEN_ORDERS
-            value: "2"
+            value: "7"
           - name: NUM_ORDERS
             value: "200"
           resources:

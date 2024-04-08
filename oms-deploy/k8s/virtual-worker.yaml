@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: virtual-worker
+  namespace: oms
+  labels:
+    app: virtual-worker
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: virtual-worker
+  template:
+    metadata:
+      labels:
+        app: virtual-worker
+      annotations:
+        dapr.io/enabled: "true"
+        dapr.io/app-id: "virtual-worker"
+        dapr.io/app-port: "80"
+        dapr.io/config: "config"
+    spec:
+      containers:
+        - name: virtual-worker
+          image: "rochabr/virtual-worker:latest"
+          imagePullPolicy: Always
+          startupProbe:
+            httpGet:
+              path: /healthz
+              port: 80
+            failureThreshold: 6
+            periodSeconds: 10
+          env:
+          - name: STORE_ID
+            value: "seattle"
+          - name: MIN_SECONDS_TO_COMPLETE_ITEM
+            value: "2"
+          - name: MAX_SECONDS_TO_COMPLETE_ITEM
+            value: "12"
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "200m"
+            limits:
+              memory: "512Mi"
+              cpu: "1"

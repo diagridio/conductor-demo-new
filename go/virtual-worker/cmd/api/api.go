@@ -13,7 +13,6 @@ import (
 )
 
 const (
-	BindingRoute              = "orders"
 	StoreId                   = "Seattle"
 	MakeLineServiceAppId      = "make-line-service"
 	MinSecondsToCompleteOrder = 1
@@ -21,7 +20,6 @@ const (
 )
 
 var storeId = StoreId
-var bindingRoute = BindingRoute
 var makeLineServiceAppId = MakeLineServiceAppId
 var minSecondsToCompleteOrder = MinSecondsToCompleteOrder
 var maxSecondsToCompleteOrder = MaxSecondsToCompleterder
