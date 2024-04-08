@@ -2,20 +2,24 @@ apiVersion: dapr.io/v1alpha1
 kind: Component
 metadata:
   name: oms.pubsub
-  namespace: oms
+  namespace: order-management-system
 spec:
-  type: pubsub.redis
-  version: v1
+  type: pubsub.kafka
+  version: v1  
   metadata:
-  - name: redisHost
-    value: redis-master.redis.svc.cluster.local:6379
-  - name: redisPassword
+  - name: brokers
+    value: kafka.kafka.svc.cluster.local:9092
+  - name: authType
+    value: "password"
+  - name: saslUsername
+    value: user
+  - name: saslPassword
     secretKeyRef:
-      name: redis-password
-      key: redis-password
+      name: kafka-password
+      key: kafka-password
+  - name: disableTls 
+    value: "true"
 scopes:
   - order-service
   - order-processor-service
   - make-line-service
-
-  
