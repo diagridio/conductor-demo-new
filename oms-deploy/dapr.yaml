@@ -50,6 +50,3 @@ apps:
     command: ["dotnet", "run"]
     appLogDestination: console
     daprdLogDestination: console
-  # - appDirPath: ./../virtual-customer/
-  #   appID: virtual-customer
-  #   command: ["go", "run", "./cmd"]

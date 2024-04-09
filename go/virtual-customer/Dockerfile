@@ -1,9 +1,16 @@
-FROM alpine:latest
+FROM --platform=$BUILDPLATFORM golang:latest AS build
+WORKDIR /src
+COPY . .
+RUN go mod download
+ARG TARGETOS TARGETARCH
+RUN CGO_ENABLED=0 GOOS=$TARGETOS GOARCH=$TARGETARCH go build -a -installsuffix cgo -o virtualCustomerApp ./cmd
 
-RUN mkdir /app
+FROM --platform=$BUILDPLATFORM alpine:latest AS final
+WORKDIR /root/
 
-COPY virtualCustomerApp /app
+COPY --from=build /src/virtualCustomerApp .
 
-# EXPOSE 80
+EXPOSE 80
 
-CMD [ "/app/virtualCustomerApp" ]
+CMD ["./virtualCustomerApp"]
+

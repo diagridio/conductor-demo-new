@@ -22,12 +22,12 @@ spec:
     spec:
       containers:
         - name: order-service
-          image:  "rochabr/order-service:1.0.2"
+          image: "rochabr/order-service:latest"
           env:
           - name: APP_PORT
             value: "80"
           - name: PRODUCT_DEFINITION_FILENAME
-            value: "app/DrugStoreProducts-categorized.json"
+            value: "product-definitions/DrugStoreProducts-categorized.json"
           resources:
             requests:
               memory: "256Mi"

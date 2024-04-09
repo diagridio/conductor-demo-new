@@ -1,0 +1,4 @@
+@virtual-worker-endpoint = 127.0.0.1:5500
+
+# Get orders
+GET http://{{virtual-worker-endpoint}}/orders

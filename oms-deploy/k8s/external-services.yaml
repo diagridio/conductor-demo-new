@@ -1,6 +1,22 @@
 apiVersion: v1
 kind: Service
 metadata:
+  name: order-service
+  namespace: oms
+  labels:
+    name: order-service
+spec:
+  type: LoadBalancer
+  ports:
+  - name: http
+    port: 8081
+    targetPort: 80
+  selector:
+    app: order-service 
+---
+apiVersion: v1
+kind: Service
+metadata:
   name: make-line-service
   namespace: oms
   labels:
@@ -17,15 +33,47 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: order-service
+  name: receipt-generation-service
   namespace: oms
   labels:
-    name: order-service
+    name: receipt-generation-service
 spec:
   type: LoadBalancer
   ports:
   - name: http
-    port: 8081
+    port: 8083
     targetPort: 80
   selector:
-    app: order-service 
+    app: receipt-generation-service  
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: loyalty-service
+  namespace: oms
+  labels:
+    name: loyalty-service
+spec:
+  type: LoadBalancer
+  ports:
+  - name: http
+    port: 8084
+    targetPort: 80
+  selector:
+    app: loyalty-service
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: virtual-worker
+  namespace: oms
+  labels:
+    name: virtual-worker
+spec:
+  type: LoadBalancer
+  ports:
+  - name: http
+    port: 8085
+    targetPort: 80
+  selector:
+    app: virtual-worker

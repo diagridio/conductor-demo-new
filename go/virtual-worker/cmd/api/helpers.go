@@ -2,8 +2,6 @@ package main
 
 import (
 	"encoding/json"
-	"errors"
-	"io"
 	"net/http"
 )
 
@@ -11,29 +9,6 @@ type jsonResponse struct {
 	Error   bool   `json:"error"`
 	Message string `json:"message"`
 	Data    any    `json:"data,omitempty"`
-}
-
-// readJSON reads a JSON object from an HTTP request
-func (app *Config) readJSON(w http.ResponseWriter, r *http.Request, data any) error {
-	maxBytes := 1048576 // 1MB
-
-	r.Body = http.MaxBytesReader(w, r.Body, int64(maxBytes))
-
-	// decode the JSON object
-	dec := json.NewDecoder(r.Body)
-	err := dec.Decode(data)
-	if err != nil {
-		return err
-	}
-
-	// ensure there are no additional bytes in the request body
-	err = dec.Decode(&struct{}{})
-	if err != io.EOF {
-		return errors.New("body must only have a single JSON object")
-	}
-
-	return nil
-
 }
 
 func (app *Config) writeJSON(w http.ResponseWriter, status int, data any, headers ...http.Header) error {

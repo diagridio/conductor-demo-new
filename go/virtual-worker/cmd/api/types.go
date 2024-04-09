@@ -4,14 +4,6 @@ import (
 	"time"
 )
 
-type LoyaltySummary struct {
-	LoyaltyId    string `json:"loyaltyId"`
-	FirstName    string `json:"firstName"`
-	LastName     string `json:"lastName"`
-	PointsTotal  int    `json:"pointTotal"`
-	PointsEarned int    `json:"pointsEarned"`
-}
-
 type OrderItemSummary struct {
 	ProductID   int     `json:"productId"`
 	ProductName string  `json:"productName"`

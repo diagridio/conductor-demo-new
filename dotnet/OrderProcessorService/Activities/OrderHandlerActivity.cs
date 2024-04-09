@@ -14,6 +14,7 @@ namespace OrderProcessorService.Activities
 
         private const string LoyaltyServiceId = "loyalty-service";
         private const string ReceiptServiceId = "receipt-generation-service";
+        private const string MakeLineServiceId = "make-line-service";
 
         public OrderHandlerActivity(ILoggerFactory loggerFactory, DaprClient client)
         {
@@ -24,11 +25,15 @@ namespace OrderProcessorService.Activities
         public override async Task<object> RunAsync(WorkflowActivityContext context, OrderInput req)
         {
             
+            // Checks for activity type and calls the appropriate method
             if (req.requestType == OrderRequestType.Loyalty) {
                 return await HandleLoyaltyRequest(req.orderSummary);
             }
             else if (req.requestType == OrderRequestType.Receipt) {
                 return await HandleReceiptRequest(req.orderSummary);
+            } 
+            else if (req.requestType == OrderRequestType.MakeLine) {
+                return await HandleMakeLineRequest(req.orderSummary);
             }
             else{
                 return new OrderResult(Processed: false);
@@ -70,6 +75,27 @@ namespace OrderProcessorService.Activities
                 else
                 {
                     _logger.LogInformation("Receipt generated for customer {0} {1}.", orderSummary.FirstName, orderSummary.LastName);
+                    return new OrderResult(Processed: true);
+                    
+                }
+        }
+
+        private async Task<OrderResult> HandleMakeLineRequest(OrderSummary orderSummary){
+            _logger.LogInformation(
+                "Starting make-line process for {orderId}.",
+                orderSummary.OrderId);
+
+            var request = _client.CreateInvokeMethodRequest<Object>(MakeLineServiceId, "makeline", orderSummary);
+            var response = await _client.InvokeMethodWithResponseAsync(request);
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    _logger.LogInformation("Makeline process failed: {0} {1} {2}", (int)response.StatusCode, response.StatusCode, await response.Content.ReadAsStringAsync());
+                    return new OrderResult(Processed: false);
+                }
+                else
+                {
+                    _logger.LogInformation("Make-line process completed succesfully for order {0}.", orderSummary.OrderId);
                     return new OrderResult(Processed: true);
                     
                 }

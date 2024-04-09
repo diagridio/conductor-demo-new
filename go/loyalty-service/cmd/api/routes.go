@@ -23,8 +23,6 @@ func (app *Config) routes() http.Handler {
 
 	mux.Use(middleware.Heartbeat("/healthz")) // add a heartbeat endpoint
 
-	//mux.Get("/dapr/subscribe", app.HandleDaprEndpoint) // Handle the /dapr/subscribe route which Dapr invokes to get the list of subscribed endpoints
-
 	mux.Post("/loyalty", app.HandleUpdateLoyalty) // Dapr subscription routes orders topic to this route
 
 	return mux

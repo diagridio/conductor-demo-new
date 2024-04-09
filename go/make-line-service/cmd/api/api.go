@@ -13,71 +13,21 @@ import (
 	"github.com/go-chi/chi/v5"
 )
 
-type JSONObj struct {
-	PubsubName string `json:"pubsubName"`
-	Topic      string `json:"topic"`
-	Route      string `json:"route"`
-}
-
-type Result struct {
-	Data any `json:"data"`
-}
-
-// Handles Dapr Endpoint and registers the subscription endpoint with the topic, pubsub and route
-func (app *Config) HandleDaprEndpoint(w http.ResponseWriter, r *http.Request) {
-	log.Print("Received request from Dapr")
-	jsonData := []JSONObj{
-		{
-			PubsubName: PubSubName,
-			Topic:      OrderTopic,
-			Route:      OrderRoute,
-		},
-	}
-
-	jsonBytes, err := json.Marshal(jsonData)
-	if err != nil {
-		log.Printf("Error Marshalling json data. Error: %v", err)
-		app.writeError(w, err, http.StatusBadRequest)
-	}
-
-	log.Print("Writing response to Dapr")
-	_, err = w.Write(jsonBytes)
-	//err = app.writeJSON(w, http.StatusOK, "{}")
-	if err != nil {
-		log.Printf("Error writing json response. Error: %v", err)
-		app.writeError(w, err, http.StatusBadRequest)
-	}
-}
-
 // Handles the make line endpoint
 func (app *Config) HandleAddOrderToMakeLine(w http.ResponseWriter, r *http.Request) {
 
-	// Unmarshall customer order
-	log.Printf("Unmarshalling order summary from topic.")
-	var result Result
-	err := app.readJSON(w, r, &result)
-	if err != nil {
-		log.Fatal(err.Error())
-		return
-	}
-
-	s, err := json.Marshal(result.Data)
-	if err != nil {
-		log.Printf("Error marshalling order summary. Error: %v", err)
-		app.writeError(w, err, http.StatusBadRequest)
-		return
-	}
-
 	var orderSummary OrderSummary
-	err = json.Unmarshal(s, &orderSummary)
+	err := app.readJSON(w, r, &orderSummary)
 	if err != nil {
 		log.Printf("Error unmarshalling order summary. Error: %v", err)
 		app.writeError(w, err, http.StatusBadRequest)
 		return
 	}
+
 	log.Printf("Received Order Summary: %v.", orderSummary.OrderID)
 
 	log.Printf("Getting orders for store: %v.", orderSummary.StoreID)
+
 	// Get Store Orders syncronously
 	waitGroup := sync.WaitGroup{}
 	orders, err := app.getStoreOrders(orderSummary.StoreID)
@@ -101,7 +51,7 @@ func (app *Config) HandleAddOrderToMakeLine(w http.ResponseWriter, r *http.Reque
 		return
 	}
 
-	log.Printf("Order %v add to store %v", orderSummary.OrderID, orderSummary.StoreID)
+	log.Printf("Order %v added to store %v", orderSummary.OrderID, orderSummary.StoreID)
 	app.writeJSON(w, http.StatusOK, orderSummary.OrderID)
 }
 
@@ -220,7 +170,7 @@ func (app *Config) updateOrderState(orders []OrderSummary, storeId string) error
 	// save order summary to state store
 	err = app.daprClient.SaveState(context.Background(), MakeLineStateStoreName, storeId, data, nil)
 	if err != nil {
-		log.Printf("Error orders to state store. Error: %v", err)
+		log.Printf("Error adding orders to state store. Error: %v", err)
 		return err
 	}
 
@@ -229,6 +179,7 @@ func (app *Config) updateOrderState(orders []OrderSummary, storeId string) error
 	return err
 }
 
+// Handles the get orders by store id endpoint
 func (app *Config) HandleGetOrdersByStoreID(w http.ResponseWriter, r *http.Request) {
 	storeId := chi.URLParam(r, "storeId")
 	if storeId == "" {

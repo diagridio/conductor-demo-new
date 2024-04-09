@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: order-processor-service
+  namespace: oms
+  labels:
+    app: order-processor-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: order-processor-service
+  template:
+    metadata:
+      labels:
+        app: order-processor-service
+      annotations:
+        dapr.io/enabled: "true"
+        dapr.io/app-id: "order-processor-service"
+        dapr.io/app-port: "80"
+        dapr.io/config: "config"
+        dapr.io/enable-app-health-check: "true" ## Flag indicating whether health check is enabled for app
+        dapr.io/app-health-check-path: "/healthz" ## The healthcheck endpoint
+        dapr.io/app-health-probe-interval: "5" ## The interval between calls to app health endpoint
+        dapr.io/app-health-probe-timeout: "500" ## The timeout of the app health endpoint call
+        dapr.io/app-health-threshold: "2" ## Threshold for considering app unhealthy
+        dapr.io/log-level: "debug"
+        dapr.io/app-protocol: "http"
+    spec:
+      containers:
+        - name: order-processor-service
+          image: "rochabr/order-processor-service:latest"
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "200m"
+            limits:
+              memory: "512Mi"
+              cpu: "1"
+          ports:
+            - containerPort: 80
+          imagePullPolicy: Always
+          startupProbe:
+            httpGet:
+              path: /healthz
+              port: 80
+            failureThreshold: 6
+            periodSeconds: 10
