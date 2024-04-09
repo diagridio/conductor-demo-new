@@ -6,6 +6,8 @@ on:
       - make-line-update
     paths:
       - 'go/loyalty-service/**'
+  
+  workflow_dispatch: # Manual trigger
 
 env:
   PROJECT_ID: fake-app-323017
