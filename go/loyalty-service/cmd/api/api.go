@@ -25,7 +25,7 @@ func (app *Config) HandleUpdateLoyalty(w http.ResponseWriter, r *http.Request) {
 	//Update loyalty points
 	err = app.updateLoyaltyPoints(orderSummary)
 	if err != nil {
-		log.Printf("Error reading order summary from topic. Error -  %v", err)
+		log.Printf("Error reading order summary from topic. Error:  %v", err)
 		app.writeError(w, err, http.StatusBadRequest)
 		return
 	}
