@@ -1,24 +1,44 @@
-# apiVersion: dapr.io/v1alpha1
+apiVersion: dapr.io/v1alpha1
+kind: Component
+metadata:
+  name: oms.pubsub
+  namespace: oms
+spec:
+  type: pubsub.kafka
+  version: v1  
+  metadata:
+  - name: brokers
+    value: kafka.kafka.svc.cluster.local:9092
+  - name: authType
+    value: "password"
+  - name: saslUsername
+    value: "user1"
+  - name: saslPassword
+    secretKeyRef:
+      name: kafka-password
+      key: kafka-password
+  - name: disableTls 
+    value: "true"
+scopes:
+  - order-service
+  - order-processor-service
+  - make-line-service
+
+  # apiVersion: dapr.io/v1alpha1
 # kind: Component
 # metadata:
 #   name: oms.pubsub
 #   namespace: oms
 # spec:
-#   type: pubsub.kafka
-#   version: v1  
+#   type: pubsub.redis
+#   version: v1
 #   metadata:
-#   - name: brokers
-#     value: kafka.kafka.svc.cluster.local:9092
-#   - name: authType
-#     value: "password"
-#   - name: saslUsername
-#     value: user
-#   - name: saslPassword
+#   - name: redisHost
+#     value: redis-master.redis.svc.cluster.local:6379
+#   - name: redisPassword
 #     secretKeyRef:
-#       name: kafka-password
-#       key: kafka-password
-#   - name: disableTls 
-#     value: "true"
+#       name: redis-password
+#       key: redis-password
 # scopes:
 #   - order-service
 #   - order-processor-service
