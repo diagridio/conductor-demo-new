@@ -26,7 +26,6 @@ export REDIS_PASSWORD=$(kubectl get secret --namespace redis redis -o jsonpath="
 kubectl create secret generic redis-password --from-literal=redis-password=$REDIS_PASSWORD -n oms
 
 # Install Kafka for pub/sub
-kubectl create ns kafka
 helm install --set persistence.enabled=false --set zookeeper.persistence.enabled=false --set auth.clientProtocol=sasl kafka bitnami/kafka -n kafka
 
 # Modifying the kafka-jaas secret to get the password, as the kafka-jaas secret is not available in the kafka namespace
@@ -68,3 +67,9 @@ gcloud compute firewall-rules list --filter="name~gke-${gke_prj-dataplane-n-demo
   #   make build_image
 # To test the services locally, you can run the following command: 
   #   make run
+
+
+# Flushall keys in redis
+k exec -it redis-master-0 -n redis -- /bin/bash
+
+redis-cli -a <PASSWORD> --scan --pattern '*' | xargs redis-cli -a <PASSWORD> DEL
