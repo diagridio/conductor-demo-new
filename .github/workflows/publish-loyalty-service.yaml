@@ -10,9 +10,10 @@ on:
   workflow_dispatch: # Manual trigger
 
 env:
-  PROJECT_ID: fake-app-323017
-  REGION: northamerica-northeast1
-  GAR_LOCATION: northamerica-northeast1-docker.pkg.dev/fake-app-323017/repo-1/
+  SERVICE_ID: loyalty-service
+  REGION: us-central1
+  REGISTRY: conductor-demo-registry
+  GAR_LOCATION: us-central1-docker.pkg.dev
 
 jobs:
   build-and-publish:
@@ -36,15 +37,15 @@ jobs:
         env:
           GOOGLE_PROJECT: ${{ secrets.PROJECT_ID }}
         run: |
-          gcloud auth configure-docker us-central1-docker.pkg.dev
-          docker buildx build --platform linux/amd64 -t us-central1-docker.pkg.dev/$GOOGLE_PROJECT/conductor-demo-registry/loyalty-service:latest . --push
+          gcloud auth configure-docker $GAR_LOCATION
+          docker buildx build --platform linux/amd64 -t $GAR_LOCATION/$GOOGLE_PROJECT/$REGISTRY/$SERVICE_ID:latest . --push
 
       - name: Build and Push Docker Image (ARM)
         env:
           GOOGLE_PROJECT: ${{ secrets.PROJECT_ID }}
         run: |
           gcloud authe configure-docker us-central1-docker.pkg.dev
-          docker buildx build --platform linux/arm64 -t us-central1-docker.pkg.dev/$GOOGLE_PROJECT/conductor-demo-registry/loyalty-service:latest . --push
+          docker buildx build --platform linux/arm64 -t $GAR_LOCATION/$GOOGLE_PROJECT/$REGISTRY/$SERVICE_ID:latest . --push
       #   uses: docker/build-push-action@v2
       #   with:
       #     context: .
