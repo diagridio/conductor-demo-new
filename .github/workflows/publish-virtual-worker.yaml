@@ -44,7 +44,7 @@ jobs:
           password: '${{ steps.auth.outputs.access_token }}'
 
       - name: Build and Push Docker Image (AMD, ARM)
-        working-directory: go/$SERVICE_NAME
+        working-directory: go/virtual-worker
         run: |
           docker buildx build --platform linux/amd64,linux/arm64 -t $GCP_CONTAINER_REGISTRY_HOST/$GCP_PROJECT_ID/$GCP_DOCKER_REPOSITORY/$IMAGE_NAME:0.0.2 . --push
 

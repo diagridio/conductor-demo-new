@@ -92,7 +92,7 @@ func (app *Config) HandleCompleteOrder(w http.ResponseWriter, r *http.Request) {
 		completeWaitGroup := sync.WaitGroup{}
 		err := app.completeOrder(order)
 		if err != nil {
-			log.Printf("%v %v, your order is ready!!", order.FirstName, order.LastName)
+			log.Printf("%v %v, your order is ready!", order.FirstName, order.LastName)
 		}
 		completeWaitGroup.Wait()
 
