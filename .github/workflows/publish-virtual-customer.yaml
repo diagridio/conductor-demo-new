@@ -1,64 +1,53 @@
-name: Build and Publish Loyalty Service
+name: Build and Publish Virtual Customer
 
 on:
   push:
     branches:
-      - make-line-update
+      - pubsub-namespace
     paths:
       - 'go/virtual-customer/**'
-  
-  workflow_dispatch: # Manual trigger
-
-env:
-  SERVICE_ID: virtual-customer
-  REGION: us-central1
-  REGISTRY: conductor-demo-registry
-  GAR_LOCATION: us-central1-docker.pkg.dev
-
 jobs:
   build-and-publish:
     runs-on: ubuntu-latest
+    permissions:
+      contents: 'read'
+      id-token: 'write'    
+    environment: development
+    env:
+      GCP_PROJECT_ID: '${{ secrets.GCP_PROJECT_ID }}'
+      GCP_DOCKER_REPOSITORY: '${{ secrets.GCP_DOCKER_REPOSITORY }}'
+      GCP_CONTAINER_REGISTRY_HOST: '${{ secrets.GCP_CONTAINER_REGISTRY_HOST }}'
+      IMAGE_NAME: virtual-customer
+      SERVICE_NAME: virtual-customer
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+      - name: Checkout
+        uses: actions/checkout@v4
 
-      - name: Install the gcloud cli
-        uses: google-github-actions/setup-gcloud@v0.2.0
+      - id: 'auth'
+        name: Configure Google Credentials
+        uses: google-github-actions/auth@v2
         with:
-          project_id: ${{ secrets.PROJECT_ID }}
-          service_account_key: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
-          export_default_credentials: true
+          token_format: 'access_token'
+          workload_identity_provider: ${{ secrets.WORKLOAD_IDENTITY_PROVIDER}}
+          service_account: ${{ secrets.SERVICE_ACCOUNT}}
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
 
+      - name: Docker Auth
+        uses: 'docker/login-action@v3'
+        with:
+          registry: '${{ env.GCP_CONTAINER_REGISTRY_HOST }}'
+          username: 'oauth2accesstoken'
+          password: '${{ steps.auth.outputs.access_token }}'
+
       - name: Build and Push Docker Image (AMD)
-        env:
-          GOOGLE_PROJECT: ${{ secrets.PROJECT_ID }}
+        working-directory: go/$SERVICE_NAME
         run: |
-          gcloud auth configure-docker $GAR_LOCATION
-          docker buildx build --platform linux/amd64 -t $GAR_LOCATION/$GOOGLE_PROJECT/$REGISTRY/$SERVICE_ID:latest . --push
+          docker buildx build --platform linux/amd64 -t $GCP_CONTAINER_REGISTRY_HOST/$GCP_PROJECT_ID/$GCP_DOCKER_REPOSITORY/$IMAGE_NAME:latest . --push
 
       - name: Build and Push Docker Image (ARM)
-        env:
-          GOOGLE_PROJECT: ${{ secrets.PROJECT_ID }}
+        working-directory: go/$SERVICE_NAME
         run: |
-          gcloud authe configure-docker us-central1-docker.pkg.dev
-          docker buildx build --platform linux/arm64 -t $GAR_LOCATION/$GOOGLE_PROJECT/$REGISTRY/$SERVICE_ID:latest . --push
-      #   uses: docker/build-push-action@v2
-      #   with:
-      #     context: .
-      #     file: go/loyalty-service/Dockerfile
-      #     push: true
-      #     tags: gcr.io/<GCP_PROJECT_ID>/loyalty-service:arm
-      #     platforms: linux/arm64
-
-      # - name: Build and Push Docker Image (AMD)
-      #   uses: docker/build-push-action@v2
-      #   with:
-      #     context: .
-      #     file: go/loyalty-service/Dockerfile
-      #     push: true
-      #     tags: gcr.io/<GCP_PROJECT_ID>/loyalty-service:amd
-      #     platforms: linux/amd64
+          docker buildx build --platform linux/arm64 -t $GCP_CONTAINER_REGISTRY_HOST/$GCP_PROJECT_ID/$GCP_DOCKER_REPOSITORY/$IMAGE_NAME:latest . --push
