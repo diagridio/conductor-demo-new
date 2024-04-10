@@ -22,7 +22,6 @@ func (app *Config) HandleGenerateReceipt(w http.ResponseWriter, r *http.Request)
 	}
 
 	log.Printf("Received Order Summary: %v.", orderSummary.OrderID)
-
 	log.Println("Binding with Redis")
 
 	orderContent, err := json.Marshal(orderSummary)
@@ -36,7 +35,7 @@ func (app *Config) HandleGenerateReceipt(w http.ResponseWriter, r *http.Request)
 	var metadata map[string]string = make(map[string]string)
 
 	//append metadata with order id
-	metadata["key"] = orderSummary.OrderID
+	metadata["receiptName"] = orderSummary.OrderID
 
 	log.Println("Metadata created")
 	// Redis output binding
@@ -53,6 +52,12 @@ func (app *Config) HandleGenerateReceipt(w http.ResponseWriter, r *http.Request)
 		app.writeError(w, err, http.StatusBadRequest)
 
 		return
+	}
+
+	// Mocking call to non-existing service and app-id to demonstrate error handling in Conductor
+	_, err = app.daprClient.InvokeMethod(context.Background(), "receipt-generation-service", "non-existing-method", "GET")
+	if err != nil {
+		log.Printf("Error invoking method. Error: %v", err)
 	}
 
 	log.Printf("Receipt for order %v generated successfully.", orderSummary.OrderID)

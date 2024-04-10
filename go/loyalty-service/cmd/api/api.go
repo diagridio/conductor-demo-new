@@ -35,11 +35,11 @@ func (app *Config) HandleUpdateLoyalty(w http.ResponseWriter, r *http.Request) {
 	// 	Data:        data,
 	// }
 
-	// Mocking call to non-existing service and app-id to demonstrate error handling in Conductor
-	_, err = app.daprClient.InvokeMethod(context.Background(), "order-service", "non-existing-method", "GET")
-	if err != nil {
-		log.Printf("Error invoking method. Error: %v", err)
-	}
+	// // Mocking call to non-existing service and app-id to demonstrate error handling in Conductor
+	// _, err = app.daprClient.InvokeMethod(context.Background(), "order-service", "non-existing-method", "GET")
+	// if err != nil {
+	// 	log.Printf("Error invoking method. Error: %v", err)
+	// }
 
 	app.writeJSON(w, http.StatusOK, orderSummary.OrderID)
 

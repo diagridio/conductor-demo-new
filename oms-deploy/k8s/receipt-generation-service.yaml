@@ -18,7 +18,7 @@ spec:
         dapr.io/enabled: "true"
         dapr.io/app-id: "receipt-generation-service"
         dapr.io/app-port: "80"
-        dapr.io/config: "config"
+        dapr.io/config: "receipt-config"
     spec:
       containers:
         - name: receipt-generation-service

@@ -1,0 +1,17 @@
+apiVersion: dapr.io/v1alpha1
+kind: Component
+metadata:
+  name: oms.binding.receipt
+  namespace: oms
+spec:
+  type: bindings.redis
+  version: v1
+  metadata:
+  - name: redisHost
+    value: redis-masterr.redis.svc.cluster.local:6379
+  - name: redisPassword
+    secretKeyRef:
+      name: redis-password
+      key: redis-password
+scopes:
+  - receipt-generation-service
