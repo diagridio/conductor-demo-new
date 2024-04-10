@@ -1,4 +1,4 @@
-RELEASE_VERSION  = 0.0.1
+RELEASE_VERSION  = 0.1.0
 SERVICE_NAME = order-processor-service
 REGISTRY=rochabr
 APP_PORT=5700
