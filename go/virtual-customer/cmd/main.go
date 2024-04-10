@@ -82,7 +82,7 @@ func main() {
 			ordersCreated++
 		}
 
-		if ordersCreated >= numOrders || numOrders == -1 {
+		if ordersCreated >= numOrders && numOrders != -1 {
 			break
 		}
 	}

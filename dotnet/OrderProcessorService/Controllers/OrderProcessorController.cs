@@ -93,6 +93,8 @@ namespace OrderProcessorService.Controllers
                 }
                 else if (state.RuntimeStatus == WorkflowRuntimeStatus.Failed)
                 {
+                    await _daprClient.PurgeInstanceAsync(orderId);
+
                     _logger.LogInformation("The workflow failed - {state.FailureDetails}", state.FailureDetails);
                     return BadRequest();
                 }

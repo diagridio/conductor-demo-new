@@ -1,4 +1,4 @@
-RELEASE_VERSION  = latest
+RELEASE_VERSION  = 0.1.0
 SERVICE_NAME = loyalty-service
 REGISTRY=rochabr
 APP_PORT=5400
