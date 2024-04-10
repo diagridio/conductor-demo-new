@@ -18,8 +18,6 @@ jobs:
       GCP_PROJECT_ID: '${{ secrets.GCP_PROJECT_ID }}'
       GCP_DOCKER_REPOSITORY: '${{ secrets.GCP_DOCKER_REPOSITORY }}'
       GCP_CONTAINER_REGISTRY_HOST: '${{ secrets.GCP_CONTAINER_REGISTRY_HOST }}'
-      IMAGE_NAME: make-line-service
-      SERVICE_NAME: make-line-service
 
     steps:
       - name: Checkout
@@ -43,12 +41,8 @@ jobs:
           username: 'oauth2accesstoken'
           password: '${{ steps.auth.outputs.access_token }}'
 
-      - name: Build and Push Docker Image (AMD)
-        working-directory: go/$SERVICE_NAME
-        run: |
-          docker buildx build --platform linux/amd64 -t $GCP_CONTAINER_REGISTRY_HOST/$GCP_PROJECT_ID/$GCP_DOCKER_REPOSITORY/$IMAGE_NAME:latest . --push
 
-      - name: Build and Push Docker Image (ARM)
-        working-directory: go/$SERVICE_NAME
+      - name: Build and Push Docker Image (ARM, AMD)
+        working-directory: go/make-line-service
         run: |
-          docker buildx build --platform linux/arm64 -t $GCP_CONTAINER_REGISTRY_HOST/$GCP_PROJECT_ID/$GCP_DOCKER_REPOSITORY/$IMAGE_NAME:latest . --push
+          docker buildx build --platform linux/amd64,linux/arm64 -t $GCP_CONTAINER_REGISTRY_HOST/$GCP_PROJECT_ID/$GCP_DOCKER_REPOSITORY/make-line-service:0.0.3 . --push

@@ -18,8 +18,6 @@ jobs:
       GCP_PROJECT_ID: '${{ secrets.GCP_PROJECT_ID }}'
       GCP_DOCKER_REPOSITORY: '${{ secrets.GCP_DOCKER_REPOSITORY }}'
       GCP_CONTAINER_REGISTRY_HOST: '${{ secrets.GCP_CONTAINER_REGISTRY_HOST }}'
-      IMAGE_NAME: 'virtual-worker'
-      SERVICE_NAME: 'virtual-worker'
 
     steps:
       - name: Checkout
@@ -46,6 +44,6 @@ jobs:
       - name: Build and Push Docker Image (AMD, ARM)
         working-directory: go/virtual-worker
         run: |
-          docker buildx build --platform linux/amd64,linux/arm64 -t $GCP_CONTAINER_REGISTRY_HOST/$GCP_PROJECT_ID/$GCP_DOCKER_REPOSITORY/$IMAGE_NAME:0.0.2 . --push
+          docker buildx build --platform linux/amd64,linux/arm64 -t $GCP_CONTAINER_REGISTRY_HOST/$GCP_PROJECT_ID/$GCP_DOCKER_REPOSITORY/virtual-worker:0.0.3 . --push
 
       
