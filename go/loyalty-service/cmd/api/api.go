@@ -36,7 +36,7 @@ func (app *Config) HandleUpdateLoyalty(w http.ResponseWriter, r *http.Request) {
 	// }
 
 	// Mocking call to non-existing service and app-id to demonstrate error handling in Conductor
-	_, err = app.daprClient.InvokeMethod(context.Background(), "non-existing-service", "non-existing-app-id", "POST")
+	_, err = app.daprClient.InvokeMethod(context.Background(), "order-service", "non-existing-method", "GET")
 	if err != nil {
 		log.Printf("Error invoking method. Error: %v", err)
 	}
