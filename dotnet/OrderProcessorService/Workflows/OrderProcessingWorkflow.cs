@@ -58,7 +58,7 @@ namespace OrderProcessorService.Workflows
                     new Notification($"Failed to updated loyalty points for {order.FirstName} {order.LastName}"));
                     
                 context.SetCustomStatus("Stopped order process due to failure to update the loyalty points.");
-                
+
                 return new OrderResult(Processed: false);
             }
             

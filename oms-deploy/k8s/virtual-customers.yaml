@@ -29,15 +29,15 @@ spec:
           - name: MAX_ITEM_QUANTITY
             value: "2"
           - name: MIN_SEC_TO_PLACE_ORDER
-            value: "3"
+            value: "7"
           - name: MAX_SEC_TO_PLACE_ORDER
-            value: "7"
+            value: "15"
           - name: MIN_SEC_BETWEEN_ORDERS
-            value: "3"
+            value: "5"
           - name: MAX_SEC_BETWEEN_ORDERS
-            value: "7"
+            value: "10"
           - name: NUM_ORDERS
-            value: "200"
+            value: "300"
           resources:
             requests:
               memory: "256Mi"

@@ -6,6 +6,7 @@ on:
       - pubsub-namespace
     paths:
       - 'go/virtual-worker/**'
+
 jobs:
   build-and-publish:
     runs-on: ubuntu-latest
@@ -17,8 +18,8 @@ jobs:
       GCP_PROJECT_ID: '${{ secrets.GCP_PROJECT_ID }}'
       GCP_DOCKER_REPOSITORY: '${{ secrets.GCP_DOCKER_REPOSITORY }}'
       GCP_CONTAINER_REGISTRY_HOST: '${{ secrets.GCP_CONTAINER_REGISTRY_HOST }}'
-      IMAGE_NAME: virtual-worker
-      SERVICE_NAME: virtual-worker
+      IMAGE_NAME: 'virtual-worker'
+      SERVICE_NAME: 'virtual-worker'
 
     steps:
       - name: Checkout
