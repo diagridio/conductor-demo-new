@@ -42,12 +42,9 @@ jobs:
           username: 'oauth2accesstoken'
           password: '${{ steps.auth.outputs.access_token }}'
 
-      - name: Build and Push Docker Image (AMD)
+      - name: Build and Push Docker Image (AMD, ARM)
         working-directory: go/$SERVICE_NAME
         run: |
-          docker buildx build --platform linux/amd64 -t $GCP_CONTAINER_REGISTRY_HOST/$GCP_PROJECT_ID/$GCP_DOCKER_REPOSITORY/$IMAGE_NAME:latest . --push
+          docker buildx build --platform linux/amd64,linux/arm64 -t $GCP_CONTAINER_REGISTRY_HOST/$GCP_PROJECT_ID/$GCP_DOCKER_REPOSITORY/$IMAGE_NAME:0.0.2 . --push
 
-      - name: Build and Push Docker Image (ARM)
-        working-directory: go/$SERVICE_NAME
-        run: |
-          docker buildx build --platform linux/arm64 -t $GCP_CONTAINER_REGISTRY_HOST/$GCP_PROJECT_ID/$GCP_DOCKER_REPOSITORY/$IMAGE_NAME:latest . --push
+      
