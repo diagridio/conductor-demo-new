@@ -3,7 +3,7 @@ name: Build and Publish Loyalty Service
 on:
   push:
     branches:
-      - pubsub-namespace
+      - main
     paths:
       - 'go/loyalty-service/**'
 
@@ -44,4 +44,4 @@ jobs:
       - name: Build and Push Docker Image (AMD, ARM)
         working-directory: go/loyalty-service
         run: |
-          docker buildx build --platform linux/amd64,linux/arm64 -t $GCP_CONTAINER_REGISTRY_HOST/$GCP_PROJECT_ID/$GCP_DOCKER_REPOSITORY/loyalty-service:0.0.3 . --push
+          docker buildx build --platform linux/amd64,linux/arm64 -t $GCP_CONTAINER_REGISTRY_HOST/$GCP_PROJECT_ID/$GCP_DOCKER_REPOSITORY/order-system-loyalty-service:0.2.0 . --push

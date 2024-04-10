@@ -3,7 +3,7 @@ name: Build and Publish Make Line Service
 on:
   push:
     branches:
-      - pubsub-namespace
+      - main
     paths:
       - 'go/make-line-service/**'
 
@@ -45,4 +45,4 @@ jobs:
       - name: Build and Push Docker Image (ARM, AMD)
         working-directory: go/make-line-service
         run: |
-          docker buildx build --platform linux/amd64,linux/arm64 -t $GCP_CONTAINER_REGISTRY_HOST/$GCP_PROJECT_ID/$GCP_DOCKER_REPOSITORY/make-line-service:0.0.3 . --push
+          docker buildx build --platform linux/amd64,linux/arm64 -t $GCP_CONTAINER_REGISTRY_HOST/$GCP_PROJECT_ID/$GCP_DOCKER_REPOSITORY/order-system-make-line-service:0.2.0 . --push

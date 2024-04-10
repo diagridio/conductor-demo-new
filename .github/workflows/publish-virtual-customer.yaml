@@ -3,7 +3,7 @@ name: Build and Publish Virtual Customer
 on:
   push:
     branches:
-      - pubsub-namespace
+      - main
     paths:
       - 'go/virtual-customer/**'
 jobs:
@@ -43,4 +43,4 @@ jobs:
       - name: Build and Push Docker Image (AMD, ARM)
         working-directory: go/virtual-customer
         run: |
-          docker buildx build --platform linux/amd64,linux/arm64 -t $GCP_CONTAINER_REGISTRY_HOST/$GCP_PROJECT_ID/$GCP_DOCKER_REPOSITORY/virtual-customer:0.0.3 . --push
+          docker buildx build --platform linux/amd64,linux/arm64 -t $GCP_CONTAINER_REGISTRY_HOST/$GCP_PROJECT_ID/$GCP_DOCKER_REPOSITORY/order-system-virtual-customer:0.2.0 . --push

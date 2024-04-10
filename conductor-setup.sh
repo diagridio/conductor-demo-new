@@ -72,4 +72,4 @@ gcloud compute firewall-rules list --filter="name~gke-${gke_prj-dataplane-n-demo
 # Flushall keys in redis
 k exec -it redis-master-0 -n redis -- /bin/bash
 
-redis-cli -a <PASSWORD> --scan --pattern '*' | xargs redis-cli -a <PASSWORD> DEL
+redis-cli -a $REDIS_PASSWORD --scan --pattern '*' | xargs redis-cli -a $REDIS_PASSWORD DEL
