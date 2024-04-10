@@ -31,7 +31,6 @@ helm install --set persistence.enabled=false --set zookeeper.persistence.enabled
 # Modifying the kafka-jaas secret to get the password, as the kafka-jaas secret is not available in the kafka namespace
 #export KAFKA_PASSWORD=$(kubectl get secret kafka-jaas --namespace kafka -o jsonpath='{.data.client-passwords}' | base64 -d | cut -d , -f 1)
 export KAFKA_PASSWORD=$(kubectl get secret kafka-user-passwords --namespace kafka -o jsonpath='{.data.client-passwords}' | base64 -d | cut -d , -f 1)
-
 kubectl create secret generic kafka-password --from-literal=kafka-password=$KAFKA_PASSWORD -n oms
 
 # Install Zipkin for tracing
