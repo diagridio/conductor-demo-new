@@ -23,7 +23,7 @@ spec:
     spec:
       containers:
         - name: make-line-service
-          image:  "rochabr/make-line-service:0.1.0"
+          image:  "rochabr/make-line-service:0.5.0"
           env:
           - name: APP_PORT
             value: "80"

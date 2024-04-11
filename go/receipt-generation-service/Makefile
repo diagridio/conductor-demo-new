@@ -1,4 +1,4 @@
-RELEASE_VERSION  = 0.1.0
+RELEASE_VERSION  = 0.5.0
 SERVICE_NAME = receipt-generation-service
 REGISTRY=rochabr
 APP_PORT=5300

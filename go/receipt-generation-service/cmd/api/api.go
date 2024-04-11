@@ -35,7 +35,7 @@ func (app *Config) HandleGenerateReceipt(w http.ResponseWriter, r *http.Request)
 	var metadata map[string]string = make(map[string]string)
 
 	//append metadata with order id
-	metadata["receiptName"] = orderSummary.OrderID
+	metadata["key"] = orderSummary.OrderID
 
 	log.Println("Metadata created")
 	// Redis output binding
