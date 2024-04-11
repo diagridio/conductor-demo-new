@@ -21,7 +21,7 @@ spec:
     spec:
       containers:
         - name: virtual-customers
-          image: "rochabr/virtual-customer:0.5.0"
+          image: "rochabr/virtual-customer:0.4.0"
           imagePullPolicy: Always
           env:
           - name: STORE_ID
