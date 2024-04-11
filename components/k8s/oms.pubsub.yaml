@@ -14,32 +14,10 @@ spec:
   - name: saslUsername
     value: "user1"
   - name: saslPassword
-    secretKeyRef:
-      name: kafka-password
-      key: kafka-password
+    value: 6PwH3IHkUF #Update me!
   - name: disableTls 
     value: "true"
 scopes:
   - order-service
   - order-processor-service
   - make-line-service
-
-  # apiVersion: dapr.io/v1alpha1
-# kind: Component
-# metadata:
-#   name: oms.pubsub
-#   namespace: oms
-# spec:
-#   type: pubsub.redis
-#   version: v1
-#   metadata:
-#   - name: redisHost
-#     value: redis-master.redis.svc.cluster.local:6379
-#   - name: redisPassword
-#     secretKeyRef:
-#       name: redis-password
-#       key: redis-password
-# scopes:
-#   - order-service
-#   - order-processor-service
-#   - make-line-service

@@ -24,7 +24,7 @@ const (
 	MaxSecondsToPlaceOrder  = 3
 	MinSecondsBetweenOrders = 1
 	MaxSecondsBetweenOrders = 3
-	NumOrders               = -1
+	NumOrders               = 20
 )
 
 var storeId = StoreId
@@ -82,7 +82,7 @@ func main() {
 			ordersCreated++
 		}
 
-		if ordersCreated >= numOrders || numOrders == -1 {
+		if ordersCreated >= numOrders && numOrders != -1 {
 			break
 		}
 	}

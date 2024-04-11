@@ -77,6 +77,8 @@ namespace OrderProcessorService.Controllers
                 }
                 if (state.RuntimeStatus == WorkflowRuntimeStatus.Completed)
                 {
+                    await _daprClient.PurgeInstanceAsync(orderId);
+
                     OrderResult result = state.ReadOutputAs<OrderResult>();
                     if (result.Processed)
                     {
@@ -91,12 +93,13 @@ namespace OrderProcessorService.Controllers
                 }
                 else if (state.RuntimeStatus == WorkflowRuntimeStatus.Failed)
                 {
+                    await _daprClient.PurgeInstanceAsync(orderId);
+
                     _logger.LogInformation("The workflow failed - {state.FailureDetails}", state.FailureDetails);
                     return BadRequest();
                 }
 
             }
-            
             
             // string url= $"http://localhost:5780/v1.0-beta1/workflows/dapr/" + WorkflowName + "/start?instanceID=" + orderId; // sample url
             // using (HttpClient client = new HttpClient())

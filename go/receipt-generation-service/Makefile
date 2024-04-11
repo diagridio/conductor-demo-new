@@ -1,4 +1,4 @@
-RELEASE_VERSION  = latest
+RELEASE_VERSION  = 0.5.0
 SERVICE_NAME = receipt-generation-service
 REGISTRY=rochabr
 APP_PORT=5300
@@ -17,6 +17,7 @@ run: tidy ## Runs uncompiled code in Dapr
 		--app-id $(SERVICE_NAME) \
 		--app-port ${APP_PORT} \
 		--app-protocol http \
+		--log-level debug \
 		--dapr-http-port ${DAPR_HTTP_PORT} \
 		--dapr-grpc-port ${DAPR_GRPC_PORT} \
 		--resources-path ../../components/local \

@@ -13,6 +13,9 @@ import (
 	"github.com/go-chi/chi/v5"
 )
 
+// create map for orders that are being completed
+var ongoingOrders = make(map[string]bool)
+
 // Handles the make line endpoint
 func (app *Config) HandleAddOrderToMakeLine(w http.ResponseWriter, r *http.Request) {
 
@@ -67,6 +70,13 @@ func (app *Config) HandleDeleteOrder(w http.ResponseWriter, r *http.Request) {
 
 	log.Printf("Trying to complete order %v from %v.", orderId, storeId)
 
+	// Check if the order is already being deleted
+	if ongoingOrders[orderId] {
+		log.Printf("Order %v is already being completed.", orderId)
+		app.writeJSON(w, http.StatusAccepted, "")
+		return
+	}
+
 	orders, err := app.getStoreOrders(storeId)
 	if err != nil {
 		log.Printf("Error getting orders from store. Error: %v", err)
@@ -116,6 +126,9 @@ func (app *Config) HandleDeleteOrder(w http.ResponseWriter, r *http.Request) {
 
 // Delete order from array of orders based on order id
 func deleteOrder(orders []OrderSummary, orderId string) ([]OrderSummary, OrderSummary, error) {
+
+	//mark order for completion
+	ongoingOrders[orderId] = true
 
 	log.Printf("Deleting order with ID: %v", orderId)
 
@@ -183,7 +196,7 @@ func (app *Config) updateOrderState(orders []OrderSummary, storeId string) error
 func (app *Config) HandleGetOrdersByStoreID(w http.ResponseWriter, r *http.Request) {
 	storeId := chi.URLParam(r, "storeId")
 	if storeId == "" {
-		app.writeError(w, errors.New("no store id provided"), http.StatusBadGateway)
+		app.writeError(w, errors.New("no store id provided"), http.StatusNotFound)
 		return
 	}
 
@@ -207,18 +220,26 @@ func (app *Config) getStoreOrders(storeId string) ([]OrderSummary, error) {
 		return nil, err
 	}
 
-	var orderSummary []OrderSummary
+	var orders []OrderSummary
 
 	//if state store doesn't exist, return empty array
 	if stateItem.Value == nil {
 		return nil, nil
 	} else {
 		//if state exists populate order summary array with state store information
-		err = json.Unmarshal(stateItem.Value, &orderSummary)
+		err = json.Unmarshal(stateItem.Value, &orders)
 		if err != nil {
 			log.Printf("Error unmarshalling order array. Error: %v", err)
 			return nil, err
 		}
-		return orderSummary, nil
+
+		// var ordersToDelete []OrderSummary
+		// // Remove itens that are already marked for deletion
+		// for _, order := range orders {
+		// 	if !order.MarkedForDeletion {
+		// 		ordersToDelete = append(ordersToDelete, order)
+		// 	}
+		// }
+		return orders, nil
 	}
 }

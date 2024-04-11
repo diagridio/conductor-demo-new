@@ -18,11 +18,11 @@ spec:
         dapr.io/enabled: "true"
         dapr.io/app-id: "loyalty-service"
         dapr.io/app-port: "80"
-        dapr.io/config: "config"
+        dapr.io/config: "loyalty-config"
     spec:
       containers:
         - name: loyalty-service
-          image: "rochabr/loyalty-service:latest"
+          image: "rochabr/loyalty-service:0.4.0"
           env:
           - name: APP_PORT
             value: "80"

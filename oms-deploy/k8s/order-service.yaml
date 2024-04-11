@@ -22,7 +22,8 @@ spec:
     spec:
       containers:
         - name: order-service
-          image: "rochabr/order-service:latest"
+          image: "rochabr/order-service:0.4.0"
+          #image: "us-central1-docker.pkg.dev/prj-common-d-shared-89549/reg-d-common-docker/order-service:0.0.3"
           env:
           - name: APP_PORT
             value: "80"

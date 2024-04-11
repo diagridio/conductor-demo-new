@@ -13,16 +13,16 @@ import (
 )
 
 const (
-	StoreId                   = "Seattle"
-	MakeLineServiceAppId      = "make-line-service"
-	MinSecondsToCompleteOrder = 1
-	MaxSecondsToCompleterder  = 3
+	StoreId                  = "Seattle"
+	MakeLineServiceAppId     = "make-line-service"
+	MinSecondsToCompleteItem = 1
+	MaxSecondsToCompleteItem = 3
 )
 
 var storeId = StoreId
 var makeLineServiceAppId = MakeLineServiceAppId
-var minSecondsToCompleteOrder = MinSecondsToCompleteOrder
-var maxSecondsToCompleteOrder = MaxSecondsToCompleterder
+var minSecondsToCompleteItem = MinSecondsToCompleteItem
+var maxSecondsToCompleteItem = MaxSecondsToCompleteItem
 
 func populateConstants() {
 	// get store id
@@ -31,13 +31,13 @@ func populateConstants() {
 	}
 
 	// get max item quantity
-	if miq := os.Getenv("MAX_ITEM_QUANTITY"); miq != "" {
-		minSecondsToCompleteOrder, _ = strconv.Atoi(miq)
+	if miq := os.Getenv("MIN_SECONDS_TO_COMPLETE_ITEM"); miq != "" {
+		minSecondsToCompleteItem, _ = strconv.Atoi(miq)
 	}
 
 	// get max unique items per order
-	if mui := os.Getenv("MAX_UNIQUE_ITEMS_PER_ORDER"); mui != "" {
-		maxSecondsToCompleteOrder, _ = strconv.Atoi(mui)
+	if mui := os.Getenv("MAX_SECONDS_TO_COMPLETE_ITEM"); mui != "" {
+		maxSecondsToCompleteItem, _ = strconv.Atoi(mui)
 	}
 }
 
@@ -84,7 +84,7 @@ func (app *Config) HandleCompleteOrder(w http.ResponseWriter, r *http.Request) {
 			//creating a slow down to simulate the time it takes to make an item
 			log.Printf("The VirtualWorker (%v) is making %v %v.", storeId, orderItem.Quantity, orderItem.ProductName)
 
-			time.Sleep(time.Duration(rand.Intn(maxSecondsToCompleteOrder-minSecondsToCompleteOrder)+minSecondsToCompleteOrder) * time.Second)
+			time.Sleep(time.Duration(rand.Intn(maxSecondsToCompleteItem-minSecondsToCompleteItem)+minSecondsToCompleteItem) * time.Second)
 
 			log.Printf("The VirtualWorker (%v) completed %v %v.", storeId, orderItem.Quantity, orderItem.ProductName)
 		}

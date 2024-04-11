@@ -24,8 +24,43 @@ namespace OrderProcessorService.Workflows
                 nameof(NotifyActivity),
                 new Notification($"Received order {orderId} for {order.FirstName} {order.LastName} at ${order.StoreId}"));
 
-          // Generating receipt for the order
+            // Update loyalty points for the customer
             OrderResult result = await context.CallActivityAsync<OrderResult>(
+                nameof(OrderHandlerActivity),
+                new OrderInput(OrderRequestType.Loyalty, order));
+                //this.defaultActivityRetryOptions);
+            
+            if (!result.Processed)
+            {
+                // End the workflow here we can't update loyalty points for the customer
+                await context.CallActivityAsync(
+                    nameof(NotifyActivity),
+                    new Notification($"Failed to updated loyalty points for {order.FirstName} {order.LastName}"));
+                    
+                context.SetCustomStatus("Stopped order process due to failure to update the loyalty points.");
+                return new OrderResult(Processed: false);
+            }
+            
+            // Determine if the make-line process is successful
+            result =  await context.CallActivityAsync<OrderResult>(
+                nameof(OrderHandlerActivity),
+                new OrderInput(OrderRequestType.MakeLine, order));
+                //this.defaultActivityRetryOptions);
+            
+            // If there the make line fails, stop and let the user know
+            if (!result.Processed)
+            {
+                // End the workflow here due to make-line issues
+                await context.CallActivityAsync(
+                    nameof(NotifyActivity),
+                    new Notification($"Failed to complete make-line process for order {order.OrderId}"));
+
+                context.SetCustomStatus("Stopped order process due to failure to complete make-line process.");
+                return new OrderResult(Processed: false);
+            }
+
+            // Generating receipt for the order
+            result = await context.CallActivityAsync<OrderResult>(
                 nameof(OrderHandlerActivity),
                 new OrderInput(OrderRequestType.Receipt, order));
                 //this.defaultActivityRetryOptions);
@@ -39,45 +74,6 @@ namespace OrderProcessorService.Workflows
                     new Notification($"Failed to generate receipt to {order.FirstName} {order.LastName}"));
 
                 context.SetCustomStatus("Stopped order process due to receipt generation issues.");
-
-                return new OrderResult(Processed: false);
-            }
-
-            // Update loyalty points for the customer
-              await context.CallActivityAsync<OrderResult>(
-                nameof(OrderHandlerActivity),
-                new OrderInput(OrderRequestType.Loyalty, order));
-                //this.defaultActivityRetryOptions);
-            
-
-            if (!result.Processed)
-            {
-                // End the workflow here we can't update loyalty points for the customer
-                await context.CallActivityAsync(
-                    nameof(NotifyActivity),
-                    new Notification($"Failed to updated loyalty points for {order.FirstName} {order.LastName}"));
-                    
-                context.SetCustomStatus("Stopped order process due to failure to update the loyalty points.");
-                
-                return new OrderResult(Processed: false);
-            }
-            
-            // Determine if the make-line process is successful
-              await context.CallActivityAsync<OrderResult>(
-                nameof(OrderHandlerActivity),
-                new OrderInput(OrderRequestType.MakeLine, order));
-                //this.defaultActivityRetryOptions);
-            
-            // If there the make line fails, stop and let the user know
-            if (!result.Processed)
-            {
-                // End the workflow here due to make-line issues
-                await context.CallActivityAsync(
-                    nameof(NotifyActivity),
-                    new Notification($"Failed to complete make-line process for order {order.OrderId}"));
-
-                    context.SetCustomStatus("Stopped order process due to failure to complete make-line process.");
-
                 return new OrderResult(Processed: false);
             }
 
@@ -89,6 +85,5 @@ namespace OrderProcessorService.Workflows
             // End the workflow with a success result
             return new OrderResult(Processed: true);
         }
-
     }
 }

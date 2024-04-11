@@ -24,12 +24,12 @@ spec:
         dapr.io/app-health-probe-interval: "5" ## The interval between calls to app health endpoint
         dapr.io/app-health-probe-timeout: "500" ## The timeout of the app health endpoint call
         dapr.io/app-health-threshold: "2" ## Threshold for considering app unhealthy
-        dapr.io/log-level: "debug"
+        #dapr.io/log-level: "debug"
         dapr.io/app-protocol: "http"
     spec:
       containers:
         - name: order-processor-service
-          image: "rochabr/order-processor-service:latest"
+          image: "alicejgibbons/order-processor-service:latest"
           resources:
             requests:
               memory: "256Mi"

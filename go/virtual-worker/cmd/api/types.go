@@ -23,4 +23,5 @@ type OrderSummary struct {
 	LoyaltyID          string             `json:"loyaltyId"`
 	OrderItems         []OrderItemSummary `json:"orderItems"`
 	OrderTotal         float64            `json:"orderTotal"`
+	MarkedForDeletion  bool               `json:"markedForDeletion"`
 }

@@ -31,7 +31,6 @@ helm install --set persistence.enabled=false --set zookeeper.persistence.enabled
 # Modifying the kafka-jaas secret to get the password, as the kafka-jaas secret is not available in the kafka namespace
 #export KAFKA_PASSWORD=$(kubectl get secret kafka-jaas --namespace kafka -o jsonpath='{.data.client-passwords}' | base64 -d | cut -d , -f 1)
 export KAFKA_PASSWORD=$(kubectl get secret kafka-user-passwords --namespace kafka -o jsonpath='{.data.client-passwords}' | base64 -d | cut -d , -f 1)
-
 kubectl create secret generic kafka-password --from-literal=kafka-password=$KAFKA_PASSWORD -n oms
 
 # Install Zipkin for tracing
@@ -72,4 +71,4 @@ gcloud compute firewall-rules list --filter="name~gke-${gke_prj-dataplane-n-demo
 # Flushall keys in redis
 k exec -it redis-master-0 -n redis -- /bin/bash
 
-redis-cli -a <PASSWORD> --scan --pattern '*' | xargs redis-cli -a <PASSWORD> DEL
+redis-cli -a $REDIS_PASSWORD --scan --pattern '*' | xargs redis-cli -a $REDIS_PASSWORD DEL

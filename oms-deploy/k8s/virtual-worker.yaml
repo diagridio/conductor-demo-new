@@ -22,7 +22,7 @@ spec:
     spec:
       containers:
         - name: virtual-worker
-          image: "rochabr/virtual-worker:latest"
+          image: "rochabr/virtual-worker:0.4.0"
           imagePullPolicy: Always
           startupProbe:
             httpGet:
@@ -36,7 +36,7 @@ spec:
           - name: STORE_ID
             value: "Seattle"
           - name: MIN_SECONDS_TO_COMPLETE_ITEM
-            value: "2"
+            value: "5"
           - name: MAX_SECONDS_TO_COMPLETE_ITEM
             value: "12"
           resources:
