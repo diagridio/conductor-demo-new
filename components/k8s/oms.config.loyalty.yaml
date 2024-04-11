@@ -1,7 +1,7 @@
 apiVersion: dapr.io/v1alpha1
 kind: Configuration
 metadata:
-  name: receipt-config
+  name: loyalty-config
   namespace: oms
 spec:
   features:

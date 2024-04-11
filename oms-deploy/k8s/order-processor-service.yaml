@@ -29,7 +29,7 @@ spec:
     spec:
       containers:
         - name: order-processor-service
-          image: "rochabr/order-processor-service:0.4.0"
+          image: "alicejgibbons/order-processor-service:latest"
           resources:
             requests:
               memory: "256Mi"
