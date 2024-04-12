@@ -1,6 +1,6 @@
 
 # create application namespaces
-kubectl create ns oms # Our services
+kubectl create ns order-system # Our services
 kubectl create ns dapr # Dapr
 kubectl create ns redis # Redis
 kubectl create ns kafka # Kafka
@@ -23,7 +23,7 @@ helm repo update
 helm install redis bitnami/redis -n redis
 export REDIS_PASSWORD=$(kubectl get secret --namespace redis redis -o jsonpath="{.data.redis-password}" | base64 -d) 
 
-kubectl create secret generic redis-password --from-literal=redis-password=$REDIS_PASSWORD -n oms
+kubectl create secret generic redis-password --from-literal=redis-password=$REDIS_PASSWORD -n order-system
 
 # Install Kafka for pub/sub
 helm install --set persistence.enabled=false --set zookeeper.persistence.enabled=false --set auth.clientProtocol=sasl kafka bitnami/kafka -n kafka
@@ -31,7 +31,7 @@ helm install --set persistence.enabled=false --set zookeeper.persistence.enabled
 # Modifying the kafka-jaas secret to get the password, as the kafka-jaas secret is not available in the kafka namespace
 #export KAFKA_PASSWORD=$(kubectl get secret kafka-jaas --namespace kafka -o jsonpath='{.data.client-passwords}' | base64 -d | cut -d , -f 1)
 export KAFKA_PASSWORD=$(kubectl get secret kafka-user-passwords --namespace kafka -o jsonpath='{.data.client-passwords}' | base64 -d | cut -d , -f 1)
-kubectl create secret generic kafka-password --from-literal=kafka-password=$KAFKA_PASSWORD -n oms
+kubectl create secret generic kafka-password --from-literal=kafka-password=$KAFKA_PASSWORD -n order-system
 
 # Install Zipkin for tracing
 echo "Zipkin namespace created"

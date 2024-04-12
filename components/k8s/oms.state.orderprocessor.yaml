@@ -2,7 +2,7 @@ apiVersion: dapr.io/v1alpha1
 kind: Component
 metadata:
   name: oms.state.orderprocessor
-  namespace: oms
+  namespace: order-system
 spec:
   type: state.redis
   version: v1

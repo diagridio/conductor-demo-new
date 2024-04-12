@@ -2,7 +2,7 @@
 # kind: Subscription
 # metadata:
 #   name: oms.subscription.orders
-#   namespace: oms
+#   namespace: order-system
 # spec:
 #   topic: orders
 #   route: /orders

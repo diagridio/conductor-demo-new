@@ -2,7 +2,7 @@ apiVersion: dapr.io/v1alpha1
 kind: Resiliency
 metadata:
   name: oms.resiliency
-  namespace: oms
+  namespace: order-system
 scopes:
   - order-service
   - loyalty-service

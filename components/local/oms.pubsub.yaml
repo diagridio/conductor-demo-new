@@ -2,7 +2,7 @@ apiVersion: dapr.io/v1alpha1
 kind: Component
 metadata:
   name: oms.pubsub
-  namespace: oms
+  namespace: order-system
 spec:
   type: pubsub.redis
   version: v1

@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: receipt-generation-service
-  namespace: oms
+  namespace: order-system
   labels:
     app: receipt-generation-service
 spec:

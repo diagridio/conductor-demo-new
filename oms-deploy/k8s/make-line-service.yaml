@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: make-line-service
-  namespace: oms
+  namespace: order-system
   labels:
     app: make-line-service
 spec:

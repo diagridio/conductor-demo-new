@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: order-processor-workflow
-  namespace: oms
+  namespace: order-system
   labels:
     app: order-processor-workflow
 spec:

@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: virtual-customer
-  namespace: oms
+  namespace: order-system
   labels:
     app: virtual-customer
 spec:
