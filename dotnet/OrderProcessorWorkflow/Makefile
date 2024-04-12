@@ -1,5 +1,6 @@
-RELEASE_VERSION  = 0.5.0
-SERVICE_NAME = order-processor-service
+RELEASE_VERSION  = 0.6.1
+IMAGE_NAME = order-system/order-processor-workflow
+SERVICE_NAME = order-processor-workflow
 REGISTRY=rochabr
 APP_PORT=5700
 DAPR_HTTP_PORT=5780
@@ -23,5 +24,5 @@ run: clean ## Runs uncompiled code in Dapr
 
 .PHONY: build_image
 build_image: clean ## Builds local release binary
-	docker buildx build --no-cache --platform=linux/amd64,linux/arm64 -t ${REGISTRY}/${SERVICE_NAME}:${RELEASE_VERSION} --push .
+	docker buildx build --no-cache --platform=linux/amd64,linux/arm64 -t ${REGISTRY}/${IMAGE_NAME}:${RELEASE_VERSION} --push .
 

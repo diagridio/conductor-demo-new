@@ -1,4 +1,4 @@
-namespace OrderProcessorService.Models
+namespace OrderProcessorWorkflow.Models
 {
     public record OrderInput(OrderRequestType requestType, OrderSummary orderSummary);
     public record OrderResult(bool Processed);

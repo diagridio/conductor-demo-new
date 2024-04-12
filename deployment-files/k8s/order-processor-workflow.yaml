@@ -1,22 +1,22 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: order-processor-service
-  namespace: oms
+  name: order-processor-workflow
+  namespace: order-system
   labels:
-    app: order-processor-service
+    app: order-processor-workflow
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: order-processor-service
+      app: order-processor-workflow
   template:
     metadata:
       labels:
-        app: order-processor-service
+        app: order-processor-workflow
       annotations:
         dapr.io/enabled: "true"
-        dapr.io/app-id: "order-processor-service"
+        dapr.io/app-id: "order-processor-workflow"
         dapr.io/app-port: "80"
         dapr.io/config: "config"
         dapr.io/enable-app-health-check: "true" ## Flag indicating whether health check is enabled for app
@@ -28,8 +28,8 @@ spec:
         dapr.io/app-protocol: "http"
     spec:
       containers:
-        - name: order-processor-service
-          image: "alicejgibbons/order-processor-service:latest"
+        - name: order-processor-workflow
+          image: "us-central1-docker.pkg.dev/prj-common-d-shared-89549/reg-d-common-docker-public/order-system/order-processor-workflow:0.6.1"
           resources:
             requests:
               memory: "256Mi"

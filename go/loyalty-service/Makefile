@@ -1,5 +1,6 @@
-RELEASE_VERSION  = 0.5.0
+RELEASE_VERSION  = 0.6.1
 SERVICE_NAME = loyalty-service
+IMAGE_NAME = order-system/loyalty-service
 REGISTRY=rochabr
 APP_PORT=5400
 DAPR_HTTP_PORT=5480
@@ -24,5 +25,5 @@ run: tidy ## Runs uncompiled code in Dapr
 
 .PHONY: build_image
 build_image: tidy ## Builds local release binary
-	docker buildx build --no-cache --platform=linux/amd64,linux/arm64 -t ${REGISTRY}/${SERVICE_NAME}:${RELEASE_VERSION} --push .
+	docker buildx build --no-cache --platform=linux/amd64,linux/arm64 -t ${REGISTRY}/${IMAGE_NAME}:${RELEASE_VERSION} --push .
 

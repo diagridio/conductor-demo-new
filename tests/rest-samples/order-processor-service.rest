@@ -1,9 +1,9 @@
-@order-processor-service = 127.0.0.1:5700
-@order-processor-service-dapr = 127.0.0.1:3500
+@order-processor-workflow = 127.0.0.1:5700
+@order-processor-workflow-dapr = 127.0.0.1:3500
 
 
 ### Readiness probe
-GET http://{{order-processor-service}}/ready
+GET http://{{order-processor-workflow}}/ready
 
 ### Healthz
-GET http://{{order-processor-service}}/healthz
+GET http://{{order-processor-workflow}}/healthz

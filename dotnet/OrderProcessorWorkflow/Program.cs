@@ -1,8 +1,8 @@
 using Dapr.Client;
 using Dapr.Workflow;
-using OrderProcessorService.Activities;
-using OrderProcessorService.Models;
-using OrderProcessorService.Workflows;
+using OrderProcessorWorkflow.Activities;
+using OrderProcessorWorkflow.Models;
+using OrderProcessorWorkflow.Workflows;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 

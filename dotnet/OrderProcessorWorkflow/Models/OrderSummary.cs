@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
-namespace OrderProcessorService.Models
+namespace OrderProcessorWorkflow.Models
 {
     public class OrderSummary
     {

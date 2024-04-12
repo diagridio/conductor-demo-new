@@ -2,10 +2,10 @@ apiVersion: dapr.io/v1alpha1
 kind: Subscription
 metadata:
   name: oms.subscription.ordercompleted
-  namespace: oms
+  namespace: order-system
 spec:
   topic: ordercompleted
   route: /ordercompleted
   pubsubname: oms.pubsub
 scopes:
-- order-processor-service
+- order-processor-workflow

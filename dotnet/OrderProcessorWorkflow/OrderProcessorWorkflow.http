@@ -1,0 +1,6 @@
+@OrderProcessorWorkflow_HostAddress = http://localhost:5700
+
+GET {{OrderProcessorWorkflow_HostAddress}}/Probes/healthz/
+Accept: application/json
+
+###

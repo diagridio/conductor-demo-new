@@ -1,9 +1,9 @@
 ﻿using System.Diagnostics;
 using Dapr.Workflow;
-using OrderProcessorService.Activities;
-using OrderProcessorService.Models;
+using OrderProcessorWorkflow.Activities;
+using OrderProcessorWorkflow.Models;
 
-namespace OrderProcessorService.Workflows
+namespace OrderProcessorWorkflow.Workflows
 {
     public class OrderProcessingWorkflow : Workflow<OrderSummary, OrderResult>
     {
