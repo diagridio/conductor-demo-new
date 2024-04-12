@@ -1,4 +1,4 @@
-RELEASE_VERSION  = 0.6.0
+RELEASE_VERSION  = 0.6.1
 IMAGE_NAME = order-system/order-processor-workflow
 SERVICE_NAME = order-processor-workflow
 REGISTRY=rochabr

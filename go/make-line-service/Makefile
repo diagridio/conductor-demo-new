@@ -1,4 +1,4 @@
-RELEASE_VERSION  = 0.6.0
+RELEASE_VERSION  = 0.6.1
 SERVICE_NAME = make-line-service
 IMAGE_NAME = order-system/make-line-service
 REGISTRY=rochabr

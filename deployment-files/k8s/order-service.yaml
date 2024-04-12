@@ -22,7 +22,7 @@ spec:
     spec:
       containers:
         - name: order-service
-          image: "us-central1-docker.pkg.dev/prj-common-d-shared-89549/reg-d-common-docker-public/order-system/order-service:0.6.0"
+          image: "us-central1-docker.pkg.dev/prj-common-d-shared-89549/reg-d-common-docker-public/order-system/order-service:0.6.1"
           env:
           - name: APP_PORT
             value: "80"
