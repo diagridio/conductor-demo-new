@@ -2,12 +2,27 @@ apiVersion: dapr.io/v1alpha1
 kind: Configuration
 metadata:
   name: config
+  namespace: oms
 spec:
   tracing:
     samplingRate: "1"
     zipkin:
       endpointAddress: "http://zipkin.zipkin.svc.cluster.local:9411/api/v2/spans"
-# spec:
-#   features:
-#   - name: HotReload
-#     enabled: true
+  metric:
+    enabled: true
+    rules:
+    - name: dapr_http_client_roundtrip_latency
+      labels:
+      - name: path
+        regex:
+          "orders/Seattle/ORDER_ID": "orders/Seattle/.+"
+    - name: dapr_http_client_sent_bytes
+      labels:
+      - name: path
+        regex:
+          "orders/Seattle/ORDER_ID": "orders/Seattle/.+"
+    - name: dapr_http_client_completed_count
+      labels:
+      - name: path
+        regex:
+          "orders/Seattle/ORDER_ID": "orders/Seattle/.+"

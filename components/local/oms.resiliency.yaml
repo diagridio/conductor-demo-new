@@ -39,7 +39,7 @@ spec:
         trip: consecutiveFailures > 8
   targets:
     apps:
-      make-line-service:
+      order-processor-workflow:
         timeout: general
         retry: important
         circuitBreaker: simpleCB
