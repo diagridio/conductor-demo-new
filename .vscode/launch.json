@@ -5,14 +5,14 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Debug OrderProcessorService",
+            "name": "Debug OrderProcessorWorkflow",
             "type": "coreclr",
             "request": "launch",
-            "preLaunchTask": "Build OrderProcessorService",
-            "postDebugTask": "Dapr Stop OrderProcessorService",
-            "program": "${workspaceFolder}/dotnet/OrderProcessorService/bin/Debug/net8.0/OrderProcessorService.dll",
+            "preLaunchTask": "Build OrderProcessorWorkflow",
+            "postDebugTask": "Dapr Stop OrderProcessorWorkflow",
+            "program": "${workspaceFolder}/dotnet/OrderProcessorWorkflow/bin/Debug/net8.0/OrderProcessorWorkflow.dll",
             "args": [],
-            "cwd": "${workspaceFolder}/dotnet/OrderProcessorService",
+            "cwd": "${workspaceFolder}/dotnet/OrderProcessorWorkflow",
             "stopAtEntry": false,
             "env": {
                 "ASPNETCORE_ENVIRONMENT": "Development",
@@ -26,7 +26,7 @@
         {
             "name": "Debug All Services",
             "configurations": [
-                "Debug OrderProcessorService"
+                "Debug OrderProcessorWorkflow"
             ]
         },
     ]

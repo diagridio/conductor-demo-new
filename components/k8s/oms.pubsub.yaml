@@ -2,7 +2,7 @@ apiVersion: dapr.io/v1alpha1
 kind: Component
 metadata:
   name: oms.pubsub
-  namespace: oms
+  namespace: order-system
 spec:
   type: pubsub.kafka
   version: v1  
@@ -14,10 +14,10 @@ spec:
   - name: saslUsername
     value: "user1"
   - name: saslPassword
-    value: 6PwH3IHkUF #Update me!
+    value: YnMEaIfEi9 #Update me!
   - name: disableTls 
     value: "true"
 scopes:
   - order-service
-  - order-processor-service
+  - order-processor-workflow
   - make-line-service

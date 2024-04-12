@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
+
 	// "fmt"
 	// "os"
 	// "time"
@@ -59,7 +60,7 @@ func (app *Config) HandleGenerateReceipt(w http.ResponseWriter, r *http.Request)
 
 	// // Adding target app id as part of the header
 	// req.Header.Add("dapr-app-id", "loyalty-service")
-	
+
 	// // Invoking a service
 	// resp, err := client.Do(req)
 	// log.Printf("Service invocation to loyalty service received response: %v %v", resp.StatusCode, http.StatusText(resp.StatusCode))
@@ -72,7 +73,8 @@ func (app *Config) HandleGenerateReceipt(w http.ResponseWriter, r *http.Request)
 	var metadata map[string]string = make(map[string]string)
 
 	//append metadata with order id
-	metadata["receiptName"] = orderSummary.OrderID
+	//metadata["receiptName"] = orderSummary.OrderID
+	metadata["key"] = orderSummary.OrderID
 
 	// Redis output binding
 	// Insert order using Dapr output binding via Dapr SDK

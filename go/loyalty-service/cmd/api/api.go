@@ -20,7 +20,7 @@ func (app *Config) HandleUpdateLoyalty(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	log.Printf("Received Order Summary: %v.", orderSummary.OrderID)
+	log.Printf("Received Order Summary : %v.", orderSummary.OrderID)
 
 	//Update loyalty points
 	err = app.updateLoyaltyPoints(orderSummary)

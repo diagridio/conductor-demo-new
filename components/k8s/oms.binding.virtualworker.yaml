@@ -2,7 +2,7 @@ apiVersion: dapr.io/v1alpha1
 kind: Component
 metadata:
   name: orders
-  namespace: oms
+  namespace: order-system
 spec:
   type: bindings.cron
   version: v1

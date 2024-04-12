@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: virtual-worker
-  namespace: oms
+  namespace: order-system
   labels:
     app: virtual-worker
 spec:
@@ -22,7 +22,7 @@ spec:
     spec:
       containers:
         - name: virtual-worker
-          image: "rochabr/virtual-worker:0.4.0"
+          image: "us-central1-docker.pkg.dev/prj-common-d-shared-89549/reg-d-common-docker-public/order-system/virtual-worker:0.6.1"
           imagePullPolicy: Always
           startupProbe:
             httpGet:

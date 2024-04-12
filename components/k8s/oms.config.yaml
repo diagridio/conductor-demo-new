@@ -2,7 +2,7 @@ apiVersion: dapr.io/v1alpha1
 kind: Configuration
 metadata:
   name: config
-  namespace: oms
+  namespace: order-system
 spec:
   tracing:
     samplingRate: "1"

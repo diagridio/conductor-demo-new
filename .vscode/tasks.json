@@ -2,16 +2,16 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "Build OrderProcessorService",
+            "label": "Build OrderProcessorWorkflow",
             "command": "dotnet",
             "type": "process",
             "args": [
                 "build",
-                "${workspaceFolder}/dotnet/OrderProcessorService",
+                "${workspaceFolder}/dotnet/OrderProcessorWorkflow",
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary"
             ],
-            "dependsOn": "Dapr OrderProcessorService",
+            "dependsOn": "Dapr OrderProcessorWorkflow",
             "problemMatcher": "$msCompile",
             "group": "build"
         },
@@ -32,12 +32,12 @@
             }
         },
         {
-            "label": "Dapr OrderProcessorService",
+            "label": "Dapr OrderProcessorWorkflow",
             "command": "dapr",
             "args": [
                 "run",
                 "--app-id",
-                "order-processor-service",
+                "order-processor-workflow",
                 "--components-path",
                 "${workspaceFolder}/components/local",
                 "--app-port",
@@ -64,17 +64,17 @@
             }
         },
         {
-            "label": "Dapr Stop OrderProcessorService",
+            "label": "Dapr Stop OrderProcessorWorkflow",
             "command": "dapr",
             "args": [
                 "stop",
-                "order-processor-service"
+                "order-processor-workflow"
             ]
         },
         {
             "label": "Dapr (All Services)",
             "dependsOn": [
-                "Dapr OrderProcessorService"
+                "Dapr OrderProcessorWorkflow"
             ],
             "problemMatcher": []
         }
