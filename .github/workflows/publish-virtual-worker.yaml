@@ -3,7 +3,7 @@ name: Build and Publish Virtual Worker
 on:
   push:
     branches:
-      - build-image
+      - main
     paths:
       - 'go/virtual-worker/**'
 

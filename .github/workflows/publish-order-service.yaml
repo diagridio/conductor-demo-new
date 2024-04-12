@@ -3,7 +3,7 @@ name: Build and Publish Order Service
 on:
   push:
     branches:
-      - build-image
+      - main
     paths:
       - 'go/order-service/**'
 

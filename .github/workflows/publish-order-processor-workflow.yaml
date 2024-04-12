@@ -3,7 +3,7 @@ name: Build and Publish Order Processor Workflow
 on:
   push:
     branches:
-      - build-image
+      - main
     paths:
       - 'dotnet/OrderProcessorWorkflow/**'
 

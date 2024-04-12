@@ -3,7 +3,7 @@ name: Build and Publish Make Line Service
 on:
   push:
     branches:
-      - build-image
+      - main
     paths:
       - 'go/make-line-service/**'
 

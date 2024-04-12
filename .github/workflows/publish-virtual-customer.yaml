@@ -3,7 +3,7 @@ name: Build and Publish Virtual Customer
 on:
   push:
     branches:
-      - build-image
+      - main
     paths:
       - 'go/virtual-customer/**'
 jobs:
