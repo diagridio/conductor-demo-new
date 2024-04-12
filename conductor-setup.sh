@@ -1,15 +1,15 @@
 
 # create application namespaces
 kubectl create ns order-system # Our services
-kubectl create ns dapr # Dapr
+kubectl create ns dapr-system # Dapr
 kubectl create ns redis # Redis
 kubectl create ns kafka # Kafka
 kubectl create ns zipkin # Zipkin
 
 # install dapr
-dapr init -k -n dapr
+dapr init -k -n dapr-system
 
-kubectl apply -f ./components/k8s/rbac/dapr-secret-reader.yaml
+kubectl apply -f ./components/k8s/dapr-secret-reader.yaml
 
 # setting up metrics server - Conductor pre-requisites (https://docs.diagrid.io/conductor/getting-started/prereqs/#installation-prerequisites)
 kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml

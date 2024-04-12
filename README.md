@@ -26,6 +26,10 @@ A sample order management system composed of 8 Dapr-enabled microservices to sho
 
 Run the commands in the [./conductor-setup](./conductor-setup.sh) script one by one for best results. All Dapr components are deployed on Kubernetes today.
 
+#### Important
+
+Since we are inducing a compinent security advisory, update the content of _oms.pubsub.yaml_ with the new value for $KAFKA_PASSWORD. Redeploy the component.
+
 ### Build and push docker images to the registry individually.
 
 Inside each service folder there is a Makefile. Navigate to the folder and run the command below to build and push the images. 
