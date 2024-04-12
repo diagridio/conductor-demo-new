@@ -8,14 +8,14 @@ using Dapr.Client;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using OrderProcessorService.Models;
+using OrderProcessorWorkflow.Models;
 using System.Text.Json;
 using System.Text;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Dapr.Workflow;
-using OrderProcessorService.Workflows;
+using OrderProcessorWorkflow.Workflows;
 
-namespace OrderProcessorService.Controllers
+namespace OrderProcessorWorkflow.Controllers
 {
     [ApiController]
     [Route("[controller]")]

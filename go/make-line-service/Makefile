@@ -1,6 +1,6 @@
-RELEASE_VERSION  = 0.5.0
+RELEASE_VERSION  = 0.6.0
 SERVICE_NAME = make-line-service
-IMAGE_NAME = order-system/make-line
+IMAGE_NAME = order-system/make-line-service
 REGISTRY=rochabr
 APP_PORT=5200
 DAPR_HTTP_PORT=5280

@@ -5,7 +5,7 @@ VisualStudioVersion = 17.5.002.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "dotnet", "dotnet", "{07EE225D-284A-45B1-8D34-ED54AFE6D460}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OrderProcessorService", "dotnet\OrderProcessorService\OrderProcessorService.csproj", "{0F56BD68-6264-45AE-A8A6-B2A3E907ABF3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OrderProcessorWorkflow", "dotnet\OrderProcessorWorkflow\OrderProcessorWorkflow.csproj", "{0F56BD68-6264-45AE-A8A6-B2A3E907ABF3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

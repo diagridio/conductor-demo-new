@@ -1,6 +1,6 @@
-RELEASE_VERSION  = 0.5.0
+RELEASE_VERSION  = 0.6.0
 SERVICE_NAME = loyalty-service
-IMAGE_NAME = order-system/loyalty
+IMAGE_NAME = order-system/loyalty-service
 REGISTRY=rochabr
 APP_PORT=5400
 DAPR_HTTP_PORT=5480

@@ -16,4 +16,4 @@ spec:
   - name: actorStateStore
     value: "true"
 scopes:
-  - order-processor-service
+  - order-processor-workflow

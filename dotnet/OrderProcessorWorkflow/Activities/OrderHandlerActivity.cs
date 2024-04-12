@@ -1,11 +1,11 @@
 using Dapr.Client;
 using Dapr.Workflow;
 using Microsoft.Extensions.Logging;
-using OrderProcessorService.Models;
+using OrderProcessorWorkflow.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
-namespace OrderProcessorService.Activities
+namespace OrderProcessorWorkflow.Activities
 {
     public class OrderHandlerActivity : WorkflowActivity<OrderInput, object>
     {

@@ -27,7 +27,7 @@ build_order_service:
 ## build_order_processor_service: builds the order processor service container and push it to the registry
 build_order_processor_service:
 	@echo "Building order processor service binary..."
-	docker buildx build --no-cache --platform=linux/amd64 -t ${REGISTRY}/order-processor-service:latest --push ./../dotnet/OrderProcessorService
+	docker buildx build --no-cache --platform=linux/amd64 -t ${REGISTRY}/order-processor-workflow:latest --push ./../dotnet/OrderProcessorWorkflow
 	@echo "Done!"
 
 ## build_virtual_customer_service: builds the virtual customer binary container and push it to the registry

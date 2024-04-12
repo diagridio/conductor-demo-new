@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace OrderProcessorService.Models
+namespace OrderProcessorWorkflow.Models
 {
     public class OrderItemSummary
     {

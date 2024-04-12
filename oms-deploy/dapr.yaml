@@ -40,8 +40,8 @@ apps:
       - ./../../components/local
     command: ["go", "run", "./cmd/api"]
 
-  - appDirPath: ./../dotnet/OrderProcessorService/
-    appID: order-processor-service
+  - appDirPath: ./../dotnet/OrderProcessorWorkflow/
+    appID: order-processor-workflow
     appPort: 5700
     daprHTTPPort: 5780
     daprGRPCPort: 5701

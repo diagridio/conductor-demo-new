@@ -1,27 +1,27 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: virtual-customers
+  name: virtual-customer
   namespace: oms
   labels:
-    app: virtual-customers
+    app: virtual-customer
 spec:
   replicas: 2
   selector:
     matchLabels:
-      app: virtual-customers
+      app: virtual-customer
   template:
     metadata:
       labels:
-        app: virtual-customers
+        app: virtual-customer
       annotations:
         dapr.io/enabled: "true"
-        dapr.io/app-id: "virtual-customers"
+        dapr.io/app-id: "virtual-customer"
         dapr.io/config: "config"
     spec:
       containers:
-        - name: virtual-customers
-          image: "rochabr/virtual-customer:0.4.0"
+        - name: virtual-customer
+          image: "us-central1-docker.pkg.dev/prj-common-d-shared-89549/reg-d-common-docker-public/order-system/virtual-customer:0.6.0"
           imagePullPolicy: Always
           env:
           - name: STORE_ID

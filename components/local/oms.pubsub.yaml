@@ -13,6 +13,6 @@ spec:
     value: ""
 scopes:
   - order-service
-  - order-processor-service
+  - order-processor-workflow
   - make-line-service
   

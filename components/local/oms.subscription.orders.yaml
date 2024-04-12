@@ -8,4 +8,4 @@ spec:
   route: /orders
   pubsubname: oms.pubsub
 scopes:
-- order-processor-service
+- order-processor-workflow

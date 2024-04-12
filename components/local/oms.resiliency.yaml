@@ -7,7 +7,7 @@ scopes:
   - order-service
   - loyalty-service
   - make-line-service
-  - order-processor-service
+  - order-processor-workflow
 spec:
   policies:
     timeouts:

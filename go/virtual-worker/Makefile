@@ -1,4 +1,4 @@
-RELEASE_VERSION  = 0.5.0
+RELEASE_VERSION  = 0.6.0
 SERVICE_NAME = virtual-worker
 IMAGE_NAME = order-system/virtual-worker
 REGISTRY=rochabr

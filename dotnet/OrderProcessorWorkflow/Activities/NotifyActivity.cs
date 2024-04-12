@@ -1,7 +1,7 @@
-using OrderProcessorService.Models;
+using OrderProcessorWorkflow.Models;
 using Dapr.Workflow;
 
-namespace OrderProcessorService.Activities
+namespace OrderProcessorWorkflow.Activities
 {
     public class NotifyActivity : WorkflowActivity<Notification, object?>
     {

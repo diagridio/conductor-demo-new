@@ -23,7 +23,7 @@ spec:
     spec:
       containers:
         - name: make-line-service
-          image:  "rochabr/make-line-service:0.4.0"
+          image: "us-central1-docker.pkg.dev/prj-common-d-shared-89549/reg-d-common-docker-public/order-system/make-line-service:0.6.0"
           env:
           - name: APP_PORT
             value: "80"
