@@ -13,7 +13,7 @@ A sample order management system composed of 8 Dapr-enabled microservices to sho
 | Make Line Service | Responsible for simulating and coordinating a 'queue' of current orders. Monitors the processing and completion of each order in the 'queue' | Kafka subscriber, Redis state store |  
 | Order Service | Basic CRUD API that is used to place and manage orders | Kafka publisher |
 | Receipt Generation Service | Archival program that generates and stores order receipts for auditing and historical purposes  | Kafka subscriber, Redis output binding |
-| Order Processor  | Responsible for orchestrating a workflow whenever an order is created.  | Kafka subscriber, Redis output binding |
+| Order Processor Workflow  | Responsible for orchestrating a workflow(LOyalty, Receipt, Make-Line) whenever an order is created.   | Kafka subscriber, Redis output binding, Dapr Workflow Client |
 | Virtual Customer | 'Customer simulation' program that simulates customers placing orders | Order service invocation |
 | Virtual Worker | 'Worker simulation' program that simulates the completion of customer orders | Cron input binding, Make-line service invocation | 
 
