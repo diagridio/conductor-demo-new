@@ -1,4 +1,4 @@
-name: Build and Publish Virtual Customer
+name: Build and Publish Virtual Worker
 
 on:
   push:
