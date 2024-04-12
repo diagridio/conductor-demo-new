@@ -51,7 +51,7 @@ kubectl apply -f ./components/k8s/oms.config.yaml
 kubectl apply -f ./components/k8s
 
 #Deploy services
-kubectl apply -f /oms-deploy/k8s
+kubectl apply -f ./deployment-files/k8s
 
 
 #To connect to your database from outside the cluster execute the following commands:
