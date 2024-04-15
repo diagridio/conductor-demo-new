@@ -18,10 +18,11 @@ spec:
         dapr.io/enabled: "true"
         dapr.io/app-id: "virtual-customer"
         dapr.io/config: "config"
+        dapr.io/log-level: "debug"
     spec:
       containers:
         - name: virtual-customer
-          image: "us-central1-docker.pkg.dev/prj-common-d-shared-89549/reg-d-common-docker-public/order-system/virtual-customer:0.7.3"
+          image: "rochabr/virtual-customer:0.7.3"
           imagePullPolicy: Always
           env:
           - name: STORE_ID

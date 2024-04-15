@@ -1,3 +1,5 @@
 uvicorn
 fastapi
+dapr-ext-fastapi-dev
 dapr
+requests

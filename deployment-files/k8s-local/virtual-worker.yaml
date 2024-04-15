@@ -19,10 +19,16 @@ spec:
         dapr.io/app-id: "virtual-worker"
         dapr.io/app-port: "80"
         dapr.io/config: "config"
+        dapr.io/log-level: "debug"
+        dapr.io/enable-app-health-check: "true" ## Flag indicating whether health check is enabled for app
+        dapr.io/app-health-check-path: "/healthz" ## The healthcheck endpoint
+        dapr.io/app-health-probe-interval: "5" ## The interval between calls to app health endpoint
+        dapr.io/app-health-probe-timeout: "500" ## The timeout of the app health endpoint call
+        dapr.io/app-health-threshold: "2" ## Threshold for considering app unhealthy
     spec:
       containers:
         - name: virtual-worker
-          image: "us-central1-docker.pkg.dev/prj-common-d-shared-89549/reg-d-common-docker-public/order-system/virtual-worker:0.7.3"
+          image: "rochabr/virtual-worker:0.7.3"
           imagePullPolicy: Always
           startupProbe:
             httpGet:

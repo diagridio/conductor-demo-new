@@ -1,28 +1,29 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: loyalty-service
+  name: receipt-generation-service
   namespace: order-system
   labels:
-    app: loyalty-service
+    app: receipt-generation-service
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: loyalty-service
+      app: receipt-generation-service
   template:
     metadata:
       labels:
-        app: loyalty-service
+        app: receipt-generation-service
       annotations:
         dapr.io/enabled: "true"
-        dapr.io/app-id: "loyalty-service"
+        dapr.io/app-id: "receipt-generation-service"
         dapr.io/app-port: "80"
-        dapr.io/config: "loyalty-config"
+        dapr.io/config: "config"
+        dapr.io/log-level: "debug"
     spec:
       containers:
-        - name: loyalty-service
-          image: "us-central1-docker.pkg.dev/prj-common-d-shared-89549/reg-d-common-docker-public/order-system/loyalty-service:0.7.3"
+        - name: receipt-generation-service
+          image: "rochabr/receipt-generation-service:0.7.3"
           env:
           - name: APP_PORT
             value: "80"

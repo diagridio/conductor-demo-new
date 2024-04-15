@@ -1,6 +1,6 @@
-RELEASE_VERSION  = 0.6.1
+RELEASE_VERSION  = 0.7.3
 SERVICE_NAME = virtual-worker
-IMAGE_NAME = order-system/virtual-worker
+IMAGE_NAME = virtual-worker
 REGISTRY=rochabr
 APP_PORT=5500
 DAPR_HTTP_PORT=5580

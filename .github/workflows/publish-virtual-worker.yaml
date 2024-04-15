@@ -3,7 +3,7 @@ name: Build and Publish Virtual Worker
 on:
   push:
     branches:
-      - main
+      - python-service
     paths:
       - 'go/virtual-worker/**'
 
@@ -19,7 +19,7 @@ jobs:
       GCP_DOCKER_REPOSITORY: '${{ secrets.GCP_DOCKER_REPOSITORY }}'
       GCP_CONTAINER_REGISTRY_HOST: '${{ secrets.GCP_CONTAINER_REGISTRY_HOST }}'
       IMAGE_NAME: order-system/virtual-worker
-      TAG: 0.6.1
+      TAG: 0.7.3
 
     steps:
       - name: Checkout

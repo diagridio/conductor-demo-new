@@ -3,9 +3,9 @@ name: Build and Publish Receipt Generation Service
 on:
   push:
     branches:
-      - main
+      - python-service
     paths:
-      - 'go/receipt-generation-service/**'
+      - 'python/receipt-generation-service/**'
 
 jobs:
   build-and-publish:
@@ -19,7 +19,7 @@ jobs:
       GCP_DOCKER_REPOSITORY: '${{ secrets.GCP_DOCKER_REPOSITORY }}'
       GCP_CONTAINER_REGISTRY_HOST: '${{ secrets.GCP_CONTAINER_REGISTRY_HOST }}'
       IMAGE_NAME: order-system/receipt-generation-service
-      TAG: 0.6.1
+      TAG: 0.7.3
 
     steps:
       - name: Checkout
@@ -44,6 +44,6 @@ jobs:
           password: '${{ steps.auth.outputs.access_token }}'
 
       - name: Build and Push Docker Image (AMD, ARM)
-        working-directory: go/receipt-generation-service
+        working-directory: python/receipt-generation-service
         run: |
           docker buildx build --platform linux/amd64,linux/arm64 -t $GCP_CONTAINER_REGISTRY_HOST/$GCP_PROJECT_ID/$GCP_DOCKER_REPOSITORY/$IMAGE_NAME:$TAG . --push

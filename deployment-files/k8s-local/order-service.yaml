@@ -1,31 +1,39 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: loyalty-service
+  name: order-service
   namespace: order-system
   labels:
-    app: loyalty-service
+    app: order-service
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: loyalty-service
+      app: order-service
   template:
     metadata:
       labels:
-        app: loyalty-service
+        app: order-service
       annotations:
         dapr.io/enabled: "true"
-        dapr.io/app-id: "loyalty-service"
+        dapr.io/app-id: "order-service"
         dapr.io/app-port: "80"
-        dapr.io/config: "loyalty-config"
+        dapr.io/config: "config"
+        dapr.io/log-level: "debug"
+        dapr.io/enable-app-health-check: "true" ## Flag indicating whether health check is enabled for app
+        dapr.io/app-health-check-path: "/healthz" ## The healthcheck endpoint
+        dapr.io/app-health-probe-interval: "5" ## The interval between calls to app health endpoint
+        dapr.io/app-health-probe-timeout: "500" ## The timeout of the app health endpoint call
+        dapr.io/app-health-threshold: "2" ## Threshold for considering app unhealthy
     spec:
       containers:
-        - name: loyalty-service
-          image: "us-central1-docker.pkg.dev/prj-common-d-shared-89549/reg-d-common-docker-public/order-system/loyalty-service:0.7.3"
+        - name: order-service
+          image: "rochabr/order-service:0.7.3"
           env:
           - name: APP_PORT
             value: "80"
+          - name: PRODUCT_DEFINITION_FILENAME
+            value: "product-definitions/DrugStoreProducts-categorized.json"
           resources:
             requests:
               memory: "256Mi"

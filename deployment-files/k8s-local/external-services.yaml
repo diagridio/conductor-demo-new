@@ -1,0 +1,79 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: order-service
+  namespace: order-system
+  labels:
+    name: order-service
+spec:
+  type: LoadBalancer
+  ports:
+  - name: http
+    port: 8081
+    targetPort: 80
+  selector:
+    app: order-service 
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: make-line-service
+  namespace: order-system
+  labels:
+    name: make-line-service
+spec:
+  type: LoadBalancer
+  ports:
+  - name: http
+    port: 8082
+    targetPort: 80
+  selector:
+    app: make-line-service
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: receipt-generation-service
+  namespace: order-system
+  labels:
+    name: receipt-generation-service
+spec:
+  type: LoadBalancer
+  ports:
+  - name: http
+    port: 8083
+    targetPort: 80
+  selector:
+    app: receipt-generation-service  
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: loyalty-service
+  namespace: order-system
+  labels:
+    name: loyalty-service
+spec:
+  type: LoadBalancer
+  ports:
+  - name: http
+    port: 8084
+    targetPort: 80
+  selector:
+    app: loyalty-service
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: virtual-worker
+  namespace: order-system
+  labels:
+    name: virtual-worker
+spec:
+  type: LoadBalancer
+  ports:
+  - name: http
+    port: 8085
+    targetPort: 80
+  selector:
+    app: virtual-worker

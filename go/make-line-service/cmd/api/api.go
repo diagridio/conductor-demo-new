@@ -6,12 +6,31 @@ import (
 	"errors"
 	"log"
 	"net/http"
+	"os"
 	"sync"
 	"time"
 
 	"github.com/dapr/go-sdk/client"
 	"github.com/go-chi/chi/v5"
 )
+
+// Handles the update loyalty endpoint
+func (app *Config) HandleHealthz(w http.ResponseWriter, r *http.Request) {
+
+	//set app port
+	daprHttpPort := "5280"
+	if value, ok := os.LookupEnv("DAPR_HTTP_PORT"); ok {
+		daprHttpPort = value
+	}
+	_, err := http.Get("http://localhost:" + daprHttpPort + "/v1.0/healthz")
+
+	if err != nil {
+		app.writeError(w, err, http.StatusInternalServerError)
+		os.Exit(1)
+	}
+
+	app.writeJSON(w, http.StatusOK, "Healthy")
+}
 
 // create map for orders that are being completed
 var ongoingOrders = make(map[string]bool)

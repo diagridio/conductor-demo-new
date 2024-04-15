@@ -13,6 +13,7 @@ const (
 	PubSubName            = "oms.pubsub"
 	OrderRoute            = "orders"
 	LoyaltyStateStoreName = "oms.state.loyalty"
+	DaprHttpPort          = "3500"
 )
 
 type Config struct {

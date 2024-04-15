@@ -1,5 +1,5 @@
-RELEASE_VERSION  = 0.6.1
-IMAGE_NAME = order-system/order-processor-workflow
+RELEASE_VERSION  = 0.7.3
+IMAGE_NAME = order-processor-workflow
 SERVICE_NAME = order-processor-workflow
 REGISTRY=rochabr
 APP_PORT=5700

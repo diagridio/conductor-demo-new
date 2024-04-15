@@ -1,6 +1,6 @@
-RELEASE_VERSION  = 0.6.1
+RELEASE_VERSION  = 0.7.3
 SERVICE_NAME = receipt-generation-service
-IMAGE_NAME = order-system/receipt-generation
+IMAGE_NAME = receipt-generation-service
 REGISTRY=rochabr
 APP_PORT=5300
 DAPR_HTTP_PORT=5380
@@ -20,10 +20,10 @@ run: setup ## Runs uncompiled code in Dapr
 		--dapr-http-port ${DAPR_HTTP_PORT} \
 		--dapr-grpc-port ${DAPR_GRPC_PORT} \
 		--resources-path ../../components/local \
-		python3 ./api/main.py
+		python3 ./app/main.py
 
 .PHONY: build_image
-build_image: tidy ## Builds local release binary
+build_image:  ## Builds local release binary
 	docker buildx build --no-cache --platform=linux/amd64,linux/arm64 -t ${REGISTRY}/${IMAGE_NAME}:${RELEASE_VERSION} --push .
 
 

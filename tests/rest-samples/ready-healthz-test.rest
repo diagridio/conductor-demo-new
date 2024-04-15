@@ -1,0 +1,45 @@
+@receipt-service = 127.0.0.1:5300
+@make-line-service = 127.0.0.1:5200
+@loyalty-service = 127.0.0.1:5400
+@order-processor-workflow = 127.0.0.1:5700
+@virtual-worker = 127.0.0.1:5500
+@order-service = 127.0.0.1:5100
+
+
+### Check if Dapr is ready
+GET http://{{receipt-service}}/ready
+
+### Health check
+GET http://{{receipt-service}}/healthz
+
+### Check if Dapr is ready
+GET http://{{make-line-service}}/ready
+
+### Health check
+GET http://{{make-line-service}}/healthz
+
+### Check if Dapr is ready
+GET http://{{order-processor-workflow}}/ready
+
+### Health check
+GET http://{{order-processor-workflow}}/healthz
+
+### Check if Dapr is ready
+GET http://{{virtual-worker}}/ready
+
+### Health check
+GET http://{{virtual-worker}}/healthz
+
+### Check if Dapr is ready
+GET http://{{order-service}}/ready
+
+### Health check
+GET http://{{order-service}}/healthz
+
+### Check if Dapr is ready
+GET http://{{loyalty-service}}/ready
+
+### Health check
+GET http://{{loyalty-service}}/healthz
+
+

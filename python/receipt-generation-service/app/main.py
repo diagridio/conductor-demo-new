@@ -1,18 +1,23 @@
 from fastapi import FastAPI, status, HTTPException
 from fastapi.responses import JSONResponse
+from dapr.ext.fastapi import DaprApp
 
 import uvicorn
 
 import os
 import json
 import logging
-
+import requests
 
 import models
 
 from dapr.clients import DaprClient
 
+app_port = os.getenv('APP_PORT', '5300')
+
 app = FastAPI()
+dapr_app = DaprApp(app)
+
 
 logging.basicConfig(level = logging.INFO)
 BINDING_OPERATION = 'create' 
@@ -20,11 +25,19 @@ BINDING_NAME = 'oms.binding.receipt'
 
 @app.get("/healthz")
 def healthz():
-    return JSONResponse(status_code=status.HTTP_200_OK)
+    port = int(os.getenv('DAPR_HTTP_PORT'))
+    if port is None:
+        port = 5380
+    resp = requests.get(f'http://localhost:{port}/v1.0/healthz')
+
+    if resp.status_code != 200:
+        return JSONResponse({'status': 'Healthy'}, status_code=status.HTTP_200_OK)
+    
+    return JSONResponse({'status': 'Not found'}, status_code=status.HTTP_404_NOT_FOUND)
 
 @app.get("/ready")
 def ready():
-    return JSONResponse(status_code=status.HTTP_200_OK)
+    return JSONResponse({'status': 'Dapr is ready to go!'}, status_code=status.HTTP_200_OK)
 
 @app.post("/receipt")
 def handleReceipt(orderSummary: models.OrderSummary):
@@ -63,13 +76,10 @@ def saveReceipt(order: models.OrderSummary):
             return order.orderId
         except Exception as e:
             print(e, flush=True)
-            logging.info(f'Saved receipt for order: {order.orderId}')
+            logging.info(f'Error saving receipt for order: {order.orderId}')
 
             raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Error saving receipt")
 
 
 if __name__ == "__main__":
-    port = int(os.getenv('APP_PORT'))
-    if port is None:
-        port = 5300
-    uvicorn.run(app, port=port)
+    uvicorn.run(app, host="0.0.0.0", port=int(app_port))

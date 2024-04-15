@@ -22,7 +22,7 @@ spec:
     spec:
       containers:
         - name: order-service
-          image: "us-central1-docker.pkg.dev/prj-common-d-shared-89549/reg-d-common-docker-public/order-system/order-service:0.6.1"
+          image: "us-central1-docker.pkg.dev/prj-common-d-shared-89549/reg-d-common-docker-public/order-system/order-service:0.7.3"
           env:
           - name: APP_PORT
             value: "80"
@@ -43,4 +43,12 @@ spec:
               path: /healthz
               port: 80
             failureThreshold: 6
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /ready
+              port: 80
+            timeoutSeconds: 30
+            successThreshold: 1
+            failureThreshold: 12
             periodSeconds: 10

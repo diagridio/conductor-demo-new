@@ -1,28 +1,30 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: loyalty-service
+  name: make-line-service
   namespace: order-system
   labels:
-    app: loyalty-service
+    app: make-line-service
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: loyalty-service
+      app: make-line-service
   template:
     metadata:
       labels:
-        app: loyalty-service
+        app: make-line-service
       annotations:
         dapr.io/enabled: "true"
-        dapr.io/app-id: "loyalty-service"
+        dapr.io/app-id: "make-line-service"
         dapr.io/app-port: "80"
-        dapr.io/config: "loyalty-config"
+        dapr.io/config: "config"
+        dapr.io/log-level: "debug"
+        # dapr.io/http-max-request-size: "16"
     spec:
       containers:
-        - name: loyalty-service
-          image: "us-central1-docker.pkg.dev/prj-common-d-shared-89549/reg-d-common-docker-public/order-system/loyalty-service:0.7.3"
+        - name: make-line-service
+          image: "rochabr/make-line-service:0.7.3"
           env:
           - name: APP_PORT
             value: "80"

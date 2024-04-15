@@ -1,4 +1,4 @@
-RELEASE_VERSION  = 0.6.1
+RELEASE_VERSION  = 0.7.3
 SERVICE_NAME = receipt-generation-service
 IMAGE_NAME = order-system/receipt-generation
 REGISTRY=rochabr
