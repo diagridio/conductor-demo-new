@@ -28,7 +28,7 @@ spec:
     spec:
       containers:
         - name: virtual-worker
-          image: "rochabr/virtual-worker:0.7.3"
+          image: "rochabr/virtual-worker:0.7.4"
           imagePullPolicy: Always
           startupProbe:
             httpGet:

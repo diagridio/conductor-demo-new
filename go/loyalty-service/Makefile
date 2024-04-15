@@ -1,4 +1,4 @@
-RELEASE_VERSION  = 0.7.3
+RELEASE_VERSION  = 0.7.4
 SERVICE_NAME = loyalty-service
 IMAGE_NAME = loyalty-service
 REGISTRY=rochabr

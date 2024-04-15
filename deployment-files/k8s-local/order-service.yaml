@@ -28,7 +28,7 @@ spec:
     spec:
       containers:
         - name: order-service
-          image: "rochabr/order-service:0.7.3"
+          image: "rochabr/order-service:0.7.4"
           env:
           - name: APP_PORT
             value: "80"

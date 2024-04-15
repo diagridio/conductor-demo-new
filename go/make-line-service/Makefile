@@ -1,4 +1,4 @@
-RELEASE_VERSION  = 0.7.3
+RELEASE_VERSION  = 0.7.4
 SERVICE_NAME = make-line-service
 IMAGE_NAME = make-line-service
 REGISTRY=rochabr
