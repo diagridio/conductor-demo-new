@@ -67,7 +67,6 @@ jobs:
   
       - name: Deploy to GKE
         run: |
-          gcloud container clusters get-credentials $GKE_CLUSTER --zone $GKE_ZONE
           kubectl apply -k ./deployment-files/k8s
 
       # # Deploy to GKE
