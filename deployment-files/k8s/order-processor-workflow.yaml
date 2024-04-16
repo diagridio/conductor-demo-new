@@ -29,7 +29,7 @@ spec:
     spec:
       containers:
         - name: order-processor-workflow
-          image: "us-central1-docker.pkg.dev/prj-common-d-shared-89549/reg-d-common-docker-public/order-system/order-processor-workflow:0.6.1"
+          image: "us-central1-docker.pkg.dev/prj-common-d-shared-89549/reg-d-common-docker-public/order-system/order-processor-workflow:0.7.4"
           resources:
             requests:
               memory: "256Mi"
@@ -45,4 +45,12 @@ spec:
               path: /healthz
               port: 80
             failureThreshold: 6
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /ready
+              port: 80
+            timeoutSeconds: 30
+            successThreshold: 1
+            failureThreshold: 12
             periodSeconds: 10

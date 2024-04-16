@@ -1,6 +1,6 @@
-RELEASE_VERSION  = 0.6.1
+RELEASE_VERSION  = 0.7.4
 SERVICE_NAME = virtual-customer
-IMAGE_NAME = order-system/virtual-customer
+IMAGE_NAME = virtual-customer
 REGISTRY=rochabr
 DAPR_HTTP_PORT=5800
 

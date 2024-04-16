@@ -1,6 +1,6 @@
-RELEASE_VERSION  = 0.6.1
+RELEASE_VERSION  = 0.7.4
 SERVICE_NAME = order-service
-IMAGE_NAME = order-system/order-service
+IMAGE_NAME = order-service
 REGISTRY=rochabr
 APP_PORT=5100
 DAPR_HTTP_PORT=5180

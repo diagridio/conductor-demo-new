@@ -5,9 +5,28 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
+	"os"
 
 	"github.com/dapr/go-sdk/client"
 )
+
+// Handles the update loyalty endpoint
+func (app *Config) HandleHealthz(w http.ResponseWriter, r *http.Request) {
+
+	//set app port
+	daprHttpPort := "5480"
+	if value, ok := os.LookupEnv("DAPR_HTTP_PORT"); ok {
+		daprHttpPort = value
+	}
+	_, err := http.Get("http://localhost:" + daprHttpPort + "/v1.0/healthz")
+
+	if err != nil {
+		app.writeError(w, err, http.StatusInternalServerError)
+		os.Exit(1)
+	}
+
+	app.writeJSON(w, http.StatusOK, "Healthy!")
+}
 
 // Handles the update loyalty endpoint
 func (app *Config) HandleUpdateLoyalty(w http.ResponseWriter, r *http.Request) {
@@ -69,7 +88,7 @@ func (app *Config) updateLoyaltyPoints(orderSummary OrderSummary) error {
 
 	//if state store doesn't exist, create a new loyalty summary
 	if stateItem.Value == nil {
-		log.Printf("No loyalty points found for customer %v", orderSummary.LoyaltyID)
+		log.Printf("No loyalty points found for customer  %v", orderSummary.LoyaltyID)
 		loyaltySummary = LoyaltySummary{
 			LoyaltyId:    orderSummary.LoyaltyID,
 			PointsTotal:  loyaltyPointsEarned,
@@ -82,7 +101,7 @@ func (app *Config) updateLoyaltyPoints(orderSummary OrderSummary) error {
 		//if state exists populate loyalty summary with state store information
 		err = json.Unmarshal(stateItem.Value, &loyaltySummary)
 		if err != nil {
-			log.Printf("Error unmarshalling loyalty summary. Error: %v", err)
+			log.Printf("Error unmarshalling loyalty summary... Error: %v", err)
 			return err
 		}
 
@@ -100,7 +119,7 @@ func (app *Config) updateLoyaltyPoints(orderSummary OrderSummary) error {
 	//save loyalty summary to state store
 	err = app.daprClient.SaveState(context.Background(), LoyaltyStateStoreName, orderSummary.LoyaltyID, data, nil)
 	if err != nil {
-		log.Printf("Error saving loyalty points to state store. Error: %v", err)
+		log.Printf("Error saving loyalty points to state store! Error: %v", err)
 		return err
 	}
 

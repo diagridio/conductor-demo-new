@@ -13,6 +13,7 @@ const (
 	PubSubName            = "oms.pubsub"
 	OrderRoute            = "orders"
 	LoyaltyStateStoreName = "oms.state.loyalty"
+	DaprHttpPort          = "3500"
 )
 
 type Config struct {
@@ -30,7 +31,7 @@ func main() {
 	// Initialize the Dapr client
 	client, err := dapr.NewClient()
 	if err != nil {
-		log.Fatalf("error creating dapr client: %v", err)
+		log.Fatalf("Error creating dapr client: %v", err)
 	}
 
 	defer client.Close()

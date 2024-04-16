@@ -20,10 +20,15 @@ spec:
         dapr.io/app-port: "80"
         dapr.io/config: "config"
         dapr.io/log-level: "debug"
+        dapr.io/enable-app-health-check: "true" ## Flag indicating whether health check is enabled for app
+        dapr.io/app-health-check-path: "/healthz" ## The healthcheck endpoint
+        dapr.io/app-health-probe-interval: "5" ## The interval between calls to app health endpoint
+        dapr.io/app-health-probe-timeout: "500" ## The timeout of the app health endpoint call
+        dapr.io/app-health-threshold: "2" ## Threshold for considering app unhealthy
     spec:
       containers:
         - name: receipt-generation-service
-          image: "us-central1-docker.pkg.dev/prj-common-d-shared-89549/reg-d-common-docker-public/order-system/receipt-generation-service:0.6.1"
+          image: "us-central1-docker.pkg.dev/prj-common-d-shared-89549/reg-d-common-docker-public/order-system/receipt-generation-service:0.7.4"
           env:
           - name: APP_PORT
             value: "80"
@@ -42,4 +47,12 @@ spec:
               path: /healthz
               port: 80
             failureThreshold: 6
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /ready
+              port: 80
+            timeoutSeconds: 30
+            successThreshold: 1
+            failureThreshold: 12
             periodSeconds: 10

@@ -5,6 +5,7 @@ import (
 	"errors"
 	"log"
 	"net/http"
+	"os"
 	"time"
 
 	"github.com/google/uuid"
@@ -14,6 +15,24 @@ const (
 	OrderTopic = "orders"
 	PubSubName = "oms.pubsub"
 )
+
+// Handles the update loyalty endpoint
+func (app *Config) HandleHealthz(w http.ResponseWriter, r *http.Request) {
+
+	//set app port
+	daprHttpPort := "5180"
+	if value, ok := os.LookupEnv("DAPR_HTTP_PORT"); ok {
+		daprHttpPort = value
+	}
+	_, err := http.Get("http://localhost:" + daprHttpPort + "/v1.0/healthz")
+
+	if err != nil {
+		app.writeError(w, err, http.StatusInternalServerError)
+		os.Exit(1)
+	}
+
+	app.writeJSON(w, http.StatusOK, "Healthy")
+}
 
 func (app *Config) HandleCreateOrderSummary(w http.ResponseWriter, r *http.Request) {
 

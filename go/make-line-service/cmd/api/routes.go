@@ -21,7 +21,9 @@ func (app *Config) routes() http.Handler {
 		MaxAge:           300,
 	}))
 
-	mux.Use(middleware.Heartbeat("/healthz")) // add a heartbeat endpoint
+	mux.Use(middleware.Heartbeat("/ready")) // add a heartbeat endpoint
+
+	mux.Get("/healthz", app.HandleHealthz) // add a heartbeat endpoint
 
 	mux.Post("/makeline", app.HandleAddOrderToMakeLine) // handle subscription to add order to make line
 
