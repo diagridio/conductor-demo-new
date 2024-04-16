@@ -119,7 +119,7 @@ func (app *Config) updateLoyaltyPoints(orderSummary OrderSummary) error {
 	//save loyalty summary to state store
 	err = app.daprClient.SaveState(context.Background(), LoyaltyStateStoreName, orderSummary.LoyaltyID, data, nil)
 	if err != nil {
-		log.Printf("Error saving loyalty points to state store. Error: %v", err)
+		log.Printf("Error saving loyalty points to state store! Error: %v", err)
 		return err
 	}
 
