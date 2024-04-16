@@ -34,7 +34,7 @@ func (app *Config) HandleUpdateLoyalty(w http.ResponseWriter, r *http.Request) {
 	var orderSummary OrderSummary
 	err := app.readJSON(w, r, &orderSummary)
 	if err != nil {
-		log.Printf("Error unmarshalling order summary. Error: %v", err)
+		log.Printf("Error unmarshalling order summary! Error: %v", err)
 		app.writeError(w, err, http.StatusBadRequest)
 		return
 	}
