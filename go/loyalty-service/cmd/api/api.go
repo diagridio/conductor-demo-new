@@ -101,7 +101,7 @@ func (app *Config) updateLoyaltyPoints(orderSummary OrderSummary) error {
 		//if state exists populate loyalty summary with state store information
 		err = json.Unmarshal(stateItem.Value, &loyaltySummary)
 		if err != nil {
-			log.Printf("Error unmarshalling loyalty summary! Error: %v", err)
+			log.Printf("Error unmarshalling loyalty summary. Error: %v", err)
 			return err
 		}
 
