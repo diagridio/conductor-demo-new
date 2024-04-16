@@ -65,6 +65,10 @@ jobs:
           kustomize edit set image order-system/loyalty-service=$GCP_CONTAINER_REGISTRY_HOST/$GCP_PROJECT_ID/$GCP_DOCKER_REPOSITORY/$IMAGE_NAME:$GITHUB_SHA
         working-directory: ./deployment-files/k8s
   
+      - name: Get GKE credentials
+        run: |
+          gcloud container clusters get-credentials $GKE_CLUSTER --zone $GKE_ZONE --project $GCP_PROJECT_ID
+
       - name: Deploy to GKE
         run: |
           kubectl apply -k ./deployment-files/k8s

@@ -88,7 +88,7 @@ func (app *Config) updateLoyaltyPoints(orderSummary OrderSummary) error {
 
 	//if state store doesn't exist, create a new loyalty summary
 	if stateItem.Value == nil {
-		log.Printf("No loyalty points found for customer %v", orderSummary.LoyaltyID)
+		log.Printf("No loyalty points found for customer  %v", orderSummary.LoyaltyID)
 		loyaltySummary = LoyaltySummary{
 			LoyaltyId:    orderSummary.LoyaltyID,
 			PointsTotal:  loyaltyPointsEarned,
