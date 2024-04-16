@@ -60,8 +60,18 @@ jobs:
           curl -sfLo kustomize https://github.com/kubernetes-sigs/kustomize/releases/download/v3.1.0/kustomize_3.1.0_linux_amd64
           chmod u+x ./kustomize
 
-      # Deploy to GKE
-      - name: Deploy to GKE
-        run: |-
+      - name: Replace the target image name in the kustomization.yaml
+        run: |
           kustomize edit set image order-system/loyalty-service=$GCP_CONTAINER_REGISTRY_HOST/$GCP_PROJECT_ID/$GCP_DOCKER_REPOSITORY/$IMAGE_NAME:$TAG
-          kubectl apply -k deployment-files/k8s
+        working-directory: ./deployment-files/k8s
+  
+      - name: Deploy to GKE
+        run: |
+          gcloud container clusters get-credentials $GKE_CLUSTER --zone $GKE_ZONE
+          kubectl apply -k ./deployment-files/k8s
+
+      # # Deploy to GKE
+      # - name: Deploy to GKE
+      #   run: |-
+      #     kustomize edit set image order-system/loyalty-service=$GCP_CONTAINER_REGISTRY_HOST/$GCP_PROJECT_ID/$GCP_DOCKER_REPOSITORY/$IMAGE_NAME:$TAG
+      #     kubectl apply -k deployment-files/k8s
