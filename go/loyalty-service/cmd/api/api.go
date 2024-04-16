@@ -80,7 +80,7 @@ func (app *Config) updateLoyaltyPoints(orderSummary OrderSummary) error {
 	// Get the current loyalty information for the customer from the loyalty state store
 	stateItem, err := app.daprClient.GetState(context.Background(), LoyaltyStateStoreName, orderSummary.LoyaltyID, nil)
 	if err != nil {
-		log.Printf("Error getting loyalty points from state store. Error: %v", err)
+		log.Printf("Error getting loyalty points from state store! Error: %v", err)
 		return err
 	}
 
