@@ -68,12 +68,12 @@ jobs:
           kustomize edit set image order-system/loyalty-service=$GCP_CONTAINER_REGISTRY_HOST/$GCP_PROJECT_ID/$GCP_DOCKER_REPOSITORY/$IMAGE_NAME:$GITHUB_SHA
         working-directory: ./deployment-files/k8s
   
-      - id: 'auth_gke'
-        name: 'Authenticate to Google Cloud'
-        uses: 'google-github-actions/auth@v0'
-        with:
-          token_format: 'access_token'
-          workload_identity_provider: 'projects/123456789/locations/global/workloadIdentityPools/my-pool/providers/my-provider'
+      # - id: 'auth_gke'
+      #   name: 'Authenticate to Google Cloud'
+      #   uses: 'google-github-actions/auth@v2'
+      #   with:
+      #     token_format: 'access_token'
+      #     workload_identity_provider: 'projects/123456789/locations/global/workloadIdentityPools/my-pool/providers/my-provider'
 
       - name: Get GKE credentials
         run: |
