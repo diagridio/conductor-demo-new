@@ -1,4 +1,4 @@
-name: Build and Publish Loyalty Service
+name: Build and Push Loyalty Service Image
 
 on:
   push:
@@ -8,23 +8,69 @@ on:
       - 'go/loyalty-service/**'
 
 jobs:
-  build-and-publish:
+  # build-and-publish:
+  #   runs-on: ubuntu-latest
+  #   permissions:
+  #     contents: 'read'
+  #     id-token: 'write'    
+  #   environment: development
+  #   env:
+  #     GCP_PROJECT_ID: '${{ secrets.GCP_PROJECT_ID }}'
+  #     GCP_DOCKER_REPOSITORY: '${{ secrets.GCP_DOCKER_REPOSITORY }}'
+  #     GCP_CONTAINER_REGISTRY_HOST: '${{ secrets.GCP_CONTAINER_REGISTRY_HOST }}'
+  #     IMAGE_NAME: order-system/loyalty-service
+  #     TAG: 0.7.4
+
+  #     GKE_CLUSTER: gke_prj-dataplane-n-demo-30534_us-west1-a_gke-n-dataplane-demo-us-west1-a2
+      
+  #     GKE_ZONE: '${{ vars.GCP_DP_GKE_ZONE }}'
+
+      
+  #     DEPLOYMENT_NAME: loyalty-service.yaml
+
+
+  #   steps:
+  #     - name: Checkout
+  #       uses: actions/checkout@v4
+
+  #     - id: 'auth'
+  #       name: Configure Google Credentials
+  #       uses: google-github-actions/auth@v2
+  #       with:
+  #         token_format: 'access_token'
+  #         workload_identity_provider: ${{ secrets.WORKLOAD_IDENTITY_PROVIDER}}
+  #         service_account: ${{ secrets.SERVICE_ACCOUNT}}
+
+  #     - name: Set up Docker Buildx
+  #       uses: docker/setup-buildx-action@v1
+
+  #     - name: Docker Auth
+  #       uses: 'docker/login-action@v3'
+  #       with:
+  #         registry: '${{ env.GCP_CONTAINER_REGISTRY_HOST }}'
+  #         username: 'oauth2accesstoken'
+  #         password: '${{ steps.auth.outputs.access_token }}'
+          
+  #     - name: Build and Push Docker Image (AMD, ARM)
+  #       working-directory: go/loyalty-service
+  #       run: |
+  #         docker buildx build --platform linux/amd64,linux/arm64 -t $GCP_CONTAINER_REGISTRY_HOST/$GCP_PROJECT_ID/$GCP_DOCKER_REPOSITORY/$IMAGE_NAME:$GITHUB_SHA . --push
+    
+    
+
+  deploy:
     runs-on: ubuntu-latest
     permissions:
       contents: 'read'
       id-token: 'write'    
-    environment: development
+    environment: demo
     env:
-      GCP_PROJECT_ID: '${{ secrets.GCP_PROJECT_ID }}'
-      GCP_DOCKER_REPOSITORY: '${{ secrets.GCP_DOCKER_REPOSITORY }}'
-      GCP_CONTAINER_REGISTRY_HOST: '${{ secrets.GCP_CONTAINER_REGISTRY_HOST }}'
+      GCP_PROJECT_ID: '${{ vars.GCP_DP_PROJECT_ID }}'
       IMAGE_NAME: order-system/loyalty-service
-      TAG: 0.7.4
 
       GKE_CLUSTER: gke_prj-dataplane-n-demo-30534_us-west1-a_gke-n-dataplane-demo-us-west1-a2
       
       GKE_ZONE: '${{ vars.GCP_DP_GKE_ZONE }}'
-
       
       DEPLOYMENT_NAME: loyalty-service.yaml
 
@@ -38,42 +84,20 @@ jobs:
         uses: google-github-actions/auth@v2
         with:
           token_format: 'access_token'
-          workload_identity_provider: ${{ secrets.WORKLOAD_IDENTITY_PROVIDER}}
-          service_account: ${{ secrets.SERVICE_ACCOUNT}}
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v1
-
-      - name: Docker Auth
-        uses: 'docker/login-action@v3'
-        with:
-          registry: '${{ env.GCP_CONTAINER_REGISTRY_HOST }}'
-          username: 'oauth2accesstoken'
-          password: '${{ steps.auth.outputs.access_token }}'
-          
-      - name: Build and Push Docker Image (AMD, ARM)
-        working-directory: go/loyalty-service
-        run: |
-          docker buildx build --platform linux/amd64,linux/arm64 -t $GCP_CONTAINER_REGISTRY_HOST/$GCP_PROJECT_ID/$GCP_DOCKER_REPOSITORY/$IMAGE_NAME:$GITHUB_SHA . --push
+          workload_identity_provider: ${{ vars.WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ vars.SERVICE_ACCOUNT}}
     
       # Set up kustomize
-      - name: Set up Kustomize
-        working-directory: deployment-files/k8s
-        run: |-
-          curl -sfLo kustomize https://github.com/kubernetes-sigs/kustomize/releases/download/v3.1.0/kustomize_3.1.0_linux_amd64
-          chmod u+x ./kustomize
+      # - name: Set up Kustomize
+      #   working-directory: deployment-files/k8s
+      #   run: |-
+      #     curl -sfLo kustomize https://github.com/kubernetes-sigs/kustomize/releases/download/v3.1.0/kustomize_3.1.0_linux_amd64
+      #     chmod u+x ./kustomize
 
-      - name: Replace the target image name in the kustomization.yaml
-        run: |
-          kustomize edit set image order-system/loyalty-service=$GCP_CONTAINER_REGISTRY_HOST/$GCP_PROJECT_ID/$GCP_DOCKER_REPOSITORY/$IMAGE_NAME:$GITHUB_SHA
-        working-directory: ./deployment-files/k8s
-  
-      # - id: 'auth_gke'
-      #   name: 'Authenticate to Google Cloud'
-      #   uses: 'google-github-actions/auth@v2'
-      #   with:
-      #     token_format: 'access_token'
-      #     workload_identity_provider: 'projects/123456789/locations/global/workloadIdentityPools/my-pool/providers/my-provider'
+      # - name: Replace the target image name in the kustomization.yaml
+      #   run: |
+      #     kustomize edit set image order-system/loyalty-service=$GCP_CONTAINER_REGISTRY_HOST/$GCP_PROJECT_ID/$GCP_DOCKER_REPOSITORY/$IMAGE_NAME:$GITHUB_SHA
+      #   working-directory: ./deployment-files/k8s
 
       - name: Get GKE credentials
         run: |
@@ -88,3 +112,4 @@ jobs:
       #   run: |-
       #     kustomize edit set image order-system/loyalty-service=$GCP_CONTAINER_REGISTRY_HOST/$GCP_PROJECT_ID/$GCP_DOCKER_REPOSITORY/$IMAGE_NAME:$TAG
       #     kubectl apply -k deployment-files/k8s
+  
