@@ -86,6 +86,11 @@ jobs:
           token_format: 'access_token'
           workload_identity_provider: ${{ vars.WORKLOAD_IDENTITY_PROVIDER }}
           service_account: ${{ vars.SERVICE_ACCOUNT}}
+      
+      - name: 'Set up Cloud SDK'
+        uses: 'google-github-actions/setup-gcloud@v1'
+        with:
+          install_components: 'gke-gcloud-auth-plugin'
     
       # Set up kustomize
       # - name: Set up Kustomize
