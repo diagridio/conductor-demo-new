@@ -54,7 +54,7 @@ def saveReceipt(order: models.OrderSummary):
 
         # Create a typed message with content type and body
         binding_key = {
-            'key': order.orderId
+            'receiptName': order.orderId
         }
         binding_data = {
             'orderId': order.orderId,
@@ -65,12 +65,12 @@ def saveReceipt(order: models.OrderSummary):
         }
 
         # Induce error when using Redis. No key "key" in the request
-        #req_data = {'receiptName': order.orderId}
+        # req_data = {'receiptName': order.orderId}
 
         # Invoke binding
         try:
             # Insert order using Dapr output binding via HTTP Post
-            resp = d.invoke_binding(BINDING_NAME, BINDING_OPERATION, json.dumps(binding_data), binding_key)
+            resp = d.invoke_binding(BINDING_NAME, BINDING_OPERATION, json.dumps(binding_data), binding_key )
             logging.info(f'Saved receipt for order: {order.orderId}')
             
             return order.orderId
