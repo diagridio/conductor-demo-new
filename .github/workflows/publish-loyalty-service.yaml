@@ -3,7 +3,7 @@ name: Build and Publish Loyalty Service
 on:
   push:
     branches:
-      - python-service
+      - action-workflow
     paths:
       - 'go/loyalty-service/**'
 
@@ -22,7 +22,10 @@ jobs:
       TAG: 0.7.4
 
       GKE_CLUSTER: gke_prj-dataplane-n-demo-30534_us-west1-a_gke-n-dataplane-demo-us-west1-a2
-      GKE_ZONE: us-west1-a
+      
+      GKE_ZONE: '${{ vars.GCP_DP_GKE_ZONE }}'
+
+      
       DEPLOYMENT_NAME: loyalty-service.yaml
 
 
@@ -65,6 +68,13 @@ jobs:
           kustomize edit set image order-system/loyalty-service=$GCP_CONTAINER_REGISTRY_HOST/$GCP_PROJECT_ID/$GCP_DOCKER_REPOSITORY/$IMAGE_NAME:$GITHUB_SHA
         working-directory: ./deployment-files/k8s
   
+      - id: 'auth_gke'
+        name: 'Authenticate to Google Cloud'
+        uses: 'google-github-actions/auth@v0'
+        with:
+          token_format: 'access_token'
+          workload_identity_provider: 'projects/123456789/locations/global/workloadIdentityPools/my-pool/providers/my-provider'
+
       - name: Get GKE credentials
         run: |
           gcloud container clusters get-credentials $GKE_CLUSTER --zone $GKE_ZONE --project $GCP_PROJECT_ID

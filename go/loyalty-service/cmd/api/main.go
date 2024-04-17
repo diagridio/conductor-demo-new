@@ -22,6 +22,8 @@ type Config struct {
 
 func main() {
 
+	log.Println("Starting the loyalty service")
+
 	//set app port
 	appPort := "5400"
 	if value, ok := os.LookupEnv("APP_PORT"); ok {
