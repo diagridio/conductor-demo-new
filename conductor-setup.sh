@@ -51,7 +51,7 @@ kubectl apply -f ./components/k8s/oms.config.yaml
 kubectl apply -f ./components/k8s
 
 # Deploy services
-kubectl apply -f ./deployment-files/k8s-local
+kubectl apply -f ./deployment-files/k8s-dev
 
 # Every push to main branch will trigger a new deployment to the cluster
 

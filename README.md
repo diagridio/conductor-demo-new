@@ -28,7 +28,7 @@ Run the commands in the [./conductor-setup](./conductor-setup.sh) script one by 
 
 #### Manual deployments to k8s during development
 
-For manual deployments, use the deployment files in `deployment-files/k8s-local`. The folder `deployment-files/k8s` is used exclusively by deployments triggered by pushes to the main branch.
+For manual deployments, use the deployment files in `deployment-files/k8s-dev`. The folder `deployment-files/k8s` is used exclusively by deployments triggered by pushes to the main branch.
 
 #### GitHub Actions
 
