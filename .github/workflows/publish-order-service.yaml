@@ -1,9 +1,9 @@
-name: Build and Publish Order Service
+name: Build and Push Order Service Image
 
 on:
   push:
     branches:
-      - main
+      - action-workflow
     paths:
       - 'go/order-service/**'
 
@@ -19,7 +19,8 @@ jobs:
       GCP_DOCKER_REPOSITORY: '${{ secrets.GCP_DOCKER_REPOSITORY }}'
       GCP_CONTAINER_REGISTRY_HOST: '${{ secrets.GCP_CONTAINER_REGISTRY_HOST }}'
       IMAGE_NAME: order-system/order-service
-      TAG: 0.7.4
+
+      GKE_CLUSTER: gke_prj-dataplane-n-demo-30534_us-west1-a_gke-n-dataplane-demo-us-west1-a2
 
     steps:
       - name: Checkout
@@ -42,8 +43,59 @@ jobs:
           registry: '${{ env.GCP_CONTAINER_REGISTRY_HOST }}'
           username: 'oauth2accesstoken'
           password: '${{ steps.auth.outputs.access_token }}'
-
+          
       - name: Build and Push Docker Image (AMD, ARM)
         working-directory: go/order-service
         run: |
-         docker buildx build --platform linux/amd64,linux/arm64 -t $GCP_CONTAINER_REGISTRY_HOST/$GCP_PROJECT_ID/$GCP_DOCKER_REPOSITORY/$IMAGE_NAME:$TAG . --push
+          docker buildx build --platform linux/amd64,linux/arm64 -t $GCP_CONTAINER_REGISTRY_HOST/$GCP_PROJECT_ID/$GCP_DOCKER_REPOSITORY/$IMAGE_NAME:$GITHUB_SHA . --push
+    
+  deploy-to-gke:
+    needs: build-and-publish
+    runs-on: ubuntu-latest
+    permissions:
+      contents: 'read'
+      id-token: 'write'    
+    environment: demo
+    env:
+      GCP_PROJECT_ID: '${{ vars.GCP_DP_PROJECT_ID }}'
+      IMAGE_NAME: order-system/order-service
+      GKE_CLUSTER: '${{ vars.GCP_DP_GKE_CLUSTER_NAME_2 }}'
+      GKE_ZONE: '${{ vars.GCP_DP_GKE_ZONE }}'
+  
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - id: 'auth'
+        name: Configure Google Credentials
+        uses: google-github-actions/auth@v2
+        with:
+          token_format: 'access_token'
+          workload_identity_provider: ${{ vars.WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ vars.SERVICE_ACCOUNT}}
+      
+      - name: 'Set up Cloud SDK'
+        uses: 'google-github-actions/setup-gcloud@v1'
+        with:
+          install_components: 'gke-gcloud-auth-plugin'
+    
+      # Set up kustomize
+      - name: Set up Kustomize
+        working-directory: ./deployment-files/
+        run: |-
+          curl -sfLo kustomize https://github.com/kubernetes-sigs/kustomize/releases/download/v3.1.0/kustomize_3.1.0_linux_amd64
+          chmod u+x ./kustomize
+
+      - name: Replace the target image name in the kustomization.yaml
+        run: |
+          kustomize edit add resource ./k8s/order-service.yaml && kustomize edit set image $IMAGE_NAME:tag=us-central1-docker.pkg.dev/prj-common-d-shared-89549/reg-d-common-docker-public/$IMAGE_NAME:$GITHUB_SHA
+        working-directory: ./deployment-files/
+
+      - name: Get GKE credentials
+        run: |
+          gcloud container clusters get-credentials $GKE_CLUSTER --zone $GKE_ZONE --project $GCP_PROJECT_ID
+
+      - name: Deploy to GKE
+        run: |
+          kubectl apply -k ./deployment-files/
+  

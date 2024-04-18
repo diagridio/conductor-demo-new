@@ -14,6 +14,8 @@ type Config struct {
 }
 
 func main() {
+	log.Println("Starting the application...")
+
 	//set app port
 	appPort := "5100"
 	if value, ok := os.LookupEnv("APP_PORT"); ok {

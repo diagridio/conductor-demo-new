@@ -82,4 +82,5 @@ def saveReceipt(order: models.OrderSummary):
 
 
 if __name__ == "__main__":
+    logging.info(f'Starting server on port {app_port}')
     uvicorn.run(app, host="0.0.0.0", port=int(app_port))
