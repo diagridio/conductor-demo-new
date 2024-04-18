@@ -5,4 +5,5 @@ metadata:
 
 resources:
 - ./k8s/loyalty-service.yaml
+- ./k8s/receipt-generation-service.yaml
 namespace: order-system

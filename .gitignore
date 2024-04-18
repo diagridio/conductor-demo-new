@@ -32,6 +32,9 @@ go.work
 # !.vscode/extensions.json
 # !.vscode/*.code-snippets
 
+# # kustomize
+# /deployment-files/kustomize
+
 # Local History for Visual Studio Code
 .history/
 

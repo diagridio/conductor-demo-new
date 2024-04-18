@@ -21,6 +21,8 @@ type Config struct {
 
 func main() {
 
+	log.Println("Starting the receipt generation service")
+
 	//set app port
 	appPort := "5300"
 	if value, ok := os.LookupEnv("APP_PORT"); ok {
