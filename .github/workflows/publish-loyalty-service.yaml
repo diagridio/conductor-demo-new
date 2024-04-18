@@ -95,7 +95,7 @@ jobs:
 
       - name: Replace the target image name in the kustomization.yaml
         run: |
-          kustomize edit set image image-registry/image-name:tag==us-central1-docker.pkg.dev/prj-common-d-shared-89549/reg-d-common-docker-public/order-system/loyalty-service:$GITHUB_SHA
+          kustomize edit set image image-registry/image-name:tag=us-central1-docker.pkg.dev/prj-common-d-shared-89549/reg-d-common-docker-public/order-system/loyalty-service:$GITHUB_SHA
         working-directory: ./deployment-files/
 
       - name: Get GKE credentials
