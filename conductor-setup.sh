@@ -50,23 +50,21 @@ kubectl apply -f ./components/k8s/oms.config.yaml
 # Deploy Dapr components
 kubectl apply -f ./components/k8s
 
-#Deploy services
-kubectl apply -f ./deployment-files/k8s
+# Deploy services
+kubectl apply -f ./deployment-files/k8s-local
 
+# Every push to main branch will trigger a new deployment to the cluster
 
 #To connect to your database from outside the cluster execute the following commands:
 
   #  kubectl port-forward --namespace redis svc/redis-master 6379:6379 &
   #  REDISCLI_AUTH="$REDIS_PASSWORD" redis-cli -h 127.0.0.1 -p 6379
 
-gcloud compute firewall-rules list --filter="name~gke-${gke_prj-dataplane-n-demo-30534_us-west1-a_gke-n-dataplane-demo-us-west1-a2}-[0-9a-z]*-master"
-
 # The containers are currently built for both ARM and AMD64 architectures. Every service folder has a Makefile that can be used to build the container images. 
 # The build and push targets can be run with the following command: 
   #   make build_image
 # To test the services locally, you can run the following command: 
   #   make run
-
 
 # Flushall keys in redis
 k exec -it redis-master-0 -n redis -- /bin/bash
