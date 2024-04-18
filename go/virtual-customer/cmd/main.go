@@ -41,7 +41,7 @@ type Config struct{}
 var client dapr.Client
 
 func main() {
-	log.Println("Starting the application...")
+	log.Println("Starting the application!")
 
 	ctx := context.Background()
 	populateConstants()
