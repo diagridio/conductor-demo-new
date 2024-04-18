@@ -26,6 +26,14 @@ A sample order management system composed of 8 Dapr-enabled microservices to sho
 
 Run the commands in the [./conductor-setup](./conductor-setup.sh) script one by one for best results. All Dapr components are deployed on Kubernetes today.
 
+#### Manual deployments to k8s during development
+
+For manual deployments, use the deployment files in `deployment-files/k8s-local`. The folder `deployment-files/k8s` is used exclusively by deployments triggered by pushes to the main branch.
+
+#### GitHub Actions
+
+Every push to the main branch will trigger a process that builds and publishes a new image tagged with the commit SHA. The image is deployed to GKE after that. [Kustomize](https://kustomize.io/) is used to create the deployments dynamically.
+
 #### Important
 
 Since we are inducing a compinent security advisory, update the content of _oms.pubsub.yaml_ with the new value for $KAFKA_PASSWORD. Redeploy the component.
