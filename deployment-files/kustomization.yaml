@@ -4,5 +4,5 @@ metadata:
   name: arbitrary
 
 resources:
-- ./k8s/
+- ./k8s/loyalty-service.yaml
 namespace: order-system
