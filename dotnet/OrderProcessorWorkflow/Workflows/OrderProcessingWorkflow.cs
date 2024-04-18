@@ -22,7 +22,7 @@ namespace OrderProcessorWorkflow.Workflows
              // Notify the user that an order has come through
             await context.CallActivityAsync(
                 nameof(NotifyActivity),
-                new Notification($"Received order {orderId} for {order.FirstName} {order.LastName} at ${order.StoreId}"));
+                new Notification($"Received order {orderId} for {order.FirstName} {order.LastName} at ${order.StoreId}!!!"));
 
             // Update loyalty points for the customer
             OrderResult result = await context.CallActivityAsync<OrderResult>(
