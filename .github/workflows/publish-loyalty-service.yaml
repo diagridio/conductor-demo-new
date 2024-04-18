@@ -3,7 +3,7 @@ name: Build and Push Loyalty Service Image
 on:
   push:
     branches:
-      - action-workflow
+      - main
     paths:
       - 'go/loyalty-service/**'
 
