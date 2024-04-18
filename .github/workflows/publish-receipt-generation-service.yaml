@@ -100,5 +100,5 @@ jobs:
 
       - name: Deploy to GKE
         run: |
-          kubectl apply -k ./deployment-files/receipt-generation-service.yaml
+          kubectl apply -k ./deployment-files/k8s/receipt-generation-service.yaml
   
