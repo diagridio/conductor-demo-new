@@ -91,7 +91,7 @@ jobs:
 
       - name: Replace the target image name in the kustomization.yaml
         run: |
-          kustomize edit set image $IMAGE_NAME:tag=us-central1-docker.pkg.dev/prj-common-d-shared-89549/reg-d-common-docker-public/$IMAGE_NAME:$GITHUB_SHA
+          kustomize edit add resource ./k8s/loyalty-service.yaml && kustomize edit set image $IMAGE_NAME:tag=us-central1-docker.pkg.dev/prj-common-d-shared-89549/reg-d-common-docker-public/$IMAGE_NAME:$GITHUB_SHA
         working-directory: ./deployment-files/
 
       - name: Get GKE credentials
@@ -100,7 +100,7 @@ jobs:
 
       - name: Deploy to GKE
         run: |
-          kubectl apply -k ./deployment-files/k8s/loyalty-service.yaml
+          kubectl apply -k ./deployment-files/
 
       # # Deploy to GKE
       # - name: Deploy to GKE
