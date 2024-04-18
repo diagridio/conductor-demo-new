@@ -100,7 +100,7 @@ jobs:
 
       - name: Deploy to GKE
         run: |
-          kubectl apply -k ./deployment-files/
+          kubectl apply -k ./deployment-files/loyalty-service.yaml
 
       # # Deploy to GKE
       # - name: Deploy to GKE
