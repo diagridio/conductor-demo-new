@@ -5,7 +5,7 @@ on:
     branches:
       - action-workflow
     paths:
-      - 'go/receipt-generation-service/**'
+      - 'python/receipt-generation-service/**'
 
 jobs:
   build-and-publish:
@@ -46,10 +46,9 @@ jobs:
           password: '${{ steps.auth.outputs.access_token }}'
           
       - name: Build and Push Docker Image (AMD, ARM)
-        working-directory: go/receipt-generation-service
+        working-directory: python/receipt-generation-service
         run: |
           docker buildx build --platform linux/amd64,linux/arm64 -t $GCP_CONTAINER_REGISTRY_HOST/$GCP_PROJECT_ID/$GCP_DOCKER_REPOSITORY/$IMAGE_NAME:$GITHUB_SHA . --push
-    
 
   deploy-to-gke:
     needs: build-and-publish
@@ -64,7 +63,6 @@ jobs:
       GKE_CLUSTER: '${{ vars.GCP_DP_GKE_CLUSTER_NAME_2 }}'
       GKE_ZONE: '${{ vars.GCP_DP_GKE_ZONE }}'
   
-
     steps:
       - name: Checkout
         uses: actions/checkout@v4

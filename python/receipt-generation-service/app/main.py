@@ -50,7 +50,7 @@ def handleReceipt(orderSummary: models.OrderSummary):
 def saveReceipt(order: models.OrderSummary):
     with DaprClient() as d:
 
-        logging.info(f'Saving receipt for order: {order.orderId}')
+        logging.info(f'!Saving receipt for order: {order.orderId}')
 
         # Create a typed message with content type and body
         binding_key = {
@@ -71,7 +71,7 @@ def saveReceipt(order: models.OrderSummary):
         try:
             # Insert order using Dapr output binding via HTTP Post
             resp = d.invoke_binding(BINDING_NAME, BINDING_OPERATION, json.dumps(binding_data), binding_key )
-            logging.info(f'Saved receipt for order: {order.orderId}')
+            logging.info(f'!Saved receipt for order: {order.orderId}')
             
             return order.orderId
         except Exception as e:

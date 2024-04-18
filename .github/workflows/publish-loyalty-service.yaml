@@ -21,7 +21,6 @@ jobs:
       IMAGE_NAME: order-system/loyalty-service
 
       GKE_CLUSTER: gke_prj-dataplane-n-demo-30534_us-west1-a_gke-n-dataplane-demo-us-west1-a2
-      
 
     steps:
       - name: Checkout
@@ -50,7 +49,6 @@ jobs:
         run: |
           docker buildx build --platform linux/amd64,linux/arm64 -t $GCP_CONTAINER_REGISTRY_HOST/$GCP_PROJECT_ID/$GCP_DOCKER_REPOSITORY/$IMAGE_NAME:$GITHUB_SHA . --push
     
-
   deploy-to-gke:
     needs: build-and-publish
     runs-on: ubuntu-latest
@@ -64,7 +62,6 @@ jobs:
       GKE_CLUSTER: '${{ vars.GCP_DP_GKE_CLUSTER_NAME_2 }}'
       GKE_ZONE: '${{ vars.GCP_DP_GKE_ZONE }}'
   
-
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -101,10 +98,4 @@ jobs:
       - name: Deploy to GKE
         run: |
           kubectl apply -k ./deployment-files/
-
-      # # Deploy to GKE
-      # - name: Deploy to GKE
-      #   run: |-
-      #     kustomize edit set image order-system/loyalty-service=$GCP_CONTAINER_REGISTRY_HOST/$GCP_PROJECT_ID/$GCP_DOCKER_REPOSITORY/$IMAGE_NAME:$TAG
-      #     kubectl apply -k deployment-files/k8s
   
