@@ -22,7 +22,7 @@ type Config struct {
 
 func main() {
 
-	log.Println("Starting the loyalty service with the new tag")
+	log.Println("Let's see if the tag works...")
 
 	//set app port
 	appPort := "5400"

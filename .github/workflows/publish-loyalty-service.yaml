@@ -58,7 +58,8 @@ jobs:
     
     
 
-  deploy:
+  deploy-to-gke:
+    needs: build-and-publish
     runs-on: ubuntu-latest
     permissions:
       contents: 'read'
