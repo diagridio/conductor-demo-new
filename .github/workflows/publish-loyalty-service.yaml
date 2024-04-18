@@ -56,7 +56,6 @@ jobs:
         run: |
           docker buildx build --platform linux/amd64,linux/arm64 -t $GCP_CONTAINER_REGISTRY_HOST/$GCP_PROJECT_ID/$GCP_DOCKER_REPOSITORY/$IMAGE_NAME:$GITHUB_SHA . --push
     
-    
 
   deploy-to-gke:
     needs: build-and-publish
@@ -95,15 +94,15 @@ jobs:
     
       # Set up kustomize
       - name: Set up Kustomize
-        working-directory: deployment-files/k8s
+        working-directory: ./deployment-files/
         run: |-
           curl -sfLo kustomize https://github.com/kubernetes-sigs/kustomize/releases/download/v3.1.0/kustomize_3.1.0_linux_amd64
           chmod u+x ./kustomize
 
       - name: Replace the target image name in the kustomization.yaml
         run: |
-          kustomize edit set image order-system/loyalty-service=$GCP_CONTAINER_REGISTRY_HOST/$GCP_PROJECT_ID/$GCP_DOCKER_REPOSITORY/$IMAGE_NAME:$GITHUB_SHA
-        working-directory: ./deployment-files/k8s
+          kustomize edit set image image-registry/image-name:tag==$GCP_CONTAINER_REGISTRY_HOST/$GCP_PROJECT_ID/$GCP_DOCKER_REPOSITORY/$IMAGE_NAME:$GITHUB_SHA
+        working-directory: ./deployment-files/
 
       - name: Get GKE credentials
         run: |
