@@ -86,6 +86,14 @@ func main() {
 		if ordersCreated >= numOrders && numOrders != -1 {
 			break
 		}
+
+		// 30% of the time, let's mock a call to a non-existing method from an existing app-id to demonstrate error handling in Conductor
+		if rand.Float64() < 0.3 {
+			_, err = client.InvokeMethod(context.Background(), "receipt-generation-service", "non-existing-method", "GET")
+			if err != nil {
+				log.Printf("Error invoking method. Error: %v", err)
+			}
+		}
 	}
 
 }
@@ -149,6 +157,9 @@ func createOrder(products []Product) (CustomerOrder, error) {
 
 	var orderItems []OrderItem
 	//fill orderitems array with random products that cannot repeat
+
+	rand.Seed(time.Now().UnixNano())
+
 	for i := 0; i < numOrderItems; i++ {
 
 		// randomly choose non-duplicated product

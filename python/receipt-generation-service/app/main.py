@@ -50,12 +50,12 @@ def handleReceipt(orderSummary: models.OrderSummary):
 def saveReceipt(order: models.OrderSummary):
     with DaprClient() as d:
 
-        # Invoke binding
-        try:
-            logging.info(f'Calling non-existing method to showcase error in Conductor')
-            d.invoke_method(app_id="order-service", method_name="non-existing", data=json.dumps({}))
-        except Exception as e:
-            logging.info(f'Error calling method')
+        # # Invoke  non-existigng method 
+        # try:
+        #     logging.info(f'Calling non-existing method to showcase error in Conductor')
+        #     d.invoke_method(app_id="order-service", method_name="non-existing", data=json.dumps({}))
+        # except Exception as e:
+        #     logging.info(f'Error calling method')
 
 
         logging.info(f'!Saving receipt for order: {order.orderId}')
@@ -66,7 +66,7 @@ def saveReceipt(order: models.OrderSummary):
         # }
 
         # Induce error when using Redis. No key "key" in the request
-        req_data = {'receiptName': order.orderId}
+        binding_key = {'receiptName': order.orderId}
 
         binding_data = {
             'orderId': order.orderId,
@@ -80,7 +80,7 @@ def saveReceipt(order: models.OrderSummary):
         # Invoke binding
         try:
             # Insert order using Dapr output binding via HTTP Post
-            resp = d.invoke_binding(BINDING_NAME, BINDING_OPERATION, json.dumps(binding_data), binding_key )
+            resp = d.invoke_binding(BINDING_NAME, BINDING_OPERATION, json.dumps(binding_data), binding_key)
             logging.info(f'!Saved receipt for order: {order.orderId}')
             
             return order.orderId
