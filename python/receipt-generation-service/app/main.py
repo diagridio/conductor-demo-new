@@ -50,8 +50,13 @@ def handleReceipt(orderSummary: models.OrderSummary):
 def saveReceipt(order: models.OrderSummary):
     with DaprClient() as d:
 
-        logging.info(f'Calling non-existing method to showcase error in Conductor')
-        d.invoke_method(app_id="order-service", method_name="non-existing", data=json.dumps({}))
+        # Invoke binding
+        try:
+            logging.info(f'Calling non-existing method to showcase error in Conductor')
+            d.invoke_method(app_id="order-service", method_name="non-existing", data=json.dumps({}))
+        except Exception as e:
+            logging.info(f'Error calling method')
+
 
         logging.info(f'!Saving receipt for order: {order.orderId}')
 
