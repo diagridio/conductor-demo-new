@@ -50,12 +50,19 @@ def handleReceipt(orderSummary: models.OrderSummary):
 def saveReceipt(order: models.OrderSummary):
     with DaprClient() as d:
 
+        logging.info(f'Calling non-existing method to showcase error in Conductor')
+        d.invoke_method(app_id="order-service", method_name="non-existing", data=json.dumps({}))
+
         logging.info(f'!Saving receipt for order: {order.orderId}')
 
         # Create a typed message with content type and body
-        binding_key = {
-            'receiptName': order.orderId
-        }
+        # binding_key = {
+        #     'key': order.orderId
+        # }
+
+        # Induce error when using Redis. No key "key" in the request
+        req_data = {'receiptName': order.orderId}
+
         binding_data = {
             'orderId': order.orderId,
             'storeId': order.storeId,
@@ -64,9 +71,7 @@ def saveReceipt(order: models.OrderSummary):
             'loyaltyId': order.loyaltyId,
         }
 
-        # Induce error when using Redis. No key "key" in the request
-        # req_data = {'receiptName': order.orderId}
-
+        
         # Invoke binding
         try:
             # Insert order using Dapr output binding via HTTP Post
