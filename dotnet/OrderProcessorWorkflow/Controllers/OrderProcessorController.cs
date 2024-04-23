@@ -77,7 +77,7 @@ namespace OrderProcessorWorkflow.Controllers
                 }
                 if (state.RuntimeStatus == WorkflowRuntimeStatus.Completed)
                 {
-                    await _daprClient.PurgeInstanceAsync(orderId);
+                    //await _daprClient.PurgeInstanceAsync(orderId);
 
                     OrderResult result = state.ReadOutputAs<OrderResult>();
                     if (result.Processed)
@@ -93,7 +93,7 @@ namespace OrderProcessorWorkflow.Controllers
                 }
                 else if (state.RuntimeStatus == WorkflowRuntimeStatus.Failed)
                 {
-                    await _daprClient.PurgeInstanceAsync(orderId);
+                    //await _daprClient.PurgeInstanceAsync(orderId);
 
                     _logger.LogInformation("The workflow failed - {state.FailureDetails}", state.FailureDetails);
                     return BadRequest();
