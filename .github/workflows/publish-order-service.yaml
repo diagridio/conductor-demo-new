@@ -110,7 +110,7 @@ jobs:
     env:
       GCP_PROJECT_ID: '${{ vars.GCP_DP_PROJECT_ID }}'
       IMAGE_NAME: order-system/order-service
-      GKE_CLUSTER: '${{ vars.GCP_DP_GKE_CLUSTER_NAME_2 }}'
+      GKE_CLUSTER: '${{ vars.GCP_DP_GKE_CLUSTER_NAME_1 }}'
       GKE_ZONE: '${{ vars.GCP_DP_GKE_ZONE }}'
   
     steps:
