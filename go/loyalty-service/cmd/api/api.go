@@ -123,7 +123,7 @@ func (app *Config) updateLoyaltyPoints(orderSummary OrderSummary) error {
 		return err
 	}
 
-	log.Printf("Success! Updated loyalty  points for customer %v. Total points: %v", orderSummary.LoyaltyID, loyaltySummary.PointsTotal)
+	log.Printf("Success! Updated loyalty points for customer %v. Total points: %v", orderSummary.LoyaltyID, loyaltySummary.PointsTotal)
 
 	return err
 }
