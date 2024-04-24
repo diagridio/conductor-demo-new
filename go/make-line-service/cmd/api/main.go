@@ -19,7 +19,8 @@ type Config struct {
 }
 
 func main() {
-	log.Println("Starting the application...")
+	log.Println("Starting the make-line service.")
+
 	//set app port
 	appPort := "5200"
 	if value, ok := os.LookupEnv("APP_PORT"); ok {

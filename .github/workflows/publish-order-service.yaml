@@ -1,4 +1,4 @@
-name: Build and Push Order Service Image
+name: Build and Push order Service Image
 
 on:
   push:
@@ -45,11 +45,11 @@ jobs:
           password: '${{ steps.auth.outputs.access_token }}'
           
       - name: Build and Push Docker Image (AMD, ARM)
-        working-directory: go/order-service
+        working-directory: go/$SERVICE_NAME
         run: |
           docker buildx build --platform linux/amd64,linux/arm64 -t $GCP_CONTAINER_REGISTRY_HOST/$GCP_PROJECT_ID/$GCP_DOCKER_REPOSITORY/$IMAGE_NAME:$GITHUB_SHA . --push
     
-  deploy-to-enterprise-cluster:
+  deploy-to-enteprise_cluster:
     needs: build-and-publish
     runs-on: ubuntu-latest
     permissions:
@@ -59,6 +59,7 @@ jobs:
     env:
       GCP_PROJECT_ID: '${{ vars.GCP_DP_PROJECT_ID }}'
       IMAGE_NAME: order-system/order-service
+      SERVICE_NAME: order-service
       GKE_CLUSTER: '${{ vars.GCP_DP_GKE_CLUSTER_NAME_2 }}'
       GKE_ZONE: '${{ vars.GCP_DP_GKE_ZONE }}'
   
@@ -88,7 +89,7 @@ jobs:
 
       - name: Replace the target image name in the kustomization.yaml
         run: |
-          kustomize edit add resource ./k8s/order-service.yaml && kustomize edit set image $IMAGE_NAME:tag=us-central1-docker.pkg.dev/prj-common-d-shared-89549/reg-d-common-docker-public/$IMAGE_NAME:$GITHUB_SHA
+          kustomize edit add resource ./k8s/$SERVICE_NAME.yaml && kustomize edit set image $IMAGE_NAME:tag=us-central1-docker.pkg.dev/prj-common-d-shared-89549/reg-d-common-docker-public/$IMAGE_NAME:$GITHUB_SHA
         working-directory: ./deployment-files/
 
       - name: Get GKE credentials
@@ -110,6 +111,7 @@ jobs:
     env:
       GCP_PROJECT_ID: '${{ vars.GCP_DP_PROJECT_ID }}'
       IMAGE_NAME: order-system/order-service
+      SERVICE_NAME: order-service
       GKE_CLUSTER: '${{ vars.GCP_DP_GKE_CLUSTER_NAME_1 }}'
       GKE_ZONE: '${{ vars.GCP_DP_GKE_ZONE }}'
   
@@ -139,7 +141,7 @@ jobs:
 
       - name: Replace the target image name in the kustomization.yaml
         run: |
-          kustomize edit add resource ./k8s/order-service.yaml && kustomize edit set image $IMAGE_NAME:tag=us-central1-docker.pkg.dev/prj-common-d-shared-89549/reg-d-common-docker-public/$IMAGE_NAME:$GITHUB_SHA
+          kustomize edit add resource ./k8s/$SERVICE_NAME.yaml && kustomize edit set image $IMAGE_NAME:tag=us-central1-docker.pkg.dev/prj-common-d-shared-89549/reg-d-common-docker-public/$IMAGE_NAME:$GITHUB_SHA
         working-directory: ./deployment-files/
 
       - name: Get GKE credentials
