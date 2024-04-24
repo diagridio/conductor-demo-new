@@ -41,8 +41,6 @@ type Config struct{}
 var client dapr.Client
 
 func main() {
-	log.Println("Starting the application!")
-
 	ctx := context.Background()
 	populateConstants()
 
@@ -85,14 +83,6 @@ func main() {
 
 		if ordersCreated >= numOrders && numOrders != -1 {
 			break
-		}
-
-		// 30% of the time, let's mock a call to a non-existing method from an existing app-id to demonstrate error handling in Conductor
-		if rand.Float64() < 0.3 {
-			_, err = client.InvokeMethod(context.Background(), "receipt-generation-service", "non-existing-method", "GET")
-			if err != nil {
-				log.Printf("Error invoking method. Error: %v", err)
-			}
 		}
 	}
 
@@ -155,11 +145,8 @@ func createOrder(products []Product) (CustomerOrder, error) {
 	numProducts := len(products)
 	numOrderItems := rng.Intn(min(numProducts, maxUniqueItemsPerOrder))
 
-	var orderItems []OrderItem
 	//fill orderitems array with random products that cannot repeat
-
-	rand.Seed(time.Now().UnixNano())
-
+	var orderItems []OrderItem
 	for i := 0; i < numOrderItems; i++ {
 
 		// randomly choose non-duplicated product
@@ -235,6 +222,15 @@ func sendOrder(ctx context.Context, order CustomerOrder) (string, error) {
 		time.Sleep(time.Duration(sleepTime) * time.Second)
 		log.Printf("Error calling service: %v", err)
 		return "", err
+	}
+
+	// 30% of the time, let's mock a call to a non-existing method from an existing app-id to demonstrate error handling in Conductor
+	if rand.Float64() < 0.3 {
+		log.Println("Mocking call to non-existing service!")
+		_, err = client.InvokeMethod(context.Background(), "receipt-generation-service", "non-existing-method", "GET")
+		if err != nil {
+			log.Printf("Error invoking method. Error: %v", err)
+		}
 	}
 
 	log.Printf("Order %s completed!", string(response))
