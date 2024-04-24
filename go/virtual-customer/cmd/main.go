@@ -224,8 +224,8 @@ func sendOrder(ctx context.Context, order CustomerOrder) (string, error) {
 		return "", err
 	}
 
-	// 30% of the time, let's mock a call to a non-existing method from an existing app-id to demonstrate error handling in Conductor
-	if rand.Float64() < 0.3 {
+	// ~20% of the time, let's mock a call to a non-existing method from an existing app-id to demonstrate error handling in Conductor
+	if rand.Float64() < 0.2 {
 		log.Println("Mocking call to non-existing service!")
 		_, err = client.InvokeMethod(context.Background(), "receipt-generation-service", "non-existing-method", "GET")
 		if err != nil {

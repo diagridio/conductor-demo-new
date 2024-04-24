@@ -2,9 +2,9 @@
 
 ## App description:
 
-The Order Management System (OMS) is composed of five GO microservices, one .NET 8 Dapr Workflow, and a Python API. All services are Dapr enabled. The system simulates a pharmacy's order processing system where customers place orders for their prescriptions onto a central order application. The Order Service then publishes the order summary onto a message bus (on the /orders topic) where it is picked up by multiple subscribers that all perform different actions. The Make-line Service holds the state of the orders to be processed and is invoked by the Virtual Worker service when prescriptions have been completed. The Loyalty Service tracks customer order points based on the number of orders they've placed and the Receipt Service acts as an archival service for auditing all prescription receipts. Finally, the Order Service Workflow service manages the chained process that completes the order.
+The Order Management System (OMS) is composed of five G0 microservices, one .NET 8 Dapr Workflow, and a Python API. All services are Dapr enabled. The system simulates a pharmacy's order processing system where customers place orders for their prescriptions onto a central order application. The Order Service then publishes the order summary onto a message bus (on the /orders topic) where it is picked up by multiple subscribers that all perform different actions. The Make-line Service holds the state of the orders to be processed and is invoked by the Virtual Worker service when prescriptions have been completed. The Loyalty Service tracks customer order points based on the number of orders they've placed and the Receipt Service acts as an archival service for auditing all prescription receipts. Finally, the Order Service Workflow manages the chained process that completes the order.
 
-> Important: There is [failing code](https://github.com/diagridio/conductor-demo/blob/main/OrderManagementSystem.ReceiptGenerationService/Controllers/ReceiptGenerationController.cs#L36) in the receipt-generation-service and [lagging code](https://github.com/diagridio/conductor-demo/blob/main/OrderManagementSystem.LoyaltyService/Controllers/LoyaltyController.cs#L64) in the loyalty-service to show how Conductor deals with failures. These are the only **expected** failures in the app.
+> Important: There is [failing code](https://github.com/diagridio/conductor-demo-new/blob/main/OrderManagementSystem.ReceiptGenerationService/Controllers/ReceiptGenerationController.cs#L36) in the receipt-generation-service and [lagging code](https://github.com/diagridio/conductor-demo/blob/main/OrderManagementSystem.LoyaltyService/Controllers/LoyaltyController.cs#L64) in the loyalty-service to show how Conductor deals with failures. These are the only **expected** failures in the app.
 
 For more information on the app services read [./README.md](./README.md).
 
@@ -14,7 +14,6 @@ Before running through the demo scenarios:
 - Cycle the [Virtual Customers app pods](https://conductor.diagrid.io/clusters/160bd018-32a9-477c-ab8a-58d664d55829/app/order-management-system:virtual-customers/detail/summary) to create load on the application using the `Rollout Application` button
 - Create an empty cluster ready for the agent to be deployed to on your local machine (eg. Kind, Docker K8s, etc)
 - Downgrade or revert the Dapr version of the demo cluster so that it can be upgraded using Conductor. Set `mtls` and `ha` arguments to false to enable more advisories
-- You can also open the [UI](http://34.82.193.148/) in advance if you wish to show the dashboard but it is typically not needed. It takes a minute or so to load so if you want a visual, load it early
 
 ## Recommended Demo Flow
 
