@@ -8,6 +8,7 @@ import os
 import json
 import logging
 import requests
+import random
 
 import models
 
@@ -64,9 +65,10 @@ def saveReceipt(order: models.OrderSummary):
         binding_key = {
             'key': order.orderId
         }
-
-        # Induce error when using Redis. No key "key" in the request
-        # binding_key = {'receiptName': order.orderId}
+        
+        # 30% of the time, induce error when using Redis. No key "key" in the request
+        if random.random() < 0.3:
+            binding_key = {'receiptName': order.orderId}
 
         binding_data = {
             'orderId': order.orderId,
@@ -81,7 +83,7 @@ def saveReceipt(order: models.OrderSummary):
         try:
             # Insert order using Dapr output binding via HTTP Post
             resp = d.invoke_binding(BINDING_NAME, BINDING_OPERATION, json.dumps(binding_data), binding_key)
-            logging.info(f'!Saved receipt for order: {order.orderId}')
+            logging.info(f'Saved receipt for order: {order.orderId}')
             
             return order.orderId
         except Exception as e:
