@@ -61,12 +61,12 @@ def saveReceipt(order: models.OrderSummary):
         logging.info(f'!Saving receipt for order: {order.orderId}')
 
         # Create a typed message with content type and body
-        # binding_key = {
-        #     'key': order.orderId
-        # }
+        binding_key = {
+            'key': order.orderId
+        }
 
         # Induce error when using Redis. No key "key" in the request
-        binding_key = {'receiptName': order.orderId}
+        # binding_key = {'receiptName': order.orderId}
 
         binding_data = {
             'orderId': order.orderId,
