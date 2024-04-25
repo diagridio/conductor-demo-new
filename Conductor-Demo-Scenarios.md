@@ -160,7 +160,7 @@ After configuring the cluster installation options you will receive a kubectl co
 
 Apply the manifests to a test cluster and navigate to the [dashboard](https://conductor.diagrid.io/clusters) to watch the agent come online and install/upgrade Dapr.
 
-> Important: Follow the instructions in [Local-Setup.md](./conductor-setup.sh) to setup a local cluster manually.
+> Important: Follow the instructions in [Local-Setup.md](./Local-Setup.md) to setup a local cluster manually.
 
 ## View the cluster summary
 
@@ -171,6 +171,8 @@ After you've created your cluster connection in Conductor then you can view the 
 - Diagrid Agent details like the status, version and agent manifests.
 - Dapr control plane uptime data is shown along with CPU and memory usage of the control plane pods broken down by component. If the control plane health is degraded or the agent has lost connection, these show up in red.
     - Conductor agent is polling every 15 seconds for health data.
+ 
+> Important: Some of these features may not be avaialble for the `Free` version.
 
 ## View and implement Advisor recommendations
 
@@ -182,7 +184,8 @@ Over 30 advisories including:
 - **Security**:
     - The recommendation for the component metadata containing sensitive information as plaintext is directly linked to the resource it affects. You can see on the component manifest that the pubsub component for Kafka has the `saslPassword` value fully readable by anyone in the cluster.
         - Now you can add a secretKeyRef to the Oms.pubsub.yaml manifest for storing this value and a kubernetes secret to the cluster to get rid of this recommendation.
-    - This shows that neither App to Dapr API or Dapr API to App authentication is enabled. Note: Dapr supports token-based auth to increase the security between the app container and the Dapr sidecar. 
+    - This shows that neither App to Dapr API or Dapr API to App authentication is enabled. Note: Dapr supports token-based auth to increase the security between the app container and the Dapr sidecar.
+    - automountServiceAccountToken is enabled. It’s recommended deploying your apps with `automountServiceAccountToken: false` to improve the security posture of your pods, unless your apps depend on having a Service Account token.
 
     - Other recommendations that could be displayed here are:
       - MTLS between services (enabled on this cluster)
@@ -196,6 +199,14 @@ Over 30 advisories including:
   global:
   ha:
     enabled: true
+  ```
+    - Only 2 out of 5 services have health checks enabled. This advises you to add the following to your annotations within your deployment files:
+  ```
+    dapr.io/enable-app-health-check: "true"
+    dapr.io/app-health-check-path: "/healthz"
+    dapr.io/app-health-probe-interval: "3"
+    dapr.io/app-health-probe-timeout: "200"
+    dapr.io/app-health-threshold: "2"
   ```
     - Other recommendations that could be displayed here are:
       - If the Dapr Injector watchdog is not configured on this cluster then when new applications come up that are Dapr enabled and the Dapr control plane is not already up, there could be app failures. This is useful in production environments and when you are stopping your Kubernetes cluster.
