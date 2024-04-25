@@ -30,7 +30,7 @@ If you are a developer working on improving these services, keep following the i
 There are two development processes you can follow: 
 
  - [Development and deployment to local k8s cluster.](https://github.com/diagridio/conductor-demo-new/tree/demo-scenarios?tab=readme-ov-file#deployment-to-local-cluster-kindminikubeetc) 
- - [Development and run the services indivisually in your local machine (non-containerized)](https://github.com/diagridio/conductor-demo-new/tree/demo-scenarios?tab=readme-ov-file#running-dapr-services-locally-non-containerized).
+ - [Development and run the services individually in your local machine (non-containerized)](https://github.com/diagridio/conductor-demo-new/tree/demo-scenarios?tab=readme-ov-file#running-dapr-services-locally-non-containerized).
 
 ## Deployment to local cluster (Kind/Minikube/etc)
 
