@@ -4,6 +4,14 @@
 
 Follow [these instructions](https://cloud.google.com/kubernetes-engine/docs/how-to/cluster-access-for-kubectl) to connect to the GCP Clusters above to manage the environment on k8s.
 
+## Clone this repository
+
+```git
+git clone https://github.com/diagridio/conductor-demo-new.git
+
+cd conductor-demo-new
+```
+
 ## Components
 
 All components are in the folder `components/k8s`. During the demo, you will need to apply new configurations. To do so, modify one or more yaml files and run:
