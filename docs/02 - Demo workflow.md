@@ -23,7 +23,9 @@ Before running through the demo scenarios:
 - [Clusters overview](./03%20-%20Clusters.md)
 - [Advisor](./04%20-%20Advisors.md)
 - [Apps graph](./05%20-%20App%20graph.md)
-  - [App-specific view](#app-specific-view)
-- [Upgrade Dapr installation](#perform-a-dapr-upgrade-on-your-cluster)
+  - [App-specific view](./06%20-%20Application%20view.md)
+- [Upgrade Dapr installation](./07%20-%20Upgrade%20Dapr.md)
 
-[Other scenarios](#other-scenarios)
+## Induced errors
+
+Errors can be seen throughout the demo workflow, for details go to [Induced errors.md](./08%20-%20Induced%20errors.md)

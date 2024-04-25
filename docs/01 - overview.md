@@ -4,8 +4,6 @@ The Order Management System (OMS) is composed of five Go microservices, one .NET
 
 The demo is capable of showcasing features for the Enteprise and Free tiers for Conductor.
 
-> Important: There is [failing code](https://github.com/diagridio/conductor-demo-new/blob/main/OrderManagementSystem.ReceiptGenerationService/Controllers/ReceiptGenerationController.cs#L36) in the receipt-generation-service and [lagging code](https://github.com/diagridio/conductor-demo/blob/main/OrderManagementSystem.LoyaltyService/Controllers/LoyaltyController.cs#L64) in the loyalty-service to show how Conductor deals with failures. These are the only **expected** failures in the app.
-
 For more information on the app services read [./README.md](./README.md).
 
 ## Clusters
@@ -16,3 +14,6 @@ The demo is deployed in two separate Conductor clusters.
 |------------------|-------------------|-----------------|--------------------------------|
 | Free |Demo Free Org| Order-System-Demo | [gke-n-dataplane-demo-us-west1-a1](https://console.cloud.google.com/kubernetes/clusters/details/us-west1-a/gke-n-dataplane-demo-us-west1-a1/details?project=prj-dataplane-n-demo-30534) |
 | Enterprise |Demo Org| Order-System-Demo |  [gke-n-dataplane-demo-us-west1-a2](https://console.cloud.google.com/kubernetes/clusters/details/us-west1-a/gke-n-dataplane-demo-us-west1-a2/details?project=prj-dataplane-n-demo-30534) |  
+
+
+**Next:** [Demo-workflow](./02%20-%20Demo%20workflow.md) 

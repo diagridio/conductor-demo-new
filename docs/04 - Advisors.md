@@ -53,3 +53,5 @@ Over 30 advisories including:
   ```
   - Other recommendations that could be displayed here are:
     - Sidecar log level should not be debug when deployed in production
+
+**Next:** [App graph](./05%20-%20App%20graph.md)

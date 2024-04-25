@@ -13,10 +13,13 @@ Clicking on `Apps Graph` shows a graphical view of the Dapr applications running
 - Isolating apps shows metrics data and infrastructure information of the connected Dapr components
 - All orange boxes are Dapr components.
 
-Isolate on the `order-service` to view metrics from it publishing orders to the `oms.pubsub` message broker to a number of subscribers. Isolate on `oms.pubsub` to see all metrics of connected apps that are communicating with the broker. The metrics shown are in near-realtime and are *not* using Dapr tracing configurations but instead just the Dapr metrics data scraped from the Prometheus endpoint on each Dapr sidecar.
+Isolate on the `order-service` to view metrics from it publishing orders to the `oms.pubsub` message broker to a number of subscribers. Isolate on `oms.pubsub` to see all metrics of connected apps that are communicating with the broker. The metrics shown are in near-realtime and are *not* using Dapr tracing configurations but instead just the Dapr metrics data scraped from the Prometheus endpoint on each Dapr sidecar. 
 
--> Clicking on `receipt-generation-service` shows the metrics from the message broker to the subscribing receipt service and it failing to output the receipt to `oms.binding.receipt` by drawing the edge as red. This error is detailed at [Redis Binding Error](https://github.com/diagridio/conductor-demo-new/edit/demo-scenarios/Conductor-Demo-Scenarios.md#redis-binding-error).
+-> Isolating `virtual-customer` will present a service invocation error tom `receipt-generation-service`. This error is detailed at [Service invocation error](./08%20-%20Induced%20errors.md). 
 
-![image](assets/receipt-generation-svc-appgraph.png)
+-> Clicking on `receipt-generation-service` shows the metrics from the message broker to the subscribing receipt service and it failing to output the receipt to `oms.binding.receipt` by drawing the edge as red. This error is detailed at [Redis Binding Error](./08%20-%20Induced%20errors.md).
+
 
 -> Click on the link button next to the `receipt-generation-service` to navigate to the app-specific view.
+
+**Next:** [Application View](./06%20-%20Application%20view.md)

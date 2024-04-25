@@ -39,3 +39,5 @@ After you've created your cluster connection in Conductor then you can view the 
     - Conductor agent is polling every 15 seconds for health data.
  
 > Important: Some of these features may not be avaialble for the `Free` version.
+
+**Next:** [Advisors](./04%20-%20Advisors.md)
