@@ -97,6 +97,12 @@ export KAFKA_PASSWORD=$(kubectl get secret kafka-user-passwords --namespace kafk
 kubectl create secret generic kafka-password --from-literal=kafka-password=$KAFKA_PASSWORD -n order-system
 ```
 
+### Important
+
+Since we are inducing a component security advisory, update the content of `/components/k8s/oms.pubsub.yaml` with the new value for $KAFKA_PASSWORD. Redeploy the component.
+
+Run `echo $KAFKA_PASSWORD` to retrieve the value.
+
 ### Install Zipkin
 
 Zipkin will be used for applicaiton tracing.
@@ -111,12 +117,6 @@ kubectl get svc -n zipkin -w
 export ZIPKIN_DASHBOARD=$(kubectl get svc --namespace zipkin zipkin -o jsonpath="{.status.loadBalancer.ingress[0].ip}"):9411
 echo "View tracing dashboard at $ZIPKIN_DASHBOARD"
 ```
-
-### Important
-
-Since we are inducing a component security advisory, update the content of `/components/k8s/oms.pubsub.yaml` with the new value for $KAFKA_PASSWORD. Redeploy the component.
-
-Run `echo $KAFKA_PASSWORD` to retrieve the value.
 
 ### Deploy Dapr components
 
