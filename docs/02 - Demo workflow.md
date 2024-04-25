@@ -1,4 +1,4 @@
-# Demo Workflow 
+# Demo workflow 
 
 ## Accessing the GKE clusters
 
