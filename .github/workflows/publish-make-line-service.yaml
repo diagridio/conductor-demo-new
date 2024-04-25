@@ -19,9 +19,7 @@ jobs:
       GCP_DOCKER_REPOSITORY: '${{ secrets.GCP_DOCKER_REPOSITORY }}'
       GCP_CONTAINER_REGISTRY_HOST: '${{ secrets.GCP_CONTAINER_REGISTRY_HOST }}'
       IMAGE_NAME: order-system/make-line-service
-      SERVICE_NAME: make-line-service
-
-      GKE_CLUSTER: gke_prj-dataplane-n-demo-30534_us-west1-a_gke-n-dataplane-demo-us-west1-a2
+      FOLDER_NAME: make-line-service
 
     steps:
       - name: Checkout
@@ -46,11 +44,11 @@ jobs:
           password: '${{ steps.auth.outputs.access_token }}'
           
       - name: Build and Push Docker Image (AMD, ARM)
-        working-directory: go/$SERVICE_NAME
+        working-directory: go/make-line-service
         run: |
           docker buildx build --platform linux/amd64,linux/arm64 -t $GCP_CONTAINER_REGISTRY_HOST/$GCP_PROJECT_ID/$GCP_DOCKER_REPOSITORY/$IMAGE_NAME:$GITHUB_SHA . --push
     
-  deploy-to-enteprise_cluster:
+  deploy-to-enteprise-cluster:
     needs: build-and-publish
     runs-on: ubuntu-latest
     permissions:

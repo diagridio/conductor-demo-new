@@ -38,7 +38,7 @@ def healthz():
 
 @app.get("/ready")
 def ready():
-    return JSONResponse({'status': 'Dapr is ready to go!'}, status_code=status.HTTP_200_OK)
+    return JSONResponse({'status': 'Dapr  is ready to go!'}, status_code=status.HTTP_200_OK)
 
 @app.post("/receipt")
 def handleReceipt(orderSummary: models.OrderSummary):

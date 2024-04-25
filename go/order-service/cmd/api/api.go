@@ -63,7 +63,7 @@ func (app *Config) HandleCreateOrderSummary(w http.ResponseWriter, r *http.Reque
 		return
 	}
 
-	log.Printf("Order  %v created for customer %v %v", summary.OrderID, summary.FirstName, summary.LastName)
+	log.Printf("Order %v created for customer %v %v", summary.OrderID, summary.FirstName, summary.LastName)
 
 	app.writeJSON(w, http.StatusCreated, summary.OrderID)
 }

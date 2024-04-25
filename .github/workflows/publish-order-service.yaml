@@ -1,4 +1,4 @@
-name: Build and Push order Service Image
+name: Build and Push Order Service Image
 
 on:
   push:
@@ -19,9 +19,7 @@ jobs:
       GCP_DOCKER_REPOSITORY: '${{ secrets.GCP_DOCKER_REPOSITORY }}'
       GCP_CONTAINER_REGISTRY_HOST: '${{ secrets.GCP_CONTAINER_REGISTRY_HOST }}'
       IMAGE_NAME: order-system/order-service
-      SERVICE_NAME: order-service
-
-      GKE_CLUSTER: gke_prj-dataplane-n-demo-30534_us-west1-a_gke-n-dataplane-demo-us-west1-a2
+      FOLDER_NAME: order-service
 
     steps:
       - name: Checkout
@@ -46,7 +44,7 @@ jobs:
           password: '${{ steps.auth.outputs.access_token }}'
           
       - name: Build and Push Docker Image (AMD, ARM)
-        working-directory: go/$SERVICE_NAME
+        working-directory: go/order-service
         run: |
           docker buildx build --platform linux/amd64,linux/arm64 -t $GCP_CONTAINER_REGISTRY_HOST/$GCP_PROJECT_ID/$GCP_DOCKER_REPOSITORY/$IMAGE_NAME:$GITHUB_SHA . --push
     

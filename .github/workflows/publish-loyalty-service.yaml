@@ -48,7 +48,7 @@ jobs:
         run: |
           docker buildx build --platform linux/amd64,linux/arm64 -t $GCP_CONTAINER_REGISTRY_HOST/$GCP_PROJECT_ID/$GCP_DOCKER_REPOSITORY/$IMAGE_NAME:$GITHUB_SHA . --push
     
-  deploy-to-enteprise_cluster:
+  deploy-to-enteprise-cluster:
     needs: build-and-publish
     runs-on: ubuntu-latest
     permissions:
