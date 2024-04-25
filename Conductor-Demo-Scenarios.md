@@ -19,18 +19,6 @@ The demo is deployed in two separate Conductor clusters.
 | Free |Demo Free Org| Order-System-Demo | [gke-n-dataplane-demo-us-west1-a1](https://console.cloud.google.com/kubernetes/clusters/details/us-west1-a/gke-n-dataplane-demo-us-west1-a1/details?project=prj-dataplane-n-demo-30534) |
 | Enterprise |Demo Org| Order-System-Demo |  [gke-n-dataplane-demo-us-west1-a2](https://console.cloud.google.com/kubernetes/clusters/details/us-west1-a/gke-n-dataplane-demo-us-west1-a2/details?project=prj-dataplane-n-demo-30534) |  
 
-## Running from the deployed environment
-
-Follow [these instructions](https://cloud.google.com/kubernetes-engine/docs/how-to/cluster-access-for-kubectl) to connect to the GCP Clusters above to manage the environment on k8s.
-
-#### Components
-
-All components are in the folder `components/k8s`. To apply new configurations, modify one or more files and run:
-
-```bash
-kubectl apply -f components/k8s
-```
-
 ## Failures
 
 The solution contains multiple induced errors that can be displayed and fixed in real-time.
@@ -113,12 +101,27 @@ This error is displayed within the App Graph by isolating the `virtual-customer`
 
 ![Screenshot 2024-04-24 at 10 43 09 PM](https://github.com/diagridio/conductor-demo-new/assets/1051195/2dfbaa13-83d9-4d69-a6cc-ae000587e057)
 
-## Prerequisites
+##  
+
+## Demo Workflow 
+
+### Accessing the GKE clusters
+
+Follow [these instructions](https://cloud.google.com/kubernetes-engine/docs/how-to/cluster-access-for-kubectl) to connect to the GCP Clusters above to manage the environment on k8s.
+
+## Components
+
+All components are in the folder `components/k8s`. During the demo, you will need to apply new configurations. To do so, modify one or more yaml files and run:
+
+```bash
+kubectl apply -f components/k8s
+```
 
 Before running through the demo scenarios:
-- Cycle the [Virtual Customers app pods](https://conductor.diagrid.io/clusters/160bd018-32a9-477c-ab8a-58d664d55829/app/order-management-system:virtual-customers/detail/summary) to create load on the application using the `Rollout Application` button
-- Create an empty cluster ready for the agent to be deployed to on your local machine (eg. Kind, Docker K8s, etc)
+- Cycle the `virtual-customer` app pods to create load on the application using the `Rollout Application` button.
 - Downgrade or revert the Dapr version of the demo cluster so that it can be upgraded using Conductor. Set `mtls` and `ha` arguments to false to enable more advisories
+
+> Important: Some of these features may not be avaialble for the `Free` version.
 
 ## Recommended Demo Flow
 
@@ -139,6 +142,8 @@ View all your Kubernetes clusters connected to Conductor.
 - You can see if Dapr is installed, and the control plane status and version.
 - You can see the number of Dapr-enabled apps on your cluster.
 
+> Important: On the `Free` version only one cluster is visible.
+
 ## Connect a new cluster to Conductor
 
 First thing that you might want to do is connect a new cluster from the Clusters Dashboard.
@@ -154,6 +159,8 @@ First thing that you might want to do is connect a new cluster from the Clusters
 After configuring the cluster installation options you will receive a kubectl command to install the Diagrid agent on your cluster. You can optionally download the manifest file to inspect what resources are installed. All of this can also be done using a [K8s operator](https://docs.diagrid.io/operator-overview) for GitOps deployments.
 
 Apply the manifests to a test cluster and navigate to the [dashboard](https://conductor.diagrid.io/clusters) to watch the agent come online and install/upgrade Dapr.
+
+> Important: Follow the instructions in [Local-Setup.md](./conductor-setup.sh) to setup a local cluster manually.
 
 ## View the cluster summary
 
