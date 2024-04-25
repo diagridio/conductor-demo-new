@@ -4,7 +4,7 @@ The Order System is composed of five Go microservices, one .NET 8 Dapr Workflow,
 
 The demo is capable of showcasing features for the Enteprise and Free tiers for Conductor.
 
-For more information on the app services read [./README.md](./README.md).
+For more information on the app services refer to the main [README.md](./../README.md) file.
 
 ## Clusters
 
