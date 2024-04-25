@@ -15,9 +15,9 @@ Clicking on `Apps Graph` shows a graphical view of the Dapr applications running
 
 Isolate on the `order-service` to view metrics from it publishing orders to the `oms.pubsub` message broker to a number of subscribers. Isolate on `oms.pubsub` to see all metrics of connected apps that are communicating with the broker. The metrics shown are in near-realtime and are *not* using Dapr tracing configurations but instead just the Dapr metrics data scraped from the Prometheus endpoint on each Dapr sidecar. 
 
--> Isolating `virtual-customer` will present a service invocation error tom `receipt-generation-service`. This error is detailed at [Service invocation error](./08%20-%20Induced%20errors.md). 
+-> Isolating `virtual-customer` will present a service invocation error tom `receipt-generation-service`. This error is detailed at [Service invocation error](./08%20-%20Induced%20errors.md#service-invocation-error). 
 
--> Clicking on `receipt-generation-service` shows the metrics from the message broker to the subscribing receipt service and it failing to output the receipt to `oms.binding.receipt` by drawing the edge as red. This error is detailed at [Redis Binding Error](./08%20-%20Induced%20errors.md).
+-> Clicking on `receipt-generation-service` shows the metrics from the message broker to the subscribing receipt service and it failing to output the receipt to `oms.binding.receipt` by drawing the edge as red. This error is detailed at [Redis Binding Error](./08%20-%20Induced%20errors.md#redis-binding-error).
 
 
 -> Click on the link button next to the `receipt-generation-service` to navigate to the app-specific view.
