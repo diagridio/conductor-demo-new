@@ -27,6 +27,17 @@ If you are a developer working on improving these services, keep following the i
 
 ## Development instructions
 
+
+### Clone this repository
+
+```git
+git clone https://github.com/diagridio/conductor-demo-new.git
+
+cd conductor-demo-new
+```
+
+### Choose your path
+
 There are two development processes you can follow: 
 
  - [Development and deployment to local k8s cluster.](https://github.com/diagridio/conductor-demo-new/tree/demo-scenarios?tab=readme-ov-file#deployment-to-local-cluster-kindminikubeetc) 
