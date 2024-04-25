@@ -10,7 +10,6 @@ The demo is capable of showcasing features for the Enteprise and Free tiers for 
 
 For more information on the app services read [./README.md](./README.md).
 
-
 ## Clusters
 
 The demo is deployed in two separate Conductor clusters.
@@ -20,9 +19,90 @@ The demo is deployed in two separate Conductor clusters.
 | Free |Demo Free Org| Order-System-Demo | [gke-n-dataplane-demo-us-west1-a1](https://console.cloud.google.com/kubernetes/clusters/details/us-west1-a/gke-n-dataplane-demo-us-west1-a1/details?project=prj-dataplane-n-demo-30534) |
 | Enterprise |Demo Org| Order-System-Demo |  [gke-n-dataplane-demo-us-west1-a2](https://console.cloud.google.com/kubernetes/clusters/details/us-west1-a/gke-n-dataplane-demo-us-west1-a2/details?project=prj-dataplane-n-demo-30534) |  
 
-## Running from deployed environment
+## Running from the deployed environment
 
+Follow [these instructions](https://cloud.google.com/kubernetes-engine/docs/how-to/cluster-access-for-kubectl) to connect to the GCP Clusters above to manage the environment on k8s.
 
+#### Components
+
+All components are in the folder `components/k8s`. To apply new configurations, modify one or more files and run:
+
+```bash
+kubectl apply -f components/k8s
+```
+
+## Failures
+
+The solution contains multiple induced errors that can be displayed and fixed in real-time.
+
+### Component metadata contains sensitive information as plain text
+
+This will show as an unresolved Security recommendation within the **Advisor** section in Conductor.
+
+![Screenshot 2024-04-24 at 6 55 27 PM](https://github.com/diagridio/conductor-demo-new/assets/1051195/39fd85c9-f523-4c24-bcb6-8762f5eddda8)
+
+To mitigate, modify the file `components/k8s/oms.pubsub.yaml` replacing eh hardcoded password with:
+
+```yaml
+- name: saslPassword
+    secretKeyRef:
+      name: kafka-password
+      key: kafka-password
+```
+
+Apply the configuration with `kubectl apply -f components/k8s` and wait a few minutes for the issue to be resolved in conductor.
+
+### Redis binding error
+
+The [Redis binding spec](https://docs.dapr.io/reference/components-reference/supported-bindings/redis/) states that every _create_ request requires a key _key_ as metadata. 
+
+Within the Receipt Service [main.py](https://github.com/diagridio/conductor-demo-new/blob/demo-scenarios/python/receipt-generation-service/app/main.py) file, the following snippet induces a malformed metadata key to be sent to Redis ~30% of the time for all invocations:
+
+```python
+# 30% of the time, induce error when using Redis. No key "key" in the request
+if random.random() < 0.3:
+  binding_key = {'receiptName': order.orderId}
+```
+
+This issue can be observed in multiple places:
+
+#### App Insights - Critical metrics issue
+
+First as a critical metric within App Insights. If the error is not showing, you can increase the `Time Span` in the _Notifications_ page to find it.
+
+![Screenshot 2024-04-24 at 7 40 08 PM](https://github.com/diagridio/conductor-demo-new/assets/1051195/4202191a-4ee0-42a0-94a2-f0ee2e11d0e3)
+
+#### Apps Graph
+
+By isolating `receipt-generation-service`:
+
+![Screenshot 2024-04-24 at 7 42 41 PM](https://github.com/diagridio/conductor-demo-new/assets/1051195/f92d70bb-ed90-4081-b4be-09f141781bfc)
+
+### Component initialization error
+
+The component `components/oms.state.loyalty-fail.yaml` contains a malformed `redisHost` value. This can be detected in the _Component Insights_ section:
+
+![Screenshot 2024-04-24 at 8 04 23 PM](https://github.com/diagridio/conductor-demo-new/assets/1051195/680e18eb-ecd2-47b0-b566-29f572297b63)
+
+You can check the component yaml file to easily detect the error:
+
+![Screenshot 2024-04-24 at 8 04 48 PM](https://github.com/diagridio/conductor-demo-new/assets/1051195/71a1ca42-492b-4e96-ac26-f48e19e4ceb7)
+
+To fix this issue, comment out the file `components/oms.state.loyalty-fail.yaml` and uncomment the content in `components/oms.state.loyalty.yaml`. Then run the command below to apply the configurations and wait a few seconds for the error to disappear. 
+
+```bash
+kubectl apply -f components/k8s
+```
+
+### Service invocation error
+
+The `virtual-customer` main path sends orders to `order-service`, but there's an induced error that calls a non-existing service from `receipt-generation-service` ~20% of the time.
+
+![Screenshot 2024-04-24 at 10 42 00 PM](https://github.com/diagridio/conductor-demo-new/assets/1051195/bce92458-f722-44b5-8c49-c192c6172386)
+
+This error is displayed within the App Graph by isolating the `virtual-customer` app and verifying the error rate to `receipt-generation-service`.
+
+![Screenshot 2024-04-24 at 10 43 09 PM](https://github.com/diagridio/conductor-demo-new/assets/1051195/2dfbaa13-83d9-4d69-a6cc-ae000587e057)
 
 ## Prerequisites
 
@@ -68,7 +148,7 @@ Apply the manifests to a test cluster and navigate to the [dashboard](https://co
 
 ## View the cluster summary
 
-OMS Demo Cluster Summary:
+Summary:
 After you've created your cluster connection in Conductor then you can view the cluster summary page to look at an overview of what is happening in your cluster from a Dapr perspective.
 - A ton of Dapr details shown including whether `mtls` is enabled, the `root certificate expiry`, `dapr version` etc. 
     - For additional details on the Dapr control plane pods, view the Dapr Status page (click on `Healthy` link). Polling every ~5 seconds.
@@ -78,7 +158,7 @@ After you've created your cluster connection in Conductor then you can view the 
 
 ## View and implement Advisor recommendations
 
-OMS Demo Cluster Advisor:
+Advisor:
 Looking at the Cluster Advisor page you can see there are a number of recommended actions to take on Conductor for production Dapr deployments. These recommendations are automatically generated based on your cluster configuration and Dapr-enabled applications so just need to install the agent to see the advisories. Advisor recommendations are evaluated every 15 mins but can be synced when desired as well as dismissed if they are not relevant to your deployment.
 
 Over 30 advisories including:
@@ -133,7 +213,7 @@ Clicking on `Apps Graph` shows a graphical view of the Dapr applications running
 
 Isolate on the `order-service` to view metrics from it publishing orders to the `oms.pubsub` message broker to a number of subscribers. Isolate on `oms.pubsub` to see all metrics of connected apps that are communicating with the broker. The metrics shown are in near-realtime and are *not* using Dapr tracing configurations but instead just the Dapr metrics data scraped from the Prometheus endpoint on each Dapr sidecar.
 
--> Clicking on `receipt-generation-service` shows the metrics from the message broker to the subscribing receipt service and it failing to output the receipt to `oms.binding.receipt` by drawing the edge as red similar to the below.
+-> Clicking on `receipt-generation-service` shows the metrics from the message broker to the subscribing receipt service and it failing to output the receipt to `oms.binding.receipt` by drawing the edge as red. This error is detailed at [Redis Binding Error](https://github.com/diagridio/conductor-demo-new/edit/demo-scenarios/Conductor-Demo-Scenarios.md#redis-binding-error).
 
 ![image](assets/receipt-generation-svc-appgraph.png)
 
