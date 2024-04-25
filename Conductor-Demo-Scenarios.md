@@ -98,7 +98,16 @@ kubectl apply -f components/k8s
 
 The `virtual-customer` main path sends orders to `order-service`, but there's an induced error that calls a non-existing service from `receipt-generation-service` ~20% of the time.
 
-![Screenshot 2024-04-24 at 10 42 00 PM](https://github.com/diagridio/conductor-demo-new/assets/1051195/bce92458-f722-44b5-8c49-c192c6172386)
+```golang
+// ~20% of the time, let's mock a call to a non-existing method from an existing app-id to demonstrate error handling in Conductor
+if rand.Float64() < 0.2 {
+    log.Println("Mocking  call to non-existing service!")
+    _, err = client.InvokeMethod(context.Background(), "receipt-generation-service", "non-existing-method", "GET")
+    if err != nil {
+        log.Printf("Error invoking method. Error: %v", err)
+    }
+}
+```
 
 This error is displayed within the App Graph by isolating the `virtual-customer` app and verifying the error rate to `receipt-generation-service`.
 
