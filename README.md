@@ -32,9 +32,6 @@ If you are a developer working on improving these services, continue here.
 - Kubernetes cluster of your choice (3+ nodes recommended)
 - Helm
 
-Run the commands in the [./conductor-setup](./conductor-setup.sh) script one by one for best results. All Dapr components are deployed on Kubernetes today.
-
-
 ### Create application namespaces
 
 After connecting to your cluster, run the following command to create the namespaces:
