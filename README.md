@@ -21,11 +21,18 @@ A sample order management system composed of 8 Dapr-enabled microservices to sho
 
 See [Demo overview](./docs/01%20-%20Overview.md).
 
-## Deployment to local cluster (Kind/Minikube/etc)
-
 > If you plan to deploy the services locally in your own cluster, follow the instructions in [Local setup.md](./docs/09%20-%20Local%20setup.md). Skip the rest of the instructions below.
 
-If you are a developer working on improving these services, continue here.
+If you are a developer working on improving these services, keep following the instructions here.
+
+## Development instructions
+
+There are two development processes you can follow: 
+
+ - [Development and deployment to local k8s cluster.](https://github.com/diagridio/conductor-demo-new/tree/demo-scenarios?tab=readme-ov-file#deployment-to-local-cluster-kindminikubeetc) 
+ - [Development and run the services indivisually in your local machine (non-containerized)](https://github.com/diagridio/conductor-demo-new/tree/demo-scenarios?tab=readme-ov-file#running-dapr-services-locally-non-containerized).
+
+## Deployment to local cluster (Kind/Minikube/etc)
 
 ### Prerequisites
 
