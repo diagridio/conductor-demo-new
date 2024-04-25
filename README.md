@@ -52,15 +52,14 @@ There are two development processes you can follow:
 
 ### Create application namespaces
 
-After connecting to your cluster, run the following command to create the namespaces:
+After connecting to your cluster, run the following command to create the namespaces we will use for the app, Dapr, and supporting components:
 
 ```bash
-# create application namespaces
-kubectl create ns order-system # Our services
-kubectl create ns dapr-system # Dapr
-kubectl create ns redis # Redis
-kubectl create ns kafka # Kafka
-kubectl create ns zipkin # Zipkin
+kubectl create ns order-system 
+kubectl create ns dapr-system 
+kubectl create ns redis 
+kubectl create ns kafka 
+kubectl create ns zipkin 
 ```
 
 ### Install Dapr and create RBAC
@@ -71,6 +70,8 @@ kubectl apply -f ./components/k8s/dapr-secret-reader.yaml
 ```
 
 ### Setup metrics server
+
+The metrics server is a Conductor pre-requisite. Some k8s distributions already cover this requirement.
 
 See more details at [Conductor pre-requisites](https://docs.diagrid.io/conductor/getting-started/prereqs/#installation-prerequisites).
 
@@ -145,7 +146,7 @@ For manual deployments, use the deployment files in `deployment-files/k8s-dev`. 
 
 #### Build and push docker images to the development registry individually.
 
-Inside each service folder there is a Makefile. Navigate to the folder. modigy the contents of the Makefile to deploy the images to your own registry and run the command below to build and push the images. 
+Inside each service folder there is a Makefile. Navigate to the folder, modify the contents of the Makefile to deploy the images to your own registry and run the command below to build and push the images. 
 
 For example, to build and push the `order-service` image, run:
 
@@ -163,7 +164,7 @@ Running the services in your computer will be simpler, as we won't depend on k8s
 - Go version 1.20
 - .NET Core 8
 - Python 3.11
-- Docker
+- Docker desktop
 - Dapr 1.13.2
 
 ### Deploy Dapr components
@@ -174,7 +175,11 @@ First we will deploy the components that we will use throughout the demo:
 kubectl apply -f ./components/local
 ```
 
-### To test the services locally, you can run the following command: 
+### To test the services locally, you can run leverage Makefile.
+
+Inside each service folder there is a Makefile. Navigate to the folder. run the command below to tun the service locally. 
+
+For example, to run the `order-service` app, run:
 
 ```bash
 cd go/order-service
@@ -185,7 +190,7 @@ make run
 
 ## GitHub Actions
 
-Every push to the main branch will trigger a process that builds and publishes a new image tagged with the commit SHA. The image is deployed to two GKE clusters after that. For details on teh clustes, see [Demo overview](./docs/01%20-%20Overview.md).
+Every push to the main branch will trigger a process that builds and publishes a new image tagged with the commit SHA. The image is deployed to two GKE clusters after that. For details on the clustes, see [Demo overview](./docs/01%20-%20Overview.md).
 
 [Kustomize](https://kustomize.io/) is used to create the deployments dynamically.
 
