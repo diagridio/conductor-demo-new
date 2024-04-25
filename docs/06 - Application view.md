@@ -7,7 +7,7 @@ Near realtime resource information like CPU and memory resources including the p
 
 -> Throughputs page shows the golden metrics graphs over time. For instance the latency, throughput and error rate for both Dapr HTTP and gRPC calls broken down by API calls.
 
-Notice that digging into the `receipt-generation-service` you will see a high error rate for the `HTTP Request Error Rate` and `gRPC Request Error Rate` graphs. Specifically the call to the Redis output binding from the app seems to be failing ~30% of the time.  [Redis Binding Error](./08%20-%20Induced%20errors.md).
+Notice that digging into the `receipt-generation-service` you will see a high error rate for the `HTTP Request Error Rate` and `gRPC Request Error Rate` graphs. Specifically the call to the Redis output binding from the app seems to be failing ~30% of the time.  [Redis Binding Error](./08%20-%20Induced%20errors.md#redis-binding-error).
 
 ![image](./images/receipt-binding-error-rate.png)
 
