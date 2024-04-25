@@ -29,7 +29,7 @@ Filter on `metrics` to see what default metrics rules are being triggered for th
 
 ## Loyalty Service App Summary:
 
-The `loyalty-service` also provides good insights on component failures. More details at [Component initialization error](./08%20-%20Induced%20errors.md).
+The `loyalty-service` also provides good insights on component failures. More details at [Component initialization error](./08%20-%20Induced%20errors.md#component-initialization-error).
 
 
 **Next:** [Upgrade Dapr](./07%20-%20Upgrade%20Dapr.md)
