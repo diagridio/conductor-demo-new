@@ -22,7 +22,7 @@ type Config struct {
 
 func main() {
 
-	log.Println("Starting the loyalty service!!!")
+	log.Println("Starting the loyalty service.")
 
 	//set app port
 	appPort := "5400"

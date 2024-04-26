@@ -87,7 +87,7 @@ namespace OrderProcessorWorkflow.Controllers
                     }
                     else
                     {
-                        _logger.LogInformation("Order workflow is {state.RuntimeStatus} but the order was not processed.", state.RuntimeStatus);
+                        _logger.LogInformation("Order workflow is  {state.RuntimeStatus} but the order was not processed.", state.RuntimeStatus);
                         return BadRequest();
                     }
                 }

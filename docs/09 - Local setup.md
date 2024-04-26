@@ -1,0 +1,140 @@
+# Run the demo in your own cluster
+
+## Prerequisites
+
+- Kubernetes cluster of your choice (3+ nodes recommended)
+- Helm
+
+Run the commands in the [./conductor-setup](./conductor-setup.sh) script one by one for best results. All Dapr components are deployed on Kubernetes today.
+
+## Clone this repository
+
+```git
+git clone https://github.com/diagridio/conductor-demo-new.git
+
+cd conductor-demo-new
+```
+
+## Create application namespaces
+
+After connecting to your cluster, run the following command to create the namespaces:
+
+```bash
+# create application namespaces
+kubectl create ns order-system # Our services
+kubectl create ns dapr-system # Dapr
+kubectl create ns redis # Redis
+kubectl create ns kafka # Kafka
+kubectl create ns zipkin # Zipkin
+```
+
+## Install Dapr and create RBAC
+
+You can choose to skip this step if you want Conductor to manage your Dapr installation (recommended):
+
+```bash
+dapr init -k -n dapr-system
+kubectl apply -f ./components/k8s/dapr-secret-reader.yaml
+```
+
+## Setup metrics server
+
+If you are on **Conductor Free**, this step will be taken care automatically for you. If you are on **Conductor Enterprise**, this step is needed for some distributions. See more details at [Conductor pre-requisites](https://docs.diagrid.io/conductor/getting-started/prereqs/#installation-prerequisites).
+
+```bash
+kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml
+kubectl patch deployment metrics-server -n kube-system --type "json" -p '[{"op": "add", "path": "/spec/template/spec/containers/0/args/-", "value": "--kubelet-insecure-tls"}]'
+```
+
+## Setup Helm
+
+```bash
+helm repo add bitnami https://charts.bitnami.com/bitnami
+helm repo update
+```
+
+## Redis setup
+
+Install Redis, export the password and create a secret that will be accessed from the component files.
+
+```bash
+helm install redis bitnami/redis -n redis
+export REDIS_PASSWORD=$(kubectl get secret --namespace redis redis -o jsonpath="{.data.redis-password}" | base64 -d) 
+
+kubectl create secret generic redis-password --from-literal=redis-password=$REDIS_PASSWORD -n order-system
+```
+
+## Kafka setup
+
+Install Kafka, export the password and create a secret that will be accessed from the component files.
+
+```bash
+helm install --set persistence.enabled=false --set zookeeper.persistence.enabled=false --set auth.clientProtocol=sasl kafka bitnami/kafka -n kafka
+
+export KAFKA_PASSWORD=$(kubectl get secret kafka-user-passwords --namespace kafka -o jsonpath='{.data.client-passwords}' | base64 -d | cut -d , -f 1)
+kubectl create secret generic kafka-password --from-literal=kafka-password=$KAFKA_PASSWORD -n order-system
+```
+
+## Install Zipkin
+
+Zipkin will be used for applicaiton tracing.
+
+```bash
+echo "Zipkin namespace created"
+kubectl create deployment zipkin -n zipkin --image openzipkin/zipkin
+echo "Zipkin deployment created"
+kubectl expose deployment zipkin -n zipkin --type LoadBalancer --port 9411 
+echo "Zipkin deployment exposed"
+kubectl get svc -n zipkin -w
+export ZIPKIN_DASHBOARD=$(kubectl get svc --namespace zipkin zipkin -o jsonpath="{.status.loadBalancer.ingress[0].ip}"):9411
+echo "View tracing dashboard at $ZIPKIN_DASHBOARD"
+```
+
+## Important
+
+Since we are inducing a component security advisory, update the content of `/components/k8s/oms.pubsub.yaml` with the new value for $KAFKA_PASSWORD. Redeploy the component.
+
+Run `echo $KAFKA_PASSWORD` to retrieve the value.
+
+## Deploy Dapr components
+
+Now we will deploy the components that we will use throughout the demo:
+
+```bash
+kubectl apply -f ./components/k8s
+```
+
+## Deploy services
+
+To deploy the services locally, navigate to the [order-system public registry](https://console.cloud.google.com/artifacts/docker/prj-common-d-shared-89549/us-central1/reg-d-common-docker-public), fetch the latest tag for each container starting with `order-system/` and update the image tag at each corresponding file in the `/deployment-files/k8s-dev/` folder.
+
+Finally, run:
+
+```bash
+kubectl apply -f ./deployment-files/k8s-dev
+```
+
+> The contents of the folder `/deployment-files/k8s` are used for automated CI/CD pipelines, as described in the main [README](./../README.md) file.
+
+Check the state of your pods by running:
+
+```bash
+kubectl get pods -n order-system
+```
+
+## Known issues
+
+There is a current issue with Redis where it constantly becomes full. We are working on mitigating this issue, but if you start seeing a errors related to Redis being unavailable, run the following commands to flush the state store:
+
+```bash
+k exec -it redis-master-0 -n redis -- /bin/bash
+```
+
+When the Redis prompt is available, run:
+
+```bash
+redis-cli -a $REDIS_PASSWORD --scan --pattern '*' | xargs redis-cli -a $REDIS_PASSWORD DEL
+```
+
+Finally, run `exit` to leave the Redis prompt.
+

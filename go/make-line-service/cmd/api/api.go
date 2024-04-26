@@ -177,7 +177,7 @@ func deleteOrder(orders []OrderSummary, orderId string) ([]OrderSummary, OrderSu
 
 	//order not found
 	if deletedOrder.OrderID == "" {
-		return orders, deletedOrder, errors.New("order not found")
+		return orders, deletedOrder, errors.New("order  not found.")
 	}
 
 	// recreating the orders array by appending the first part of the array before the order to be deleted

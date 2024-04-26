@@ -133,7 +133,7 @@ func (app *Config) getOrders(storeId string) ([]OrderSummary, error) {
 	var orders []OrderSummary
 	err = json.Unmarshal(response, &orders)
 	if err != nil {
-		log.Printf("Error unmarshalling orders. Error: %v", err)
+		log.Printf("Error unmarshalling  orders. Error: %v", err)
 		return nil, err
 	}
 
