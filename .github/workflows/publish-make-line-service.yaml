@@ -3,7 +3,7 @@ name: Build and Push Make-Line Service Image
 on:
   push:
     branches:
-      - demo-scenarios
+      - main
     paths:
       - 'go/make-line-service/**'
 
