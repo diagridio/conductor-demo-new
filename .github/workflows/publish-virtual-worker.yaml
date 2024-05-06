@@ -3,7 +3,7 @@ name: Build and Push Virtual Worker Image
 on:
   push:
     branches:
-      - demo-scenarios
+      - main
     paths:
       - 'go/virtual-worker/**'
 
