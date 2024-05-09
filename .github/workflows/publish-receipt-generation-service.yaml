@@ -3,7 +3,7 @@ name: Build and Push Receipt Generation Service Image
 on:
   push:
     branches:
-      - stg-deployment
+      - main
     paths:
       - 'python/receipt-generation-service/**'
 

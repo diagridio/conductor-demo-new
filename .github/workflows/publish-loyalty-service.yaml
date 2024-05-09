@@ -3,7 +3,7 @@ name: Build and Push Loyalty Service Image
 on:
   push:
     branches:
-      - stg-deployment
+      - main
     paths:
       - 'go/loyalty-service/**'
 
