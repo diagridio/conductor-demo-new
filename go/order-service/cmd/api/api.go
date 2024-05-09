@@ -40,7 +40,7 @@ func (app *Config) HandleCreateOrderSummary(w http.ResponseWriter, r *http.Reque
 	var customerOrder CustomerOrder
 	err := app.readJSON(w, r, &customerOrder)
 	if err != nil {
-		log.Printf("Error unmarshalling order summary! Error: %v", err)
+		log.Printf("Error unmarshalling order summary. Error: %v", err)
 		app.writeError(w, err, http.StatusBadRequest)
 		return
 	}

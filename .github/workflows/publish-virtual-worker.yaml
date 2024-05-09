@@ -3,7 +3,7 @@ name: Build and Push Virtual Worker Image
 on:
   push:
     branches:
-      - stg_deployment
+      - stg-deployment
     paths:
       - 'go/virtual-worker/**'
 

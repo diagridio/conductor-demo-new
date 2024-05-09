@@ -3,7 +3,7 @@ name: Build and Push Order Service Image
 on:
   push:
     branches:
-      - stg_deployment
+      - stg-deployment
     paths:
       - 'go/order-service/**'
 
