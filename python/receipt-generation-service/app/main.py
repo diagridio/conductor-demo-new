@@ -32,7 +32,7 @@ def healthz():
     resp = requests.get(f'http://localhost:{port}/v1.0/healthz')
 
     if resp.status_code != 200:
-        return JSONResponse({'status': 'Healthy'}, status_code=status.HTTP_200_OK)
+        return JSONResponse({'status': 'Healthy.'}, status_code=status.HTTP_200_OK)
     
     return JSONResponse({'status': 'Not found'}, status_code=status.HTTP_404_NOT_FOUND)
 

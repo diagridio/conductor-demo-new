@@ -48,7 +48,7 @@ namespace OrderProcessorWorkflow.Activities
 
                 if (!response.IsSuccessStatusCode)
                 {
-                    _logger.LogInformation("Loyalty update was unsuccessful: {0} {1} {2}", (int)response.StatusCode, response.StatusCode, await response.Content.ReadAsStringAsync());
+                    _logger.LogInformation("Loyalty points update was unsuccessful: {0} {1} {2}", (int)response.StatusCode, response.StatusCode, await response.Content.ReadAsStringAsync());
                     return new OrderResult(Processed: false);
                 }
                 else
