@@ -121,8 +121,8 @@ kubectl apply -f components/k8s
 The `virtual-customer` main path sends orders to `order-service`, but there's an induced error that calls a non-existing service from `receipt-generation-service` ~20% of the time.
 
 ```golang
-// ~20% of the time, let's mock a call to a non-existing method from an existing app-id to demonstrate error handling in Conductor
-if rand.Float64() < 0.2 {
+// ~45% of the time, let's mock a call to a non-existing method from an existing app-id to demonstrate error handling in Conductor
+if rand.Float64() < 0.45 {
     log.Println("Mocking  call to non-existing service!")
     _, err = client.InvokeMethod(context.Background(), "receipt-generation-service", "non-existing-method", "GET")
     if err != nil {
