@@ -30,6 +30,13 @@ kubectl scale statefulset kafka-controller --replicas=0 -n kafka
 
 ![Screenshot 2024-05-15 at 2 03 23 PM](https://github.com/diagridio/conductor-demo-new/assets/1051195/e90fa4b3-c4db-4832-9876-698813c5cf25)
 
+**App Notifications**
+
+![Screenshot 2024-05-15 at 2 54 59 PM](https://github.com/diagridio/conductor-demo-new/assets/1051195/83849c12-f57d-4080-b3e9-435d5398c103)
+
+**App Graph**
+
+TODO: ADD WORKING SCREENSHOT
 
 ### How to fix this error?
 
