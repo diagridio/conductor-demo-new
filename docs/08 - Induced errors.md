@@ -1,8 +1,48 @@
-# Induced errors
+# Showcasing errors
 
 The solution contains multiple induced errors that can be displayed and some can be fixed in real-time.
 
-## Component metadata contains sensitive information as plain text
+## Reliability issue - Component is offline [Configuration needed]
+
+### Overview
+A component (kafka) is suddenly offline.
+
+### How to trigger
+
+On a terminal run the following command to set the number of kafka replicas to 0:
+
+```
+kubectl scale statefulset kafka-controller --replicas=0 -n kafka
+```
+
+### Where can you see this error?
+
+**`Components` tab**
+
+![Screenshot 2024-05-15 at 2 00 59 PM](https://github.com/diagridio/conductor-demo-new/assets/1051195/c5fc613f-a310-4da2-aac9-07a9ab6ddc49)
+![Screenshot 2024-05-15 at 2 01 13 PM](https://github.com/diagridio/conductor-demo-new/assets/1051195/7c11e13c-3004-4e15-9221-f96e8d51c82c)
+
+**App Summary - `order-service` Insights**
+
+![Screenshot 2024-05-15 at 2 05 33 PM](https://github.com/diagridio/conductor-demo-new/assets/1051195/966c1e8a-d755-4864-9ca3-02d0a2c0df90)
+
+**App Summary - gRPC Request Error Rate on `order-service`** 
+
+![Screenshot 2024-05-15 at 2 03 23 PM](https://github.com/diagridio/conductor-demo-new/assets/1051195/e90fa4b3-c4db-4832-9876-698813c5cf25)
+
+
+### How to fix this error?
+
+On a terminal run the following command to set the number of kafka replicas to 3:
+
+```
+kubectl scale statefulset kafka-controller --replicas=3 -n kafka
+```
+
+## Security issue - Component configuration [Already induced in YAML]
+
+### Overview 
+Component metadata(Kafka pubsub) contains sensitive information as plain text.
 
 ### Where can you see this error?
 
@@ -16,7 +56,7 @@ The solution contains multiple induced errors that can be displayed and some can
 ![Screenshot 2024-05-15 at 1 07 13 PM](https://github.com/diagridio/conductor-demo-new/assets/1051195/8bbadd99-36c0-4d16-984b-8fa1bd6d891e)
 
 ### How to fix this issue?
-To mitigate, modify the file `components/k8s/oms.pubsub.yaml` replacing eh hardcoded password with:
+To mitigate, modify the file `components/k8s/oms.pubsub.yaml` replacing the hardcoded password with:
 
 ```yaml
 - name: saslPassword
