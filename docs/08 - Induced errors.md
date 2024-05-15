@@ -4,6 +4,10 @@ The solution contains multiple induced errors that can be displayed and some can
 
 ## Component metadata contains sensitive information as plain text
 
+### Where can you see this error?
+
+- Main `Advisor` page for the cluster.
+- 
 This will show as an unresolved Security recommendation within the **Advisor** section in Conductor.
 
 ![unresolved-security-advisor](./images/unresolved-security-advisor.png)
