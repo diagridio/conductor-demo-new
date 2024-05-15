@@ -6,12 +6,16 @@ The solution contains multiple induced errors that can be displayed and some can
 
 ### Where can you see this error?
 
-- Main `Advisor` page for the cluster.
-- 
-This will show as an unresolved Security recommendation within the **Advisor** section in Conductor.
+**`Advisor` tab.**
+![Screenshot 2024-05-15 at 1 06 29 PM](https://github.com/diagridio/conductor-demo-new/assets/1051195/2e34f8cb-832e-44c4-b821-35f048201e5a)
 
 ![unresolved-security-advisor](./images/unresolved-security-advisor.png)
 
+
+**`Components insights` on Cluster Summary**
+![Screenshot 2024-05-15 at 1 07 13 PM](https://github.com/diagridio/conductor-demo-new/assets/1051195/8bbadd99-36c0-4d16-984b-8fa1bd6d891e)
+
+### How to fix this issue?
 To mitigate, modify the file `components/k8s/oms.pubsub.yaml` replacing eh hardcoded password with:
 
 ```yaml
