@@ -36,4 +36,4 @@ Before running through the demo scenarios:
 
 ## Induced errors
 
-Errors can be seen throughout the demo workflow, for details go to [Induced errors.md](./08%20-%20Induced%20errors.md)
+Errors can be seen throughout the demo workflow, for details go to [Showcasing errors.md](./08%20-%20Showcasing%20errors.md)
