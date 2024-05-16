@@ -118,7 +118,7 @@ kubectl apply -f components/k8s
 
 ## Service invocation error
 
-The `virtual-customer` main path sends orders to `order-service`, but there's an induced error that calls a non-existing service from `receipt-generation-service` ~20% of the time.
+The `virtual-customer` main path sends orders to `order-service`, but there's an induced error that calls a non-existing service from `receipt-generation-service` ~45% of the time.
 
 ```golang
 // ~45% of the time, let's mock a call to a non-existing method from an existing app-id to demonstrate error handling in Conductor
