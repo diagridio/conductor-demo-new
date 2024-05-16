@@ -175,7 +175,7 @@ First we will deploy the components that we will use throughout the demo:
 kubectl apply -f ./components/local
 ```
 
-### To test the services locally, you can run leverage Makefile.
+### To test the services locally, you can leverage Makefile.
 
 Inside each service folder there is a Makefile. Navigate to the folder. run the command below to tun the service locally. 
 
