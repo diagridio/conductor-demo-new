@@ -126,7 +126,10 @@ kubectl get pods -n order-system
 
 There is a current issue with Redis where it constantly becomes full. We are working on mitigating this issue, but if you start seeing a errors related to Redis being unavailable, run the following commands to flush the state store:
 
+
+
 ```bash
+export REDIS_PASSWORD=$(kubectl get secret --namespace redis redis -o jsonpath="{.data.redis-password}" | base64 -d) 
 k exec -it redis-master-0 -n redis -- /bin/bash
 ```
 
