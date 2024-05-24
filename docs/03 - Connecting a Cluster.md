@@ -1,4 +1,4 @@
-# Connecting a Cluster to Conductor
+# Demo Scenario - Connecting a Cluster
 
 To connect a cluster we need to complete a few steps:
 
