@@ -27,3 +27,5 @@ To mitigate, modify the file `components/k8s/oms.pubsub.yaml` replacing the hard
 ```
 
 Apply the configuration with `kubectl apply -f components/k8s` and wait a few minutes for the issue to be resolved in conductor.
+
+**Next:** [Demo scenario - Offline Component](./07%20-%20Component%20Invocation.md) 
