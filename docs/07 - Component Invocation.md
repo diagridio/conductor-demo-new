@@ -28,4 +28,4 @@ By isolating `receipt-generation-service` you can see the error rate, RPS and la
 
 ![receipt-generation-service-isolate](./images/receipt-generation-service-isolate.png)
 
-**Next:** [Demo scenario - Offline Component](./08%20-%20Component%20Misconfiguration.md) 
+**Next:** [Demo scenario - Component Misconfiguration](./08%20-%20Component%20Misconfiguration.md) 
