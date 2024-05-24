@@ -21,3 +21,4 @@ To fix this issue, comment out the file `components/oms.state.loyalty-fail.yaml`
 ```bash
 kubectl apply -f components/k8s
 ```
+**Next:** [Demo scenario - Service Invocation](./09%20-%20Service%20Invocation.md) 
