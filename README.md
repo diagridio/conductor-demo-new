@@ -21,7 +21,7 @@ A sample order management system composed of 8 Dapr-enabled microservices to sho
 
 See [Demo overview](./docs/01%20-%20Overview.md).
 
-> If you plan to deploy the services locally in your own cluster, follow the instructions in [Local setup.md](./docs/09%20-%20Local%20setup.md). Skip the rest of the instructions below.
+> If you plan to deploy the services locally in your own cluster, follow the instructions in [LOCAL.md](./LOCAL.md). Skip the rest of the instructions below.
 
 If you are a developer working on improving these services, keep following the instructions here.
 
