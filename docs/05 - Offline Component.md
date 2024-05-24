@@ -50,3 +50,5 @@ On a terminal run the following command to set the number of kafka replicas to 3
 ```
 kubectl scale statefulset kafka-controller --replicas=3 -n kafka
 ```
+
+**Next:** [Demo scenario - Component Security](./06%20-%20Component%20Security.md) 
