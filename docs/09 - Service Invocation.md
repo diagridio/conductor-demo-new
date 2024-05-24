@@ -21,4 +21,6 @@ Use this error to showcase how Conductor displays service invoction issues betwe
 
 This error is displayed within the App Graph by isolating the `virtual-customer` app and verifying the error rate to `receipt-generation-service`.
 
-![virtual-customer-isolate](./images/virtual-customer-isolate.png)
+<p align="center">
+<img src="./images/virtual-customer-isolate.png" border="10"/>
+</p>
