@@ -1,3 +1,13 @@
 # Demo Scenario - Cluster Operations
 
 ## Overview 
+
+- Update Dapr
+- Dapr configuration
+- Certificate rotation
+- Production and non-production clusters
+
+## Upgrade Dapr
+
+Showcase how to upgrade Dapr and rollout applications using the Update Dapr
+
