@@ -27,3 +27,5 @@ First as a critical metric within App Insights. If the error is not showing, you
 By isolating `receipt-generation-service` you can see the error rate, RPS and latency:
 
 ![receipt-generation-service-isolate](./images/receipt-generation-service-isolate.png)
+
+**Next:** [Demo scenario - Offline Component](./08%20-%20Component%20Misconfiguration.md) 
