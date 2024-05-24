@@ -18,21 +18,3 @@ The demo is deployed in two separate Conductor clusters.
 
 
 **Next:** [Demo-workflow](./02%20-%20Demo%20workflow.md) 
-
-## Conductor Features Overview
-
-### Cluster Summary
-
-### Advisor
-
-### Applications
-
-### Components
-
-### Configurations
-
-### Subscriptions
-
-### Resiliency Policies
-
-### Actors
