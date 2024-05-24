@@ -19,3 +19,4 @@
 
 - Open `Edit cluster connection` and talk about certificate rotation and frequency.
 
+**Next:** [Demo scenario - Offline Component](./05%20-%20Offline%20Component.md) 
