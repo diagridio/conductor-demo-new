@@ -60,40 +60,6 @@ Talk about how you can add this process to a GitHub Actions workflow, a GitLab p
 - Dapr component initialization runs on a minute-by-minute basis.
 
 
-## Accessing the GKE clusters
-
-View the cluster summary
-Summary: After you've created your cluster connection in Conductor then you can view the cluster summary page to look at an overview of what is happening in your cluster from a Dapr perspective.
-
-A ton of Dapr details shown including whether mtls is enabled, the root certificate expiry, dapr version etc.
-For additional details on the Dapr control plane pods, view the Dapr Status page (click on Healthy link). Polling every ~5 seconds.
-Diagrid Agent details like the status, version and agent manifests.
-Dapr control plane uptime data is shown along with CPU and memory usage of the control plane pods broken down by component. If the control plane health is degraded or the agent has lost connection, these show up in red.
-Conductor agent is polling every 15 seconds for health data.
-
-
-Follow [these instructions](https://cloud.google.com/kubernetes-engine/docs/how-to/cluster-access-for-kubectl) to connect to the GCP Clusters above to manage the environment on k8s.
-
-## Clone this repository
-
-```git
-git clone https://github.com/diagridio/conductor-demo-new.git
-
-cd conductor-demo-new
-```
-
-## Components
-
-All components are in the folder `components/k8s`. During the demo, you will need to apply new configurations. To do so, modify one or more yaml files and run:
-
-```bash
-kubectl apply -f components/k8s
-```
-
-Before running through the demo scenarios:
-- Downgrade or revert the Dapr version of the demo cluster so that it can be upgraded using Conductor. Set `mtls` and `ha` arguments to false to enable more advisories
-
-> Important: Some of these features may not be avaialble for the `Free` version.
 
 ## Recommended Demo Flow
 
