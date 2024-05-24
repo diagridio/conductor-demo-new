@@ -59,4 +59,4 @@ Talk about how you can add this process to a GitHub Actions workflow, a GitLab p
 - Conductor polls every 15 seconds for health data.
 - Dapr component initialization runs on a minute-by-minute basis.
 
-**Next:** [Demo scenario - Connecting a Cluster](./02%20-%20Connecting%20a%20Cluster.md) 
+**Next:** [Demo scenario - Connecting a Cluster](./03%20-%20Connecting%20a%20Cluster.md) 
