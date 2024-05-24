@@ -1,5 +1,7 @@
 # Demo Scenario - Connecting a Cluster
 
+## Overview 
+
 To connect a cluster we need to complete a few steps:
 
 - Setup a new cluster on your preffered k8s distribution
