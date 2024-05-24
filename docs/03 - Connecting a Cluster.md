@@ -139,5 +139,7 @@ kubectl apply -f components/k8s
 
 Follow [Cluster onboarding](https://docs.diagrid.io/conductor/getting-started/cluster-onboarding) to connect your cluster.
 
+**Next:** [Demo scenario - Cluster Operations](./03%20-%20Cluster%20Operations.md) 
+
 
 
