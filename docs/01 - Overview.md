@@ -32,7 +32,7 @@ Get the credentials, replacing `CLUSTER-NAME` with the cluster that you want to 
 gcloud container clusters get-credentials [CLUSTER-NAME] --zone us-west1-a --project prj-dataplane-n-demo-30534
 ```
 
-Fir more details, see [these instructions](https://cloud.google.com/kubernetes-engine/docs/how-to/cluster-access-for-kubectl) to connect to the GCP Clusters above to manage the environment on k8s.
+For more details, see [these instructions](https://cloud.google.com/kubernetes-engine/docs/how-to/cluster-access-for-kubectl) to connect to the GCP Clusters above to manage the environment on k8s.
 
 ### Clone this repository
 
