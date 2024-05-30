@@ -16,5 +16,39 @@ The demo is deployed in two separate Conductor clusters.
 | Free |Demo Free Org| Order-System-Demo | [gke-n-dataplane-demo-us-west1-a1](https://console.cloud.google.com/kubernetes/clusters/details/us-west1-a/gke-n-dataplane-demo-us-west1-a1/details?project=prj-dataplane-n-demo-30534) |
 | Enterprise |Demo Org| Order-System-Demo |  [gke-n-dataplane-demo-us-west1-a2](https://console.cloud.google.com/kubernetes/clusters/details/us-west1-a/gke-n-dataplane-demo-us-west1-a2/details?project=prj-dataplane-n-demo-30534) |  
 
+## Connecting to the clusters and modifying Dapr components
 
-**Next:** [Demo-workflow](./02%20-%20Demo%20workflow.md) 
+### Accessing the GKE clusters
+
+Run the command below to login to Google Cloud:
+
+```
+gcloud auth login
+```
+
+Get the credentials, replacing `CLUSTER-NAME` with the cluster that you want to connect:
+
+```
+gcloud container clusters get-credentials [CLUSTER-NAME] --zone us-west1-a --project prj-dataplane-n-demo-30534
+```
+
+For more details, see [these instructions](https://cloud.google.com/kubernetes-engine/docs/how-to/cluster-access-for-kubectl) to connect to the GCP Clusters above to manage the environment on k8s.
+
+### Clone this repository
+
+```git
+git clone https://github.com/diagridio/conductor-demo-new.git
+
+cd conductor-demo-new
+```
+
+### Components
+
+All components are in the folder `components/k8s`. During the demo, you will need to apply new configurations. To do so, modify one or more yaml files and run:
+
+```bash
+kubectl apply -f components/k8s
+```
+
+**Next:** [Demo scenario - Conductor overview](./02%20-%20Conductor%20Overview.md) 
+
