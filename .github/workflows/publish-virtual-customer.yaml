@@ -3,7 +3,7 @@ name: Build and Push Virtual Customer Image
 on:
   push:
     branches:
-      - main
+      - python-v-fix
     paths:
       - 'go/virtual-customer/**'
 

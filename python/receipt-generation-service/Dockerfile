@@ -1,4 +1,4 @@
-FROM --platform=$BUILDPLATFORM python:3.11
+FROM --platform=$BUILDPLATFORM ubuntu:24.04
 
 WORKDIR /src
 
