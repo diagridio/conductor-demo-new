@@ -5,8 +5,6 @@
 - Kubernetes cluster of your choice (3+ nodes recommended)
 - Helm
 
-Run the commands in the [./conductor-setup](./conductor-setup.sh) script one by one for best results. All Dapr components are deployed on Kubernetes today.
-
 ## Clone this repository
 
 ```git
