@@ -41,8 +41,6 @@ type Config struct{}
 var client dapr.Client
 
 func main() {
-	log.Println("Starting the application!")
-
 	ctx := context.Background()
 	populateConstants()
 
@@ -147,8 +145,8 @@ func createOrder(products []Product) (CustomerOrder, error) {
 	numProducts := len(products)
 	numOrderItems := rng.Intn(min(numProducts, maxUniqueItemsPerOrder))
 
-	var orderItems []OrderItem
 	//fill orderitems array with random products that cannot repeat
+	var orderItems []OrderItem
 	for i := 0; i < numOrderItems; i++ {
 
 		// randomly choose non-duplicated product
@@ -225,6 +223,15 @@ func sendOrder(ctx context.Context, order CustomerOrder) (string, error) {
 		log.Printf("Error calling service: %v", err)
 		return "", err
 	}
+
+	// ~45% of the time, let's mock a call to a non-existing method from an existing app-id to demonstrate error handling in Conductor
+	// if rand.Float64() < 0.45 {
+	// 	log.Println("Mocking  call to non-existing service.")
+	// 	_, err = client.InvokeMethod(context.Background(), "receipt-generation-service", "non-existing-method", "GET")
+	// 	if err != nil {
+	// 		log.Printf("Error invoking method. Error: %v", err)
+	// 	}
+	// }
 
 	log.Printf("Order %s completed!", string(response))
 

@@ -126,14 +126,14 @@ func (app *Config) getOrders(storeId string) ([]OrderSummary, error) {
 	methodWithParameters := "orders/" + storeId
 	response, err := app.daprClient.InvokeMethod(context.Background(), makeLineServiceAppId, methodWithParameters, "GET")
 	if err != nil {
-		log.Printf("Error getting orders from store. Error: %v", err)
+		log.Printf("Error getting orders from store Error: %v", err)
 		return nil, err
 	}
 
 	var orders []OrderSummary
 	err = json.Unmarshal(response, &orders)
 	if err != nil {
-		log.Printf("Error unmarshalling orders. Error: %v", err)
+		log.Printf("Error unmarshalling  orders. Error: %v", err)
 		return nil, err
 	}
 

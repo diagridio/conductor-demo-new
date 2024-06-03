@@ -25,7 +25,7 @@ func (app *Config) HandleHealthz(w http.ResponseWriter, r *http.Request) {
 		os.Exit(1)
 	}
 
-	app.writeJSON(w, http.StatusOK, "Healthy!")
+	app.writeJSON(w, http.StatusOK, "Healthy")
 }
 
 // Handles the update loyalty endpoint
@@ -123,7 +123,7 @@ func (app *Config) updateLoyaltyPoints(orderSummary OrderSummary) error {
 		return err
 	}
 
-	log.Printf("Success! Updated loyalty points for customer %v. Total points: %v", orderSummary.LoyaltyID, loyaltySummary.PointsTotal)
+	log.Printf("Success! Updated loyalty  points for customer %v. Total points: %v", orderSummary.LoyaltyID, loyaltySummary.PointsTotal)
 
 	return err
 }

@@ -8,6 +8,7 @@ import os
 import json
 import logging
 import requests
+import random
 
 import models
 
@@ -31,13 +32,13 @@ def healthz():
     resp = requests.get(f'http://localhost:{port}/v1.0/healthz')
 
     if resp.status_code != 200:
-        return JSONResponse({'status': 'Healthy'}, status_code=status.HTTP_200_OK)
+        return JSONResponse({'status': 'Healthy.'}, status_code=status.HTTP_200_OK)
     
     return JSONResponse({'status': 'Not found'}, status_code=status.HTTP_404_NOT_FOUND)
 
 @app.get("/ready")
 def ready():
-    return JSONResponse({'status': 'Dapr is ready to go!'}, status_code=status.HTTP_200_OK)
+    return JSONResponse({'status': 'Dapr  is ready to go!'}, status_code=status.HTTP_200_OK)
 
 @app.post("/receipt")
 def handleReceipt(orderSummary: models.OrderSummary):
@@ -50,12 +51,25 @@ def handleReceipt(orderSummary: models.OrderSummary):
 def saveReceipt(order: models.OrderSummary):
     with DaprClient() as d:
 
+        # # Invoke  non-existigng method 
+        # try:
+        #     logging.info(f'Calling non-existing method to showcase error in Conductor')
+        #     d.invoke_method(app_id="order-service", method_name="non-existing", data=json.dumps({}))
+        # except Exception as e:
+        #     logging.info(f'Error calling method')
+
+
         logging.info(f'!Saving receipt for order: {order.orderId}')
 
         # Create a typed message with content type and body
         binding_key = {
-            'receiptName': order.orderId
+            'key': order.orderId
         }
+        
+        # 30% of the time, induce error when using Redis. No key "key" in the request
+        if random.random() < 0.3:
+            binding_key = {'receiptName': order.orderId}
+
         binding_data = {
             'orderId': order.orderId,
             'storeId': order.storeId,
@@ -64,14 +78,12 @@ def saveReceipt(order: models.OrderSummary):
             'loyaltyId': order.loyaltyId,
         }
 
-        # Induce error when using Redis. No key "key" in the request
-        # req_data = {'receiptName': order.orderId}
-
+        
         # Invoke binding
         try:
             # Insert order using Dapr output binding via HTTP Post
-            resp = d.invoke_binding(BINDING_NAME, BINDING_OPERATION, json.dumps(binding_data), binding_key )
-            logging.info(f'!Saved receipt for order: {order.orderId}')
+            resp = d.invoke_binding(BINDING_NAME, BINDING_OPERATION, json.dumps(binding_data), binding_key)
+            logging.info(f'Saved receipt for order: {order.orderId}')
             
             return order.orderId
         except Exception as e:
