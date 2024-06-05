@@ -1,4 +1,4 @@
-FROM --platform=$BUILDPLATFORM python:3.11
+FROM --platform=$BUILDPLATFORM python:3.12-slim-bookworm
 
 WORKDIR /src
 
