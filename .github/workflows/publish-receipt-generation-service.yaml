@@ -1,4 +1,4 @@
-name: Build and Push Loyalty Service Image
+name: Build and Push Receipt Generation Service Image
 
 on:
   push:
