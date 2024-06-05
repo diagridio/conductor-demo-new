@@ -14,7 +14,7 @@ spec:
   - name: saslUsername
     value: "user1"
   - name: saslPassword
-    value: H3cqhhx3Dw #Update me!
+    value: V5qYJ96Etj #Update me!
   - name: disableTls 
     value: "true"
 scopes:
