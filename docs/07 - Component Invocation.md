@@ -4,12 +4,14 @@
 
 The [Redis binding spec](https://docs.dapr.io/reference/components-reference/supported-bindings/redis/) states that every _create_ request requires a key _key_ as metadata. 
 
-Within the Receipt Service [main.py](https://github.com/diagridio/conductor-demo-new/blob/demo-scenarios/python/receipt-generation-service/app/main.py) file, the following snippet induces a malformed metadata key to be sent to Redis ~30% of the time for all invocations:
+Within the Receipt Service [api.go](https://github.com/diagridio/conductor-demo-new/blob/demo-scenarios/go/receipt-generation-service/app/main.py) file, the following snippet induces a malformed metadata key to be sent to Redis ~35% of the time for all invocations:
 
-```python
-# 30% of the time, induce error when using Redis. No key "key" in the request
-if random.random() < 0.3:
-  binding_key = {'receiptName': order.orderId}
+```go
+// ~35% of the time, induce error when using Redis. No key "key" in the request
+if rand.Float64() < 0.35 {
+  metadata = make(map[string]string)
+  metadata["orderId"] = orderSummary.OrderID
+}
 ```
 
 This error showcases how Conductor can help you identify underlying issues with the applications code.

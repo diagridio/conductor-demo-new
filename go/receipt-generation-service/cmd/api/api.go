@@ -66,6 +66,7 @@ func (app *Config) HandleGenerateReceipt(w http.ResponseWriter, r *http.Request)
 
 	// ~35% of the time, induce error when using Redis. No key "key" in the request
 	if rand.Float64() < 0.35 {
+		metadata = make(map[string]string)
 		metadata["orderId"] = orderSummary.OrderID
 	}
 
