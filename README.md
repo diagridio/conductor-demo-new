@@ -163,7 +163,6 @@ Running the services in your computer will be simpler, as we won't depend on k8s
 
 - Go version 1.20
 - .NET Core 8
-- Python 3.11
 - Docker desktop
 - Dapr 1.13.2
 

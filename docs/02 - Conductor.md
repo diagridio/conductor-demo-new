@@ -1,4 +1,4 @@
-# Demo Scenario: Conductor overview
+# Demo Scenario: Conductor
 
 ## Conductor Features Overview
 
