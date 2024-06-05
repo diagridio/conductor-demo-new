@@ -11,7 +11,7 @@ import (
 	dapr "github.com/dapr/go-sdk/client"
 )
 
-// Handles the update loyalty endpoint
+// Handles the Healthz endpoint
 func (app *Config) HandleHealthz(w http.ResponseWriter, r *http.Request) {
 
 	//set app port
@@ -29,7 +29,7 @@ func (app *Config) HandleHealthz(w http.ResponseWriter, r *http.Request) {
 	app.writeJSON(w, http.StatusOK, "Healthy")
 }
 
-// Handles the update loyalty endpoint
+// Handles the generate receipt endpoint
 func (app *Config) HandleGenerateReceipt(w http.ResponseWriter, r *http.Request) {
 
 	var orderSummary OrderSummary
@@ -42,7 +42,7 @@ func (app *Config) HandleGenerateReceipt(w http.ResponseWriter, r *http.Request)
 
 	log.Printf("Received Order Summary : %v.", orderSummary.OrderID)
 
-	//marshall loyalty summary to save to state store
+	//marshall order summary to save to state store
 	data, err := json.Marshal(map[string]string{
 		"orderID":   orderSummary.OrderID,
 		"storeID":   orderSummary.StoreID,
