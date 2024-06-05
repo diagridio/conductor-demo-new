@@ -3,7 +3,7 @@ name: Build and Push Order Service Image
 on:
   push:
     branches:
-      - python-v-fix
+      - main
     paths:
       - 'go/order-service/**'
 
