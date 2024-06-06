@@ -17,13 +17,13 @@ spec:
       annotations:
         dapr.io/enabled: "true"
         dapr.io/app-id: "worker-actor"
-        dapr.io/app-port: "80"
+        dapr.io/app-port: "8080"
         dapr.io/config: "config"
         dapr.io/actor-type: "WorkerActor"
     spec:
       containers:
         - name: worker-actor
-          image: "us-central1-docker.pkg.dev/prj-common-d-shared-89549/reg-d-common-docker-public/order-system/worker-actor:9bdc61701847441c4f345a84c2ff263cc1bf3b2e"
+          image: "us-central1-docker.pkg.dev/prj-common-d-shared-89549/reg-d-common-docker-public/order-system/worker-actor:03c6a4020bca09f7c45f933adbfe38c97d6b5371"
           resources:
             requests:
               memory: "256Mi"
@@ -32,6 +32,6 @@ spec:
               memory: "512Mi"
               cpu: "1"
           ports:
-            - containerPort: 80
+            - containerPort: 8080
           imagePullPolicy: Always
           

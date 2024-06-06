@@ -1,6 +1,4 @@
 ﻿using Dapr.Actors;
-using Dapr.Actors.Runtime;
-using System.Threading.Tasks;
 
 namespace WorkerActorService
 {

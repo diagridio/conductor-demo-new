@@ -47,7 +47,7 @@ spec:
         timeout: general
         retry: important
         circuitBreaker: simpleCB
-      virtual-worker:
-        timeout: general
-        retry: important
-        circuitBreaker: simpleCB
+      # virtual-worker:
+      #   timeout: general
+      #   retry: important
+      #   circuitBreaker: simpleCB

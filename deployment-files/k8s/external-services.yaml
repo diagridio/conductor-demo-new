@@ -65,15 +65,15 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: virtual-worker
+  name: worker-actor
   namespace: order-system
   labels:
-    name: virtual-worker
+    name: worker-actor
 spec:
   type: LoadBalancer
   ports:
   - name: http
     port: 8085
-    targetPort: 80
+    targetPort: 8080
   selector:
-    app: virtual-worker
+    app: worker-actor
