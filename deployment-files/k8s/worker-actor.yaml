@@ -18,7 +18,7 @@ spec:
         dapr.io/enabled: "true"
         dapr.io/app-id: "worker-actor"
         dapr.io/app-port: "80"
-        dapr.io/actor-type: "WorkerActor"
+        dapr.io/actor-types: "WorkerActor"
     spec:
       containers:
         - name: worker-actor
