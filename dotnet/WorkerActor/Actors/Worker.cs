@@ -26,12 +26,16 @@ namespace WorkerActor.Actors
             {
                 await client.DeleteStateAsync(storeName, orderId);
                 Console.WriteLine($"Order {orderId} deleted successfully.");
+                
+                return true;
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Error deleting order: {ex.Message}");
                 return false;
             }
+
+            return true;
         }
     }
 }
