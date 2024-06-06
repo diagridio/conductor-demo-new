@@ -76,6 +76,24 @@ namespace OrderProcessorWorkflow.Workflows
                 context.SetCustomStatus("Stopped order process due to receipt generation issues.");
                 return new OrderResult(Processed: false);
             }
+            
+            // Determine if the make-line process is successful
+            result =  await context.CallActivityAsync<OrderResult>(
+                nameof(OrderHandlerActivity),
+                new OrderInput(OrderRequestType.Complete, order));
+                //this.defaultActivityRetryOptions);
+
+            // If receipt generation fails, let the user know 
+            if (!result.Processed)
+            {
+                // End the workflow here since we can;t create the receipt
+                await context.CallActivityAsync(
+                    nameof(NotifyActivity),
+                    new Notification($"Failed to complete order {order.OrderId}"));
+
+                context.SetCustomStatus("Stopped order process due to order completion failure.");
+                return new OrderResult(Processed: false);
+            }
 
             // Let them know their order was processed
             await context.CallActivityAsync(
