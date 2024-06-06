@@ -20,7 +20,7 @@ namespace WorkerActor.Interface
         {
             var propAValue = this.PropertyA == null ? "null" : this.PropertyA;
             var propBValue = this.PropertyB == null ? "null" : this.PropertyB;
-            return $"PropertyA: {propAValue}, PropertyB: {propBValue}";
+            return $"Proper tyA: {propAValue}, PropertyB: {propBValue}";
         }
     }
 }
