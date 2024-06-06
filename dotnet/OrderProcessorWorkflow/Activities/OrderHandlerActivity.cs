@@ -3,6 +3,7 @@ using Dapr.Workflow;
 using OrderProcessorWorkflow.Models;
 using Dapr.Actors;
 using Dapr.Actors.Client;
+using WorkerActor.Interface;
 
 namespace OrderProcessorWorkflow.Activities
 {
@@ -104,12 +105,6 @@ namespace OrderProcessorWorkflow.Activities
                 }
         }
 
-        public interface IWorker : IActor
-        {
-            Task<bool> CompleteOrder(string orderId);
-        
-        }
-
         private async Task<OrderResult> HandleCompleteOrderRequest(OrderSummary orderSummary){
             _logger.LogInformation(
                 "Starting order completion for {orderId}.",
@@ -120,7 +115,7 @@ namespace OrderProcessorWorkflow.Activities
             // In the Client Application
             var actorId = new ActorId(orderSummary.OrderId.ToString());
 
-            var proxy = ActorProxy.Create<IWorker>(actorId, WorkerActorType);
+            var proxy = ActorProxy.Create<IWorkerActor>(actorId, WorkerActorType);
 
             var response = await proxy.CompleteOrder(oId);
 
