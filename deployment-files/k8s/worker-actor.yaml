@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: worker-actor
+  namespace: order-system
+  labels:
+    app: worker-actor
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: worker-actor
+  template:
+    metadata:
+      labels:
+        app: worker-actor
+      annotations:
+        dapr.io/enabled: "true"
+        dapr.io/app-id: "worker-actor"
+        dapr.io/app-port: "80"
+        dapr.io/actor-type: "WorkerActor"
+    spec:
+      containers:
+        - name: worker-actor
+          image: "worker-actor:tag"
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "200m"
+            limits:
+              memory: "512Mi"
+              cpu: "1"
+          ports:
+            - containerPort: 80
+          imagePullPolicy: Always
+          

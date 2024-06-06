@@ -13,3 +13,4 @@ spec:
     value: ""
 scopes:
   - make-line-service
+  - worker-actor
