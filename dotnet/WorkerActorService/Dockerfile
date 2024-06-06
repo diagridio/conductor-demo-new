@@ -8,8 +8,9 @@ FROM build AS publish
 RUN dotnet publish "WorkerActorService.csproj" -c Release -o /app/publish
 
 FROM --platform=$TARGETPLATFORM mcr.microsoft.com/dotnet/aspnet:8.0 AS final
-EXPOSE 8080
+EXPOSE 80
 
+ENV ASPNETCORE_URLS=http://+:80
 WORKDIR /app
 COPY --from=publish /app/publish .
 ENTRYPOINT ["dotnet", "WorkerActorService.dll"]

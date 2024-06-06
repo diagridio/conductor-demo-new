@@ -61,19 +61,3 @@ spec:
     targetPort: 80
   selector:
     app: loyalty-service
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: worker-actor
-  namespace: order-system
-  labels:
-    name: worker-actor
-spec:
-  type: LoadBalancer
-  ports:
-  - name: http
-    port: 8085
-    targetPort: 8080
-  selector:
-    app: worker-actor
