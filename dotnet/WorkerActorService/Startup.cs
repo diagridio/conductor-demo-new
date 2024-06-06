@@ -27,9 +27,15 @@ namespace WorkerActorService
 
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapControllers();    
                 // Register actors handlers that interface with the Dapr runtime.
                 endpoints.MapActorsHandlers();
             });
+
+            if (string.IsNullOrEmpty(Environment.GetEnvironmentVariable("DAPR_GRPC_PORT")))
+            {
+                Environment.SetEnvironmentVariable("DAPR_GRPC_PORT", "5501");
+            }
         }
     }
 }

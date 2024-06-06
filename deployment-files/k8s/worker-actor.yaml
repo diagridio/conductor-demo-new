@@ -17,8 +17,7 @@ spec:
       annotations:
         dapr.io/enabled: "true"
         dapr.io/app-id: "worker-actor"
-        dapr.io/app-port: "8080"
-        dapr.io/actor-types: "WorkerActor"
+        dapr.io/app-port: "80"
     spec:
       containers:
         - name: worker-actor
@@ -31,6 +30,20 @@ spec:
               memory: "512Mi"
               cpu: "1"
           ports:
-            - containerPort: 8080
+            - containerPort: 80
           imagePullPolicy: Always
+          startupProbe:
+            httpGet:
+              path: /healthz
+              port: 80
+            failureThreshold: 6
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /ready
+              port: 80
+            timeoutSeconds: 30
+            successThreshold: 1
+            failureThreshold: 12
+            periodSeconds: 10
           

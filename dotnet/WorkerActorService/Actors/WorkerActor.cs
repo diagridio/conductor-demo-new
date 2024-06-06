@@ -8,7 +8,6 @@ using Dapr.Client;
 
 namespace WorkerActorService
 {   
-    [Actor(TypeName = "WorkerActor")]
     internal class WorkerActor : Actor, IWorkerActor
     {
 
