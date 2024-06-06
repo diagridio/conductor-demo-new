@@ -27,6 +27,8 @@ namespace OrderProcessorWorkflow.Controllers
         private const string OrderCompletedTopic = "ordercompleted";
         private const string PubSubName = "oms.pubsub";
         private readonly DaprWorkflowClient _daprClient;
+    
+        private readonly Random _random;
 
         //string WorkflowName = "OrderProcessingWorkflow";
         //private readonly StateOptions _stateOptions = new StateOptions(){ Concurrency = ConcurrencyMode.FirstWrite, Consistency = ConsistencyMode.Eventual };
@@ -35,6 +37,7 @@ namespace OrderProcessorWorkflow.Controllers
         {
             _logger = logger;
             _daprClient = daprClient;
+            _random = new Random();
         }
         
         [Dapr.Topic(PubSubName, OrderTopic)]
@@ -44,20 +47,21 @@ namespace OrderProcessorWorkflow.Controllers
             if (orderSummary is not null) 
             {
                 var orderId = orderSummary.OrderId.ToString();
-                _logger.LogInformation("Received Order. Initializing workflow {orderId}.", orderId);
+                var instanceId = _random.Next(10000).ToString();
+
+                _logger.LogInformation("Received Order. Initializing workflow {instanceId}.", instanceId);
 
                 // Start the workflow using the order ID as the workflow ID
-                _logger.LogInformation("Starting order workflow {orderId}", orderId);
+                _logger.LogInformation("Starting order {orderId}", orderId);
                     await _daprClient.ScheduleNewWorkflowAsync(
                     name: nameof(OrderProcessingWorkflow),
                     input: orderSummary,
-                    instanceId: orderId);
+                    instanceId: instanceId);
 
 
                 // Wait for the workflow to start and confirm the input
-                WorkflowState state = await _daprClient.WaitForWorkflowStartAsync(instanceId: orderId);
+                WorkflowState state = await _daprClient.WaitForWorkflowStartAsync(instanceId: instanceId);
 
-                _logger.LogInformation("Starting order workflow {orderId}", orderId);
                 // Wait for the workflow to complete
                 while (true)
                 {
@@ -65,13 +69,13 @@ namespace OrderProcessorWorkflow.Controllers
                     try
                     {
                         state = await _daprClient.WaitForWorkflowCompletionAsync(
-                            instanceId: orderId,
+                            instanceId: instanceId,
                             cancellation: cts.Token);
                         break;
                     }
                     catch (OperationCanceledException)
                     {
-                        _logger.LogInformation("Waiting for workflow {orderId} to complete.", orderId);
+                        _logger.LogInformation("Waiting for {orderId} to complete.", orderId);
                         return BadRequest();
                     }
                 }
