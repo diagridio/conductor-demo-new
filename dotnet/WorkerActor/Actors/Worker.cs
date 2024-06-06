@@ -25,7 +25,7 @@ namespace WorkerActor.Actors
             try
             {
                 await client.DeleteStateAsync(storeName, orderId);
-                Console.WriteLine($"Order {orderId} deleted successfully.");
+                Console.WriteLine($"Order {orderId} deleted.");
                 
                 return true;
             }
