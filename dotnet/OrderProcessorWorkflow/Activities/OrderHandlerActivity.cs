@@ -113,9 +113,9 @@ namespace OrderProcessorWorkflow.Activities
             var oId = orderSummary.OrderId.ToString();
 
             // In the Client Application
-            var actorId = new ActorId(orderSummary.OrderId.ToString());
+            //var actorId = new ActorId(orderSummary.OrderId.ToString());
 
-            var proxy = ActorProxy.Create<IWorkerActor>(actorId, WorkerActorType);
+            var proxy = ActorProxy.Create<IWorkerActor>(ActorId.CreateRandom(), WorkerActorType);
 
             var response = await proxy.CompleteOrder(oId);
 
