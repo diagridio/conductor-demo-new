@@ -117,7 +117,7 @@ namespace OrderProcessorWorkflow.Controllers
             //                                         "application/json"));
 
             //     if (response.StatusCode != HttpStatusCode.Accepted){
-            //         _logger.LogError("Failed to start workflow {orderId}. {response}.", orderSummary.OrderId, response);
+            //         _logger.LogError("Failed to s tart workflow {orderId}. {response}.", orderSummary.OrderId, response);
             //         return BadRequest();     
             //     }                                                   
 
