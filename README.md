@@ -15,7 +15,7 @@ A sample order management system composed of 8 Dapr-enabled microservices to sho
 | Receipt Generation Service | Archival program that generates and stores order receipts for auditing and historical purposes  | Kafka subscriber, Redis output binding |
 | Order Processor Workflow  | Responsible for orchestrating a workflow(Loyalty, Receipt, Make-Line) whenever an order is created.   | Kafka subscriber, Redis output binding, Dapr Workflow Client |
 | Virtual Customer | 'Customer simulation' program that simulates customers placing orders | Order service invocation |
-| Virtual Worker | 'Worker simulation' program that simulates the completion of customer orders | Cron input binding, Make-line service invocation | 
+| Worker Actor | 'Worker simulation' program that simulates the completion of customer orders | Actor, Redis State |
 
 ## Demo setup
 
