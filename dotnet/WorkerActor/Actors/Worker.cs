@@ -9,6 +9,7 @@ namespace WorkerActor.Actors
         Task<bool> CompleteOrder(string orderId);
     }
     
+    [Actor(TypeName = "WorkerActor")]
     public class Worker : Actor, IWorker
     {
         private readonly string storeName = "oms.state.makeline"; // Replace with your state store name
