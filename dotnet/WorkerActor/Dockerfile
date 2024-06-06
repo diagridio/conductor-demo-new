@@ -14,5 +14,3 @@ ENV ASPNETCORE_URLS=http://+:80
 WORKDIR /app
 COPY --from=publish /app/publish .
 ENTRYPOINT ["dotnet", "WorkerActor.dll"]
-
-# docker buildx build --platform inux/arm64 -t rochabr/order-processor-workflow:test .
