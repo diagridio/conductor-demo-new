@@ -6,7 +6,7 @@ namespace WorkerActor.Actors
 {
     public interface IWorker : IActor
     {
-        Task<string> CompleteOrder(string orderId);
+        Task<bool> CompleteOrder(string orderId);
     }
     
     public class Worker : Actor, IWorker
