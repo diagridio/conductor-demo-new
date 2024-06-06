@@ -27,9 +27,9 @@ func (app *Config) routes() http.Handler {
 
 	mux.Post("/makeline", app.HandleAddOrderToMakeLine) // handle subscription to add order to make line
 
-	mux.Get("/orders/{storeId}", app.HandleGetOrdersByStoreID) // get all orders by store ID
+	//mux.Get("/orders/{storeId}", app.HandleGetOrdersByStoreID) // get all orders by store ID
 
-	mux.Delete("/orders/{storeId}/{orderId}", app.HandleDeleteOrder) // delete order by order ID
+	//mux.Delete("/orders/{storeId}/{orderId}", app.HandleDeleteOrder) // delete order by order ID
 
 	return mux
 

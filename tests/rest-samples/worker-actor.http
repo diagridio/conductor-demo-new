@@ -6,6 +6,14 @@ dapr-app-id: worker-actor
 
 ### --- HelloWorld ---
 
+### Test Worker
+
+GET {{ daprHttp }}/v1.0/actors/Worker/1/method/CompleterOrder
+dapr-app-id: worker-actor
+Content-Type: application/json
+
+"7778888999"
+
 ### Say Hello World
 
 GET {{ daprHttp }}/v1.0/actors/HelloWorldActor/user1/method/SayHelloWorld
