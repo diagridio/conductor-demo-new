@@ -29,7 +29,7 @@ spec:
     spec:
       containers:
         - name: order-processor-workflow
-          image: "us-central1-docker.pkg.dev/prj-common-d-shared-89549/reg-d-common-docker-public/order-system/order-processor-workflow:f08dda36d89cbe1da2934793c21cb155d7cdb3b4"
+          image: "us-central1-docker.pkg.dev/prj-common-d-shared-89549/reg-d-common-docker-public/order-system/order-processor-workflow:78694f3e6d26e5bdfeef55dfe4345d9c53e1ee26"
           resources:
             requests:
               memory: "256Mi"

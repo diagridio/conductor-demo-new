@@ -1,6 +1,7 @@
 using Dapr.Actors;
 using Dapr.Actors.Runtime;
 using System;
+using WorkerActor.Interface;
 using System.Threading.Tasks;
 using Dapr.Client;
 
@@ -65,32 +66,6 @@ namespace WorkerActorService
             // Provides Opporunity to perform optional cleanup.
             Console.WriteLine($"Deactivating actor id: {this.Id}");
             return Task.CompletedTask;
-        }
-
-        /// <summary>
-        /// Set MyData into actor's private state store
-        /// </summary>
-        /// <param name="data">the user-defined MyData which will be stored into state store as "my_data" state</param>
-        public async Task<string> SetDataAsync(MyData data)
-        {
-            // Data is saved to configured state store implicitly after each method execution by Actor's runtime.
-            // Data can also be saved explicitly by calling this.StateManager.SaveStateAsync();
-            // State to be saved must be DataContract serializable.
-            await this.StateManager.SetStateAsync<MyData>(
-                "my_data",  // state name
-                data);      // data saved for the named state "my_data"
-
-            return "Success";
-        }
-
-        /// <summary>
-        /// Get MyData from actor's private state store
-        /// </summary>
-        /// <return>the user-defined MyData which is stored into state store as "my_data" state</return>
-        public Task<MyData> GetDataAsync()
-        {
-            // Gets state from the state store.
-            return this.StateManager.GetStateAsync<MyData>("my_data");
         }
 
     }
