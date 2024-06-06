@@ -24,7 +24,6 @@ namespace OrderProcessorWorkflow.Controllers
         private readonly ILogger<OrderProcessorController> _logger;
 
          private const string OrderTopic = "orders";
-        private const string OrderCompletedTopic = "ordercompleted";
         private const string PubSubName = "oms.pubsub";
         private readonly DaprWorkflowClient _daprClient;
 

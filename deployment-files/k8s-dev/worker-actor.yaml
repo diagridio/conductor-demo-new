@@ -19,11 +19,10 @@ spec:
         dapr.io/app-id: "worker-actor"
         dapr.io/app-port: "8080"
         dapr.io/config: "config"
-        dapr.io/actor-type: "WorkerActor"
     spec:
       containers:
         - name: worker-actor
-          image: "us-central1-docker.pkg.dev/prj-common-d-shared-89549/reg-d-common-docker-public/order-system/worker-actor:03c6a4020bca09f7c45f933adbfe38c97d6b5371"
+          image: "us-central1-docker.pkg.dev/prj-common-d-shared-89549/reg-d-common-docker-public/order-system/worker-actor:78694f3e6d26e5bdfeef55dfe4345d9c53e1ee26"
           resources:
             requests:
               memory: "256Mi"
