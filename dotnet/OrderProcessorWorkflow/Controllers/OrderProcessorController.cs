@@ -27,8 +27,6 @@ namespace OrderProcessorWorkflow.Controllers
         private const string PubSubName = "oms.pubsub";
         private readonly DaprWorkflowClient _daprClient;
         private readonly Random _random;
-        private readonly Random _random;
-
         //string WorkflowName = "OrderProcessingWorkflow";
         //private readonly StateOptions _stateOptions = new StateOptions(){ Concurrency = ConcurrencyMode.FirstWrite, Consistency = ConsistencyMode.Eventual };
 
@@ -36,7 +34,6 @@ namespace OrderProcessorWorkflow.Controllers
         {
             _logger = logger;
             _daprClient = daprClient;
-            _random = new Random();
             _random = new Random();
         }
         
@@ -50,9 +47,6 @@ namespace OrderProcessorWorkflow.Controllers
                 var instanceId = _random.Next(10000).ToString();
 
                 _logger.LogInformation("Received Order. Initializing workflow {instanceId}.", instanceId);
-                var instanceId = _random.Next(10000).ToString();
-
-                _logger.LogInformation("Received Order. Initializing workflow {instanceId}.", instanceId);
 
                     // Start the workflow using the order ID as the workflow ID
                 _logger.LogInformation("Starting order {orderId}", orderId);
@@ -60,11 +54,8 @@ namespace OrderProcessorWorkflow.Controllers
                     name: nameof(OrderProcessingWorkflow),
                     input: orderSummary,
                     instanceId: instanceId);
-                    instanceId: instanceId);
-
 
                 // Wait for the workflow to start and confirm the input
-                WorkflowState state = await _daprClient.WaitForWorkflowStartAsync(instanceId: instanceId);
                 WorkflowState state = await _daprClient.WaitForWorkflowStartAsync(instanceId: instanceId);
 
                 // Wait for the workflow to complete
@@ -75,13 +66,11 @@ namespace OrderProcessorWorkflow.Controllers
                     {
                         state = await _daprClient.WaitForWorkflowCompletionAsync(
                             instanceId: instanceId,
-                            instanceId: instanceId,
                             cancellation: cts.Token);
                         break;
                     }
                     catch (OperationCanceledException)
                     {
-                        _logger.LogInformation("Waiting for {orderId} to complete.", orderId);
                         _logger.LogInformation("Waiting for {orderId} to complete.", orderId);
                         return BadRequest();
                     }
