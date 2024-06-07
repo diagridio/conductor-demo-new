@@ -26,7 +26,6 @@ namespace OrderProcessorWorkflow.Controllers
          private const string OrderTopic = "orders";
         private const string PubSubName = "oms.pubsub";
         private readonly DaprWorkflowClient _daprClient;
-    
         private readonly Random _random;
 
         //string WorkflowName = "OrderProcessingWorkflow";
@@ -51,7 +50,7 @@ namespace OrderProcessorWorkflow.Controllers
                 _logger.LogInformation("Received Order. Initializing workflow {instanceId}.", instanceId);
 
                 // Start the workflow using the order ID as the workflow ID
-                _logger.LogInformation("Starting order {orderId}", orderId);
+                _logger.LogInformation("Starting order workflow {orderId}", orderId);
                     await _daprClient.ScheduleNewWorkflowAsync(
                     name: nameof(OrderProcessingWorkflow),
                     input: orderSummary,
