@@ -5,11 +5,6 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddActors(options =>
 {
     // Register actor types and configure actor settings
-    options.Actors.RegisterActor<HelloWorldActor>();
-    options.Actors.RegisterActor<StatefulActor>();
-    options.Actors.RegisterActor<TimerActor>();
-    options.Actors.RegisterActor<ReminderActor>();
-    options.Actors.RegisterActor<ActorToActor>();
     options.Actors.RegisterActor<WorkerActor>();
 });
 
