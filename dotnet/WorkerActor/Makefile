@@ -1,9 +1,10 @@
-RELEASE_VERSION  = 0.7.5
-IMAGE_NAME = worker-actor
-SERVICE_NAME = worker-actor
+RELEASE_VERSION  = 0.7.4
+IMAGE_NAME = basic-actor-demos
+SERVICE_NAME = basic-actor-demos
 REGISTRY=rochabr
-APP_PORT=5500
-DAPR_HTTP_PORT=5580
+APP_PORT=7100
+DAPR_HTTP_PORT=7180
+DAPR_GRPC_PORT=7101
 
 .PHONY: clean
 clean: ## Cleans the project
