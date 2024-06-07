@@ -4,7 +4,7 @@ A sample order management system composed of 8 Dapr-enabled microservices to sho
 
 ## Architecture and Service Definitions
 
-![Logical Application Architecture Diagram](assets/demo-arch.png)
+![Logical Application Architecture Diagram](assets/demo-arch-new.png)
 
 
 | Service          | Definition                                                                                                 | Dapr Component(s) |
