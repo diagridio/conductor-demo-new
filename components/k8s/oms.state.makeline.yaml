@@ -13,6 +13,8 @@ spec:
     secretKeyRef:
       name: redis-password
       key: redis-password
+  - name: keyPrefix
+    value: none
 scopes:
   - make-line-service
   - worker-actor

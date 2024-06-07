@@ -5,7 +5,7 @@ on:
     branches:
       - worker-actor
     paths:
-      - 'dotnet/WorkerActorService/**'
+      - 'dotnet/WorkerActor/**'
 
 jobs:
   build-and-publish:
@@ -45,7 +45,7 @@ jobs:
           password: '${{ steps.auth.outputs.access_token }}'
           
       - name: Build and Push Docker Image (AMD, ARM)
-        working-directory: dotnet/WorkerActorService
+        working-directory: dotnet/WorkerActor
         run: |
           docker buildx build --platform linux/amd64,linux/arm64 -t $GCP_CONTAINER_REGISTRY_HOST/$GCP_PROJECT_ID/$GCP_DOCKER_REPOSITORY/$IMAGE_NAME:$GITHUB_SHA . --push
     

@@ -10,6 +10,7 @@ builder.Services.AddActors(options =>
     options.Actors.RegisterActor<TimerActor>();
     options.Actors.RegisterActor<ReminderActor>();
     options.Actors.RegisterActor<ActorToActor>();
+    options.Actors.RegisterActor<WorkerActor>();
 });
 
 var app = builder.Build();
@@ -24,7 +25,7 @@ else
     // redirection will interfere with the Dapr runtime. You can
     // move this out of the else block if you use port 5001 in this
     // example, and developer tooling (such as the VSCode extension).
-    app.UseHttpsRedirection();
+    //app.UseHttpsRedirection();
 }
 
 app.MapActorsHandlers();

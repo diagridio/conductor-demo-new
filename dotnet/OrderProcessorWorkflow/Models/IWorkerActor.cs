@@ -1,9 +1,12 @@
 ﻿using Dapr.Actors;
 
-namespace WorkerActor.Interface
+namespace BasicActorSamples.Actors
 {
     public interface IWorkerActor : IActor
-    {   
-        Task<bool> CompleteOrder(string orderId);
+    {
+        Task<string> GetState();
+        Task SetState(string state);
+
+        Task<bool> DeleteOrder(string orderId);
     }
 }
