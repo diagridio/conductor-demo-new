@@ -2,52 +2,59 @@
 
 ### Get Dapr actor info
 GET {{ daprHttp }}/dapr/config
-dapr-app-id: basic-actor-demos
+dapr-app-id: worker-actor
 
 ### --- HelloWorld ---
 
 ### Say Hello World
 
 GET {{ daprHttp }}/v1.0/actors/HelloWorldActor/user2/method/SayHelloWorld
-dapr-app-id: basic-actor-demos
+dapr-app-id: worker-actor
 
 
 ### Say hello with an input
 POST {{ daprHttp }}/v1.0/actors/HelloWorldActor/user2/method/SayHello
-dapr-app-id: basic-actor-demos
+dapr-app-id: worker-actor
 Content-Type: application/json
 
 "Russo"
 
 ### GetState
 
-GET {{ daprHttp }}/v1.0/actors/HelloWorldActor/marcius/method/GetState
-dapr-app-id: basic-actor-demos
+GET {{ daprHttp }}/v1.0/actors/WorkerActor/marcelinho/method/GetState
+dapr-app-id: worker-actor
 
 
 ### SetState
-POST {{ daprHttp }}/v1.0/actors/HelloWorldActor/marcius/method/SetState
-dapr-app-id: basic-actor-demos
+POST {{ daprHttp }}/v1.0/actors/WorkerActor/marcelinho/method/SetState
+dapr-app-id: worker-actor
 Content-Type: application/json
 
-"playa"
+"order7788"
+
+### DeleteOrder
+DELETE {{ daprHttp }}/v1.0/actors/WorkerActor/marcelinho/method/DeleteOrder
+dapr-app-id: worker-actor
+Content-Type: application/json
+
+"make-line-service||5c71ec54-8f6d-4404-bf66-bef517820e13"
 
 ### --- State ---
 
 ### Set the greeting for the actor with ID user2
 POST {{ daprHttp }}/v1.0/actors/StatefulActor/user2/method/SetGreeting
-dapr-app-id: basic-actor-demos
+dapr-app-id: worker-actor
 Content-Type: application/json
 
 "Hello from Stateful222Actor!"
 
 ### Get the saved greeting for the actor with ID user2
 GET {{ daprHttp }}/v1.0/actors/StatefulActor/user2/method/GetGreeting
-dapr-app-id: basic-actor-demos
+dapr-app-id: worker-actor
 
 ### Set the greeting using state endpoint for the actor with ID user2
 POST {{ daprHttp }}/v1.0/actors/StatefulActor/user2/state
-dapr-app-id: basic-actor-demos
+dapr-app-id: worker-actor
 Content-Type: application/json
 
 [
@@ -62,12 +69,12 @@ Content-Type: application/json
 
 ### Get the greeting using state endpoint for the actor with ID user2
 GET {{ daprHttp }}/v1.0/actors/StatefulActor/user2/state/greeting
-dapr-app-id: basic-actor-demos
+dapr-app-id: worker-actor
 
 
 ### Set two keys using state endpoint for the actor with ID user2
 POST {{ daprHttp }}/v1.0/actors/StatefulActor/user2/state
-dapr-app-id: basic-actor-demos
+dapr-app-id: worker-actor
 Content-Type: application/json
 
 [
@@ -89,7 +96,7 @@ Content-Type: application/json
 
 ### Set one key, delete another using state endpoint for the actor with ID Alex
 POST {{ daprHttp }}/v1.0/actors/StatefulActor/user2/state
-dapr-app-id: basic-actor-demos
+dapr-app-id: worker-actor
 Content-Type: application/json
 
 [
@@ -112,24 +119,24 @@ Content-Type: application/json
 
 ### Reset snooze count for TimerActor
 POST {{ daprHttp }}/v1.0/actors/TimerActor/alarmclock1/method/ResetSnoozeCount
-dapr-app-id: basic-actor-demos
+dapr-app-id: worker-actor
 
 
 ### Create Timer
 POST {{ daprHttp }}/v1.0/actors/TimerActor/alarmclock1/method/CreateTimer
-dapr-app-id: basic-actor-demos
+dapr-app-id: worker-actor
 
 
 ### Delete Timer
 DELETE {{ daprHttp }}/v1.0/actors/TimerActor/alarmclock1/timers/snooze
-dapr-app-id: basic-actor-demos
+dapr-app-id: worker-actor
 
 
 ### --- Reminders ---
 
 ### Set Reminder
 POST {{ daprHttp }}/v1.0/actors/ReminderActor/alarmclock2/reminders/snooze
-dapr-app-id: basic-actor-demos
+dapr-app-id: worker-actor
 Content-Type: application/json
 
 {
@@ -140,22 +147,22 @@ Content-Type: application/json
 
 ### Get the greeting using state endpoint for the actor with ID alarmclock2
 GET {{ daprHttp }}/v1.0/actors/ReminderActor/alarmclock2/state/snoozecount
-dapr-app-id: basic-actor-demos
+dapr-app-id: worker-actor
 
 
 ### Reset the snooze count
 POST {{ daprHttp }}/v1.0/actors/ReminderActor/alarmclock2/method/ResetSnoozeCount
-dapr-app-id: basic-actor-demos
+dapr-app-id: worker-actor
 
 ### Delete Reminder
 DELETE {{ daprHttp }}/v1.0/actors/ReminderActor/alarmclock2/reminders/snooze
-dapr-app-id: basic-actor-demos
+dapr-app-id: worker-actor
 
 ### --- Actor to Actor ---
 
 ### Call the HelloWorldActor from ActorToActor
 POST {{ daprHttp }}/v1.0/actors/ActorToActor/id1/method/CallHelloWorld
-dapr-app-id: basic-actor-demos
+dapr-app-id: worker-actor
 Content-Type: application/json
 
 "helloWorldId1"

@@ -23,7 +23,7 @@ func (app *Config) HandleHealthz(w http.ResponseWriter, r *http.Request) {
 		os.Exit(1)
 	}
 
-	app.writeJSON(w, http.StatusOK, "Healthy")
+	app.writeJSON(w, http.StatusOK, "Healthy!")
 }
 
 // Handles the make line endpoint

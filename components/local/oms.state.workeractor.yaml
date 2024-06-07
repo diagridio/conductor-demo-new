@@ -16,4 +16,4 @@ spec:
   - name: ttlInSeconds
     value: "600"
 scopes: 
-  - basic-actor-demos
+  - worker-actor

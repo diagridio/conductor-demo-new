@@ -1,6 +1,6 @@
-RELEASE_VERSION  = 0.7.4
-IMAGE_NAME = basic-actor-demos
-SERVICE_NAME = basic-actor-demos
+RELEASE_VERSION  = 0.1.0
+IMAGE_NAME = worker-actor
+SERVICE_NAME = worker-actor
 REGISTRY=rochabr
 APP_PORT=7100
 DAPR_HTTP_PORT=7180
@@ -17,6 +17,7 @@ run: clean ## Runs uncompiled code in Dapr
 		--app-id $(SERVICE_NAME) \
 		--app-port ${APP_PORT} \
 		--dapr-http-port ${DAPR_HTTP_PORT} \
+		--dapr-grpc-port ${DAPR_GRPC_PORT} \
 		--resources-path ../../components/local \
 		dotnet run
 
