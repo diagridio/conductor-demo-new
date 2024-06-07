@@ -3,7 +3,7 @@ name: Build and Push Receipt Generation Service Image
 on:
   push:
     branches:
-      - worker-actor
+      - main
     paths:
       - 'go/receipt-generation-service/**'
 

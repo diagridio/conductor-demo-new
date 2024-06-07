@@ -3,7 +3,7 @@ name: Build and Push Order Service Image
 on:
   push:
     branches:
-      - worker-actor
+      - main
     paths:
       - 'go/order-service/**'
 
