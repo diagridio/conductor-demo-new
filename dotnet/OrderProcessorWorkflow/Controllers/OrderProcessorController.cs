@@ -86,7 +86,7 @@ namespace OrderProcessorWorkflow.Controllers
                     OrderResult result = state.ReadOutputAs<OrderResult>();
                     if (result.Processed)
                     {
-                        _logger.LogInformation("Order workflow is {state.RuntimeStatus} and the order was processed successfully ({result}).", state.RuntimeStatus, result);
+                        _logger.LogInformation("Order workflow is {state.RuntimeStatus} and was processed successfully ({result}).", state.RuntimeStatus, result);
                         return Ok();
                     }
                     else
