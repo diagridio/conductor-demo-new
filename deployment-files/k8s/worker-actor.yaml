@@ -32,18 +32,4 @@ spec:
           ports:
             - containerPort: 80
           imagePullPolicy: Always
-          startupProbe:
-            httpGet:
-              path: /healthz
-              port: 80
-            failureThreshold: 6
-            periodSeconds: 10
-          readinessProbe:
-            httpGet:
-              path: /ready
-              port: 80
-            timeoutSeconds: 30
-            successThreshold: 1
-            failureThreshold: 12
-            periodSeconds: 10
           
