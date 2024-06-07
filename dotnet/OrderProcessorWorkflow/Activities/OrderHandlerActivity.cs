@@ -118,11 +118,6 @@ namespace OrderProcessorWorkflow.Activities
 
             var proxy = ActorProxy.Create<IWorkerActor>(ActorId.CreateRandom(), WorkerActorType);
             var response = await proxy.DeleteOrder(oId);
-            //var proxy = ActorProxy.Create(ActorId.CreateRandom(), WorkerActorType);
-            
-            //dynamic request = new { orderId = oId};
-            //var request = new MyRequest() { orderId = oId, };
-            //var response = await proxy.InvokeMethodAsync<bool>("DeleteOrder", request);
                 if (!response)
                 {
                     _logger.LogInformation("Worker Actor failed to complete order: {0}", orderSummary.OrderId);
