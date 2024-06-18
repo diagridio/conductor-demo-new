@@ -87,6 +87,7 @@ namespace OrderProcessorWorkflow.Activities
         private async Task<OrderResult> HandleMakeLineRequest(OrderSummary orderSummary){
             _logger.LogInformation(
                 "Starting make-line process for {orderId}.",
+
                 orderSummary.OrderId);
 
             var request = _client.CreateInvokeMethodRequest<Object>(MakeLineServiceId, "makeline", orderSummary);
@@ -111,12 +112,16 @@ namespace OrderProcessorWorkflow.Activities
                 orderSummary.OrderId);
 
             var oId = orderSummary.OrderId.ToString();
+            var actorId = new ActorId(oId);
 
-            // In the Client Application
-            //var actorId = new ActorId(orderSummary.OrderId.ToString());
+            var proxy = ActorProxy.Create<IWorkerActor>(actorId, WorkerActorType);
 
+            Console.WriteLine($"Calling SetReminder...");
+            await proxy.RegisterReminder();
 
-            var proxy = ActorProxy.Create<IWorkerActor>(ActorId.CreateRandom(), WorkerActorType);
+            Console.WriteLine($"Calling SetTimer..");
+            await proxy.RegisterTimer();
+
             var response = await proxy.DeleteOrder(oId);
                 if (!response)
                 {
