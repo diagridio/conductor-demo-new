@@ -125,7 +125,7 @@ namespace OrderProcessorWorkflow.Activities
             var response = await proxy.DeleteOrder(oId);
                 if (!response)
                 {
-                    _logger.LogInformation("Worker Actor failed to complete order: {0}", orderSummary.OrderId);
+                    _logger.LogInformation("Worker Acto r failed to complete order: {0}", orderSummary.OrderId);
                     return new OrderResult(Processed: false);
                 }
                 else
