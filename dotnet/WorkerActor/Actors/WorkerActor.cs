@@ -151,7 +151,7 @@ namespace BasicActorSamples.Actors
         /// </summary>
         public Task UnregisterReminder()
         {
-            Console.WriteLine("Unregistering MyReminder...");
+            Console.WriteLine("Unregistering My Reminder...");
             return this.UnregisterReminderAsync("MyReminder");
         }
 
