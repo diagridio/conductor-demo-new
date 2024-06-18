@@ -17,7 +17,7 @@ namespace BasicActorSamples.Actors
         Task<MyData> GetDataAsync();
         Task RegisterReminder();
         Task UnregisterReminder();
-        Task<IActorReminder> GetReminder();
+        //Task<IActorReminder> GetReminder();
         Task RegisterTimer();
         Task UnregisterTimer();
     }
@@ -129,22 +129,22 @@ namespace BasicActorSamples.Actors
                 TimeSpan.FromSeconds(5));  // Time interval between reminder invocations after the first invocation
         }
 
-        /// <summary>
-        /// Get MyReminder reminder details with the actor
-        /// </summary>
-        public async Task<IActorReminder> GetReminder()
-        {
-            var reminder = await this.GetReminderAsync("MyReminder");
+        // /// <summary>
+        // /// Get MyReminder reminder details with the actor
+        // /// </summary>
+        // public async Task<IActorReminder> GetReminder()
+        // {
+        //     var reminder = await this.GetReminderAsync("MyReminder");
 
-            return reminder is not null
-            ? new ActorReminderData
-            {
-                Name = reminder.Name,
-                Period = reminder.Period,
-                DueTime = reminder.DueTime
-            }
-            : null;
-        }
+        //     return reminder is not null
+        //     ? new ActorReminderData
+        //     {
+        //         Name = reminder.Name,
+        //         Period = reminder.Period,
+        //         DueTime = reminder.DueTime
+        //     }
+        //     : null;
+        // }
 
         /// <summary>
         /// Unregister MyReminder reminder with the actor
