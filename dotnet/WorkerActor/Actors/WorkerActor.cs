@@ -183,6 +183,8 @@ namespace BasicActorSamples.Actors
         private Task OnTimerCallBack(byte[] data)
         {
             Console.WriteLine("OnTimerCallBack is called!");
+            this.UnregisterTimer();
+            this.UnregisterReminder();
             return Task.CompletedTask;
         }
     }

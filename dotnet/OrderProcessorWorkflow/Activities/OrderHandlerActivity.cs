@@ -113,7 +113,7 @@ namespace OrderProcessorWorkflow.Activities
 
             var oId = orderSummary.OrderId.ToString();
             var actorId = new ActorId(oId);
-
+            
             var proxy = ActorProxy.Create<IWorkerActor>(actorId, WorkerActorType);
 
             Console.WriteLine($"Calling SetReminder...");
@@ -122,8 +122,8 @@ namespace OrderProcessorWorkflow.Activities
             Console.WriteLine($"Calling SetTimer..");
             await proxy.RegisterTimer();
             
-            await proxy.UnregisterTimer();
-            await proxy.UnregisterReminder();
+           // await proxy.UnregisterTimer();
+            //await proxy.UnregisterReminder();
 
 
             var response = await proxy.DeleteOrder(oId);
