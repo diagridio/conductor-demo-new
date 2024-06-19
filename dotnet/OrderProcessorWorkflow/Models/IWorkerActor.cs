@@ -9,7 +9,7 @@ namespace BasicActorSamples.Actors
         Task<MyData> GetDataAsync();
         Task RegisterReminder();
         Task UnregisterReminder();
-        //Task<IActorReminder> GetReminder();
+        Task<IActorReminder> GetReminder();
         Task RegisterTimer();
         Task UnregisterTimer();
 

@@ -17,7 +17,7 @@ namespace BasicActorSamples.Actors
         Task<MyData> GetDataAsync();
         Task RegisterReminder();
         Task UnregisterReminder();
-        //Task<IActorReminder> GetReminder();
+        Task<IActorReminder> GetReminder();
         Task RegisterTimer();
         Task UnregisterTimer();
     }
@@ -132,19 +132,10 @@ namespace BasicActorSamples.Actors
         // /// <summary>
         // /// Get MyReminder reminder details with the actor
         // /// </summary>
-        // public async Task<IActorReminder> GetReminder()
-        // {
-        //     var reminder = await this.GetReminderAsync("MyReminder");
-
-        //     return reminder is not null
-        //     ? new ActorReminderData
-        //     {
-        //         Name = reminder.Name,
-        //         Period = reminder.Period,
-        //         DueTime = reminder.DueTime
-        //     }
-        //     : null;
-        // }
+        public async Task<IActorReminder> GetReminder()
+        {
+            return await this.GetReminderAsync("MyReminder");
+        }
 
         /// <summary>
         /// Unregister MyReminder reminder with the actor
