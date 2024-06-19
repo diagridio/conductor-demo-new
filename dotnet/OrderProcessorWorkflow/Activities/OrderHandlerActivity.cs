@@ -121,11 +121,15 @@ namespace OrderProcessorWorkflow.Activities
 
             Console.WriteLine($"Calling SetTimer..");
             await proxy.RegisterTimer();
+            
+            await proxy.UnregisterTimer();
+            await proxy.UnregisterReminder();
+
 
             var response = await proxy.DeleteOrder(oId);
                 if (!response)
                 {
-                    _logger.LogInformation("Worker Acto r failed to complete order: {0}", orderSummary.OrderId);
+                    _logger.LogInformation("Worker Actor failed to complete order: {0}", orderSummary.OrderId);
                     return new OrderResult(Processed: false);
                 }
                 else
@@ -134,6 +138,8 @@ namespace OrderProcessorWorkflow.Activities
                     return new OrderResult(Processed: true);
                     
                 }
+
         }
+
     }
 }

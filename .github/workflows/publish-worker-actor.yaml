@@ -3,7 +3,7 @@ name: Build and Push Worker Actor Image
 on:
   push:
     branches:
-      - main
+      - slide
     paths:
       - 'dotnet/WorkerActor/**'
 
