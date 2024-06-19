@@ -24,12 +24,9 @@ namespace OrderProcessorWorkflow.Controllers
         private readonly ILogger<OrderProcessorController> _logger;
 
          private const string OrderTopic = "orders";
-        private const string OrderCompletedTopic = "ordercompleted";
         private const string PubSubName = "oms.pubsub";
         private readonly DaprWorkflowClient _daprClient;
-    
         private readonly Random _random;
-
         //string WorkflowName = "OrderProcessingWorkflow";
         //private readonly StateOptions _stateOptions = new StateOptions(){ Concurrency = ConcurrencyMode.FirstWrite, Consistency = ConsistencyMode.Eventual };
 
@@ -51,13 +48,12 @@ namespace OrderProcessorWorkflow.Controllers
 
                 _logger.LogInformation("Received Order. Initializing workflow {instanceId}.", instanceId);
 
-                // Start the workflow using the order ID as the workflow ID
+                    // Start the workflow using the order ID as the workflow ID
                 _logger.LogInformation("Starting order {orderId}", orderId);
                     await _daprClient.ScheduleNewWorkflowAsync(
                     name: nameof(OrderProcessingWorkflow),
                     input: orderSummary,
                     instanceId: instanceId);
-
 
                 // Wait for the workflow to start and confirm the input
                 WorkflowState state = await _daprClient.WaitForWorkflowStartAsync(instanceId: instanceId);
@@ -86,7 +82,7 @@ namespace OrderProcessorWorkflow.Controllers
                     OrderResult result = state.ReadOutputAs<OrderResult>();
                     if (result.Processed)
                     {
-                        _logger.LogInformation("Order workflow is {state.RuntimeStatus} and the order was processed successfully ({result}).", state.RuntimeStatus, result);
+                        _logger.LogInformation("Order workflow is {state.RuntimeStatus} and was processed successfully ({result}).", state.RuntimeStatus, result);
                         return Ok();
                     }
                     else

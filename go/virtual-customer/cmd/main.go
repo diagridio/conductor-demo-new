@@ -182,6 +182,7 @@ func createOrder(products []Product) (CustomerOrder, error) {
 
 func getProducts(ctx context.Context) ([]Product, error) {
 
+	log.Printf("get products")
 	response, err := client.InvokeMethod(ctx, OrderServiceDaprId, "product", "get")
 	if err != nil {
 		log.Printf("error calling service: %v", err)

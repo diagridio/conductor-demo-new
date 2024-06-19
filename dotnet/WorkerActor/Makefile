@@ -1,29 +1,27 @@
-RELEASE_VERSION  = 0.7.4
-SERVICE_NAME = virtual-worker
-IMAGE_NAME = virtual-worker
+RELEASE_VERSION  = 0.1.0
+IMAGE_NAME = worker-actor
+SERVICE_NAME = worker-actor
 REGISTRY=rochabr
-APP_PORT=5500
-DAPR_HTTP_PORT=5580
-DAPR_GRPC_PORT=5501
+APP_PORT=7100
+DAPR_HTTP_PORT=7180
+DAPR_GRPC_PORT=7101
 
-.PHONY: tidy
-tidy: ## Updates the go modules and vendors all dependencies 
-	go mod tidy
-
+.PHONY: clean
+clean: ## Cleans the project
+	dotnet clean
 
 
 .PHONY: run
-run: tidy ## Runs uncompiled code in Dapr
+run: clean ## Runs uncompiled code in Dapr
 	dapr run \
 		--app-id $(SERVICE_NAME) \
 		--app-port ${APP_PORT} \
-		--app-protocol http \
 		--dapr-http-port ${DAPR_HTTP_PORT} \
 		--dapr-grpc-port ${DAPR_GRPC_PORT} \
 		--resources-path ../../components/local \
-		go run ./cmd/api
+		dotnet run
 
 .PHONY: build_image
-build_image: tidy ## Builds local release binary
+build_image: clean ## Builds local release binary
 	docker buildx build --no-cache --platform=linux/amd64,linux/arm64 -t ${REGISTRY}/${IMAGE_NAME}:${RELEASE_VERSION} --push .
 

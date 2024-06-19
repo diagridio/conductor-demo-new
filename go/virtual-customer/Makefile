@@ -2,7 +2,8 @@ RELEASE_VERSION  = 0.7.4
 SERVICE_NAME = virtual-customer
 IMAGE_NAME = virtual-customer
 REGISTRY=rochabr
-DAPR_HTTP_PORT=5800
+APP_PORT=5800
+DAPR_HTTP_PORT=5880
 
 
 .PHONY: tidy
@@ -16,6 +17,7 @@ run: tidy ## Runs uncompiled code in Dapr
 	dapr run \
 		--app-id $(SERVICE_NAME) \
 		--app-protocol http \
+		--app-port ${APP_PORT} \
 		--dapr-http-port ${DAPR_HTTP_PORT} \
 		--resources-path ../../components/local \
 		go run ./cmd

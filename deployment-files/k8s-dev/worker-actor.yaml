@@ -1,34 +1,45 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: virtual-worker
+  name: worker-actor
   namespace: order-system
   labels:
-    app: virtual-worker
+    app: worker-actor
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: virtual-worker
+      app: worker-actor
   template:
     metadata:
       labels:
-        app: virtual-worker
+        app: worker-actor
       annotations:
         dapr.io/enabled: "true"
-        dapr.io/app-id: "virtual-worker"
+        dapr.io/app-id: "worker-actor"
         dapr.io/app-port: "80"
         dapr.io/config: "config"
-        dapr.io/log-level: "debug"
+        dapr.io/actor-type: "WorkerActor"
         dapr.io/enable-app-health-check: "true" ## Flag indicating whether health check is enabled for app
         dapr.io/app-health-check-path: "/healthz" ## The healthcheck endpoint
         dapr.io/app-health-probe-interval: "5" ## The interval between calls to app health endpoint
         dapr.io/app-health-probe-timeout: "500" ## The timeout of the app health endpoint call
         dapr.io/app-health-threshold: "2" ## Threshold for considering app unhealthy
+        dapr.io/app-protocol: "http"
+
     spec:
       containers:
-        - name: virtual-worker
-          image: "us-central1-docker.pkg.dev/prj-common-d-shared-89549/reg-d-common-docker-public/order-system/virtual-worker:9bdc61701847441c4f345a84c2ff263cc1bf3b2e"
+        - name: worker-actor
+          image: "us-central1-docker.pkg.dev/prj-common-d-shared-89549/reg-d-common-docker-public/order-system/worker-actor:4cafdaf7f9931f82b6db363a3ed4bb93aec4a5a4"
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "200m"
+            limits:
+              memory: "512Mi"
+              cpu: "1"
+          ports:
+            - containerPort: 80
           imagePullPolicy: Always
           startupProbe:
             httpGet:
@@ -44,19 +55,4 @@ spec:
             successThreshold: 1
             failureThreshold: 12
             periodSeconds: 10
-          env:
-          - name: APP_PORT
-            value: "80"
-          - name: STORE_ID
-            value: "Seattle"
-          - name: MIN_SECONDS_TO_COMPLETE_ITEM
-            value: "5"
-          - name: MAX_SECONDS_TO_COMPLETE_ITEM
-            value: "12"
-          resources:
-            requests:
-              memory: "256Mi"
-              cpu: "200m"
-            limits:
-              memory: "512Mi"
-              cpu: "1"
+          

@@ -61,8 +61,9 @@ func (app *Config) HandleGenerateReceipt(w http.ResponseWriter, r *http.Request)
 	//create metadata map
 	var metadata map[string]string = make(map[string]string)
 
+	var keyValue = "Receipt:" + orderSummary.OrderID
 	//append metadata with order id
-	metadata["key"] = orderSummary.OrderID
+	metadata["key"] = keyValue
 
 	// ~35% of the time, induce error when using Redis. No key "key" in the request
 	if rand.Float64() < 0.35 {

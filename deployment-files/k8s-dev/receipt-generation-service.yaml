@@ -23,7 +23,7 @@ spec:
     spec:
       containers:
         - name: receipt-generation-service
-          image: "us-central1-docker.pkg.dev/prj-common-d-shared-89549/reg-d-common-docker-public/order-system/receipt-generation-service:9bdc61701847441c4f345a84c2ff263cc1bf3b2e"
+          image: "us-central1-docker.pkg.dev/prj-common-d-shared-89549/reg-d-common-docker-public/order-system/receipt-generation-service:a151c90dfd65ef4b2ef06d8d5adda0ce47237ddc"
           env:
           - name: APP_PORT
             value: "80"

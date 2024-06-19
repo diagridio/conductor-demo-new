@@ -1,9 +1,9 @@
 using Dapr.Client;
 using Dapr.Workflow;
-using Microsoft.Extensions.Logging;
 using OrderProcessorWorkflow.Models;
-using Microsoft.AspNetCore.Mvc;
-using System.Diagnostics;
+using Dapr.Actors;
+using Dapr.Actors.Client;
+using BasicActorSamples.Actors;
 
 namespace OrderProcessorWorkflow.Activities
 {
@@ -15,6 +15,7 @@ namespace OrderProcessorWorkflow.Activities
         private const string LoyaltyServiceId = "loyalty-service";
         private const string ReceiptServiceId = "receipt-generation-service";
         private const string MakeLineServiceId = "make-line-service";
+        private const string WorkerActorType = "WorkerActor";
 
         public OrderHandlerActivity(ILoggerFactory loggerFactory, DaprClient client)
         {
@@ -34,6 +35,9 @@ namespace OrderProcessorWorkflow.Activities
             } 
             else if (req.requestType == OrderRequestType.MakeLine) {
                 return await HandleMakeLineRequest(req.orderSummary);
+            }
+            else if (req.requestType == OrderRequestType.Complete) {
+                return await HandleCompleteOrderRequest(req.orderSummary);
             }
             else{
                 return new OrderResult(Processed: false);
@@ -83,6 +87,7 @@ namespace OrderProcessorWorkflow.Activities
         private async Task<OrderResult> HandleMakeLineRequest(OrderSummary orderSummary){
             _logger.LogInformation(
                 "Starting make-line process for {orderId}.",
+
                 orderSummary.OrderId);
 
             var request = _client.CreateInvokeMethodRequest<Object>(MakeLineServiceId, "makeline", orderSummary);
@@ -96,6 +101,36 @@ namespace OrderProcessorWorkflow.Activities
                 else
                 {
                     _logger.LogInformation("Make-line process completed succesfully for order {0}.", orderSummary.OrderId);
+                    return new OrderResult(Processed: true);
+                    
+                }
+        }
+
+        private async Task<OrderResult> HandleCompleteOrderRequest(OrderSummary orderSummary){
+            _logger.LogInformation(
+                "Starting order completion for {orderId}.",
+                orderSummary.OrderId);
+
+            var oId = orderSummary.OrderId.ToString();
+            var actorId = new ActorId(oId);
+
+            var proxy = ActorProxy.Create<IWorkerActor>(actorId, WorkerActorType);
+
+            Console.WriteLine($"Calling SetReminder...");
+            await proxy.RegisterReminder();
+
+            Console.WriteLine($"Calling SetTimer..");
+            await proxy.RegisterTimer();
+
+            var response = await proxy.DeleteOrder(oId);
+                if (!response)
+                {
+                    _logger.LogInformation("Worker Acto r failed to complete order: {0}", orderSummary.OrderId);
+                    return new OrderResult(Processed: false);
+                }
+                else
+                {
+                    _logger.LogInformation("Worker Actor completed order {0}.", orderSummary.OrderId);
                     return new OrderResult(Processed: true);
                     
                 }

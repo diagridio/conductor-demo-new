@@ -1,7 +1,7 @@
 apiVersion: dapr.io/v1alpha1
 kind: Component
 metadata:
-  name: oms.state.makeline
+  name: oms.state.workeractor
   namespace: order-system
 spec:
   type: state.redis
@@ -13,8 +13,9 @@ spec:
     secretKeyRef:
       name: redis-password
       key: redis-password
-  - name: keyPrefix
-    value: none
-scopes:
-  - make-line-service
+  - name: actorStateStore
+    value: "true"
+  - name: ttlInSeconds
+    value: "600"
+scopes: 
   - worker-actor

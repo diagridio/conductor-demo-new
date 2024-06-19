@@ -31,7 +31,7 @@ func (app *Config) HandleHealthz(w http.ResponseWriter, r *http.Request) {
 		os.Exit(1)
 	}
 
-	app.writeJSON(w, http.StatusOK, "Healthy")
+	app.writeJSON(w, http.StatusOK, "Healthy!")
 }
 
 func (app *Config) HandleCreateOrderSummary(w http.ResponseWriter, r *http.Request) {

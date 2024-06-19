@@ -4,6 +4,6 @@ namespace OrderProcessorWorkflow.Models
     public record OrderResult(bool Processed);
     public record Notification(string Message);
 
-    public enum OrderRequestType { Receipt, Loyalty, MakeLine }
+    public enum OrderRequestType { Receipt, Loyalty, MakeLine, Complete }
 
 }

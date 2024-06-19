@@ -21,3 +21,30 @@ scopes:
   - order-service
   - order-processor-workflow
   - make-line-service
+
+
+# apiVersion: dapr.io/v1alpha1
+# kind: Component
+# metadata:
+#   name: oms.pubsub
+#   namespace: order-system
+# spec:
+#   type: pubsub.kafka
+#   version: v1  
+#   metadata:
+#   - name: brokers
+#     value: kafka.kafka.svc.cluster.local:9092
+#   - name: authType
+#     value: "password"
+#   - name: saslUsername
+#     value: "user1"
+#   - name: saslPassword
+#     secretKeyRef:
+#       name: kafka-password
+#       key: kafka-password
+#   - name: disableTls 
+#     value: "true"
+# scopes:
+#   - order-service
+#   - order-processor-workflow
+#   - make-line-service
