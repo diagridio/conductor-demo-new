@@ -126,8 +126,7 @@ namespace BasicActorSamples.Actors
                 "MyReminder",              // The name of the reminder
                 null,                      // User state passed to IRemindable.ReceiveReminderAsync()
                 TimeSpan.FromSeconds(1),   // Time to delay before invoking the reminder for the first time
-                TimeSpan.FromSeconds(60),  // Time interval between reminder invocations after the first invocation
-                1,                         // repetition
+                TimeSpan.FromSeconds(30),  // Time interval between reminder invocations after the first invocation
                 TimeSpan.FromSeconds(10)   // TTL for the reminder
                 );  
         }
@@ -188,8 +187,6 @@ namespace BasicActorSamples.Actors
         private Task OnTimerCallBack(byte[] data)
         {
             Console.WriteLine("OnTimerCallBack is called!");
-            this.UnregisterTimer();
-            this.UnregisterReminder();
             return Task.CompletedTask;
         }
     }
