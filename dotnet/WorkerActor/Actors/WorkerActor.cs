@@ -126,7 +126,10 @@ namespace BasicActorSamples.Actors
                 "MyReminder",              // The name of the reminder
                 null,                      // User state passed to IRemindable.ReceiveReminderAsync()
                 TimeSpan.FromSeconds(1),   // Time to delay before invoking the reminder for the first time
-                TimeSpan.FromSeconds(60));  // Time interval between reminder invocations after the first invocation
+                TimeSpan.FromSeconds(60),  // Time interval between reminder invocations after the first invocation
+                1,                         // repetition
+                TimeSpan.FromSeconds(10)   // TTL for the reminder
+                );  
         }
 
         // /// <summary>
@@ -165,7 +168,9 @@ namespace BasicActorSamples.Actors
                 nameof(this.OnTimerCallBack),       // Timer callback
                 null,                       // User state passed to OnTimerCallback()
                 TimeSpan.FromSeconds(1),    // Time to delay before the async callback is first invoked
-                TimeSpan.FromSeconds(30));   // Time interval between invocations of the async callback
+                TimeSpan.FromSeconds(30),   // Time interval between invocations of the async callback
+                TimeSpan.FromSeconds(10)    //TTL
+                );
         }
 
         /// <summary>
