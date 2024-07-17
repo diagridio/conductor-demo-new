@@ -18,14 +18,15 @@ spec:
         dapr.io/enabled: "true"
         dapr.io/app-id: "worker-actor"
         dapr.io/app-port: "80"
-        dapr.io/config: "config"
+        dapr.io/config: "workeractor-config"
         dapr.io/actor-type: "WorkerActor"
-        dapr.io/enable-app-health-check: "true" ## Flag indicating whether health check is enabled for app
-        dapr.io/app-health-check-path: "/healthz" ## The healthcheck endpoint
-        dapr.io/app-health-probe-interval: "5" ## The interval between calls to app health endpoint
-        dapr.io/app-health-probe-timeout: "500" ## The timeout of the app health endpoint call
-        dapr.io/app-health-threshold: "2" ## Threshold for considering app unhealthy
+        # dapr.io/enable-app-health-check: "true" ## Flag indicating whether health check is enabled for app
+        # dapr.io/app-health-check-path: "/healthz" ## The healthcheck endpoint
+        # dapr.io/app-health-probe-interval: "5" ## The interval between calls to app health endpoint
+        # dapr.io/app-health-probe-timeout: "500" ## The timeout of the app health endpoint call
+        # dapr.io/app-health-threshold: "2" ## Threshold for considering app unhealthy
         dapr.io/app-protocol: "http"
+        
 
     spec:
       containers:
