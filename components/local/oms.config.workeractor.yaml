@@ -1,9 +1,0 @@
-apiVersion: dapr.io/v1alpha1
-kind: Configuration
-metadata:
-  name: workeractor-config
-  namespace: order-system
-spec:
-  features:
-  - name: ActorStateTTL
-    enabled: true

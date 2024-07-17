@@ -19,7 +19,6 @@ run: clean ## Runs uncompiled code in Dapr
 		--dapr-http-port ${DAPR_HTTP_PORT} \
 		--dapr-grpc-port ${DAPR_GRPC_PORT} \
 		--resources-path ../../components/local \
-		--config ../../components/local/oms.config.workeractor.yaml \
 		dotnet run
 
 .PHONY: build_image
