@@ -38,6 +38,7 @@ namespace BasicActorSamples.Actors
     public class WorkerActor : Actor, IWorkerActor
     {
         string STATESTORE = "oms.state.makeline";
+        HttpClient httpClient = new HttpClient();
         public WorkerActor(ActorHost host) : base(host)
         {
         }
@@ -57,16 +58,23 @@ namespace BasicActorSamples.Actors
 
          public async Task<bool> DeleteOrder(string orderId)
         {
-            try{
+            try {
                 using var client = new DaprClientBuilder().Build();
 
                 CancellationTokenSource source = new CancellationTokenSource();
                 CancellationToken cancellationToken = source.Token;
+
+                Console.WriteLine("Deleting order from state store: " + orderId);
                 
-                await client.DeleteStateAsync(STATESTORE, orderId, cancellationToken: cancellationToken);        
+                //await client.DeleteStateAsync(STATESTORE, orderId, cancellationToken: cancellationToken);    
+                var baseURL = (Environment.GetEnvironmentVariable("BASE_URL") ?? "http://localhost") + ":" + (Environment.GetEnvironmentVariable("DAPR_HTTP_PORT") ?? "3500");
+                await httpClient.DeleteAsync($"{baseURL}/v1.0/state/{STATESTORE}/{orderId}", cancellationToken);   
+
+                Console.WriteLine("Deleted:" + orderId);
 
                 return true;
-            }catch(Exception ex){
+            } catch (Exception ex){
+                Console.WriteLine("Exception: " + ex);
                 return false;
             }
             
