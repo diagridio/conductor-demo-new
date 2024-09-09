@@ -6,6 +6,7 @@ on:
       - main
     paths:
       - 'go/virtual-customer/**'
+  workflow_dispatch:
 
 jobs:
   build-and-publish:

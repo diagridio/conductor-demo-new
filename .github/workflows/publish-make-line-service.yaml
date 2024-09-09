@@ -6,6 +6,7 @@ on:
       - main
     paths:
       - 'go/make-line-service/**'
+  workflow_dispatch:
 
 jobs:
   build-and-publish:

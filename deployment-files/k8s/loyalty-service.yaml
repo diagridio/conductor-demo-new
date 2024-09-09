@@ -19,6 +19,7 @@ spec:
         dapr.io/app-id: "loyalty-service"
         dapr.io/app-port: "80"
         dapr.io/config: "loyalty-config"
+        dapr.io/log-level: "debug"
     spec:
       containers:
         - name: loyalty-service
