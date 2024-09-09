@@ -6,6 +6,7 @@ on:
       - main
     paths:
       - 'go/order-service/**'
+  workflow_dispatch:
 
 jobs:
   build-and-publish:
