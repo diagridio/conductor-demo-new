@@ -25,7 +25,7 @@ func (app *Config) routes() http.Handler {
 
 	mux.Get("/healthz", app.HandleHealthz) // add a heartbeat endpoint
 
-	mux.Post("/schedule", app.HandleCronBinding) // Dapr cron binding routes to this endpoint
+	mux.Post("/crontest", app.HandleCronBinding) // Dapr cron binding routes to this endpoint
 
 	return mux
 
