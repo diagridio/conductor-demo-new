@@ -26,7 +26,7 @@ func main() {
 	url := fmt.Sprintf("http://localhost:%s/ready", daprHttpPort)
 	req, err := http.NewRequest(http.MethodGet, url, nil)
 	if err != nil {
-		panic(err)
+		log.Printf("error creating request to receipt service - %s", err)
 	}
 
 	// Adding target app id as part of the header
@@ -35,12 +35,12 @@ func main() {
 	// Invoking a service
 	resp, err := client.Do(req)
 	if err != nil {
-		log.Fatal(err.Error())
+		log.Printf("error calling receipt service - %s", err)
 	}
 
 	b, err := io.ReadAll(resp.Body)
 	if err != nil {
-		panic(err)
+		log.Printf("error reading receipt service response body - %s", err)
 	}
 
 	fmt.Println(string(b))
