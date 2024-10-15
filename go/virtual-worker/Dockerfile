@@ -3,7 +3,7 @@ WORKDIR /src
 COPY . .
 RUN go mod download
 ARG TARGETOS TARGETARCH
-RUN CGO_ENABLED=0 GOOS=$TARGETOS GOARCH=$TARGETARCH go build -a -installsuffix cgo -o virtualWorkerApp ./cmd
+RUN CGO_ENABLED=0 GOOS=$TARGETOS GOARCH=$TARGETARCH go build -a -installsuffix cgo -o virtualWorkerApp ./cmd/api
 
 FROM --platform=$BUILDPLATFORM alpine:latest AS final
 WORKDIR /root/

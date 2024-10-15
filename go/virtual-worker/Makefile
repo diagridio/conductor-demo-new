@@ -18,7 +18,7 @@ run: tidy ## Runs uncompiled code in Dapr
 		--app-port ${APP_PORT} \
 		--dapr-http-port ${DAPR_HTTP_PORT} \
 		--resources-path ../../components/local \
-		go run ./cmd
+		go run ./cmd/api
 
 .PHONY: build_image
 build_image: tidy ## Builds local release binary
