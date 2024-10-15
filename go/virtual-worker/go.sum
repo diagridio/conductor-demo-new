@@ -1,0 +1,6 @@
+github.com/dapr/go-sdk v1.10.0-rc-1.0.20240723205333-9bc7d823cc23 h1:5x3NQbzTq05cDm9uHbhaIachJdG7xTd8xAaIZy0rDV0=
+github.com/dapr/go-sdk v1.10.0-rc-1.0.20240723205333-9bc7d823cc23/go.mod h1:DAHZKfjxFbbJRl7wOH9+FROq/lk+xrzaL3ObuSEDj+A=
+github.com/go-chi/chi/v5 v5.1.0 h1:acVI1TYaD+hhedDJ3r54HyA6sExp3HfXq7QWEEY/xMw=
+github.com/go-chi/chi/v5 v5.1.0/go.mod h1:DslCQbL2OYiznFReuXYUmQ2hGd1aDpCnlMNITLSKoi8=
+github.com/go-chi/cors v1.2.1 h1:xEC8UT3Rlp2QuWNEr4Fs/c2EAGVKBwy/1vHx3bppil4=
+github.com/go-chi/cors v1.2.1/go.mod h1:sSbTewc+6wYHBBCW7ytsFSn836hqM7JxpglAy2Vzc58=

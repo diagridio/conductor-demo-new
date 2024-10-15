@@ -35,7 +35,7 @@ func (app *Config) HandleGenerateReceipt(w http.ResponseWriter, r *http.Request)
 	var orderSummary OrderSummary
 	err := app.readJSON(w, r, &orderSummary)
 	if err != nil {
-		log.Printf("Error unmarshalling order summary. Error: %v", err)
+		log.Printf("Error unmarshall ing order summary. Error: %v", err)
 		app.writeError(w, err, http.StatusBadRequest)
 		return
 	}
@@ -91,5 +91,12 @@ func (app *Config) HandleGenerateReceipt(w http.ResponseWriter, r *http.Request)
 	log.Printf("Receipt for order %v generated successfully.", orderSummary.OrderID)
 
 	app.writeJSON(w, http.StatusOK, orderSummary.OrderID)
+
+}
+
+// Handles the generate receipt endpoint
+func (app *Config) HandleCronBinding(w http.ResponseWriter, r *http.Request) {
+
+	app.writeJSON(w, http.StatusOK, "Cron job invoked successfully")
 
 }
