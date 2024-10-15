@@ -27,6 +27,8 @@ func (app *Config) routes() http.Handler {
 
 	mux.Post("/receipt", app.HandleGenerateReceipt) // Dapr subscription routes orders topic to this route
 
+	mux.Post("/crontest", app.HandleCronBinding) // Dapr subscription routes orders topic to this route
+
 	return mux
 
 }

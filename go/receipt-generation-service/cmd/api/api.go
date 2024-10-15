@@ -93,3 +93,10 @@ func (app *Config) HandleGenerateReceipt(w http.ResponseWriter, r *http.Request)
 	app.writeJSON(w, http.StatusOK, orderSummary.OrderID)
 
 }
+
+// Handles the generate receipt endpoint
+func (app *Config) HandleCronBinding(w http.ResponseWriter, r *http.Request) {
+
+	app.writeJSON(w, http.StatusOK, "Cron job invoked successfully")
+
+}

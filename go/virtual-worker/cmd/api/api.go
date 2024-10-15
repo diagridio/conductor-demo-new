@@ -13,7 +13,7 @@ import (
 func (app *Config) HandleHealthz(w http.ResponseWriter, r *http.Request) {
 
 	//set app port
-	daprHttpPort := "5380"
+	daprHttpPort := "5980"
 	if value, ok := os.LookupEnv("DAPR_HTTP_PORT"); ok {
 		daprHttpPort = value
 	}
@@ -42,7 +42,7 @@ func (app *Config) HandleCronBinding(w http.ResponseWriter, r *http.Request) {
 		Timeout: 15 * time.Second,
 	}
 
-	url := fmt.Sprintf("http://localhost:%s/ready", daprHttpPort)
+	url := fmt.Sprintf("http://localhost:%s/crontest", daprHttpPort)
 	req, err := http.NewRequest(http.MethodGet, url, nil)
 	if err != nil {
 		log.Printf("error creating request to receipt service - %s", err)
@@ -57,10 +57,10 @@ func (app *Config) HandleCronBinding(w http.ResponseWriter, r *http.Request) {
 		log.Printf("error calling receipt service - %s", err)
 	}
 
-	b, err := io.ReadAll(resp.Body)
+	_, err = io.ReadAll(resp.Body)
 	if err != nil {
 		log.Printf("error reading receipt service response body - %s", err)
 	}
 
-	log.Printf("Response from receipt service - %s", string(b))
+	app.writeJSON(w, http.StatusOK, "Cron binding invoked successfully")
 }
