@@ -3,7 +3,7 @@ name: Build and Push Virtual Worker Image
 on:
   push:
     branches:
-      - cron
+      - main
     paths:
       - 'go/virtual-worker/**'
   workflow_dispatch:
