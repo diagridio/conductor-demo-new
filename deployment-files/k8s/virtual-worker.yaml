@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: virtual-worker
+  namespace: order-system
+  labels:
+    app: virtual-worker
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: virtual-worker
+  template:
+    metadata:
+      labels:
+        app: virtual-worker
+      annotations:
+        dapr.io/enabled: "true"
+        dapr.io/app-id: "virtual-worker"
+        dapr.io/config: "config"
+    spec:
+      containers:
+        - name: virtual-worker
+          image: "order-system/virtual-worker:tag"
+          imagePullPolicy: Always
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "200m"
+            limits:
+              memory: "512Mi"
+              cpu: "1"
