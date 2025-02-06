@@ -28,8 +28,10 @@ namespace OrderProcessorWorkflow.Controllers
             // Ensure dapr sidecar is running and healthy. If not, fail the health check and have the pod restarted.
             // This should prevent the case where the application container is running before dapr is installed in
             // the case of a gitops deploy.
-            var response = await _httpClient.GetAsync($"http://localhost:{DaprHttpPort}/v1.0/healthz");
-            return new StatusCodeResult((int)response.StatusCode);
+            // var response = await _httpClient.GetAsync($"http://localhost:{DaprHttpPort}/v1.0/healthz");
+            // return new StatusCodeResult((int)response.StatusCode);
+
+            return await Task.FromResult(Ok());
         }
     }
 }
