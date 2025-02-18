@@ -52,5 +52,5 @@ All components are in the folder `components/k8s`. During the demo, you will nee
 kubectl apply -f components/k8s
 ```
 
-**Next:** [Demo scenario - Conductor overview](./02%20-%20Conductor%20Overview.md) 
+**Next:** [Demo scenario - Conductor overview](./02%20-%20Conductor.md)
 
