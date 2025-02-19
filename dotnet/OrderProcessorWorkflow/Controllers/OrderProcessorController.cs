@@ -22,8 +22,7 @@ namespace OrderProcessorWorkflow.Controllers
     public class OrderProcessorController : ControllerBase
     {
         private readonly ILogger<OrderProcessorController> _logger;
-
-         private const string OrderTopic = "orders";
+        private const string OrderTopic = "orders";
         private const string PubSubName = "oms.pubsub";
         private readonly DaprWorkflowClient _daprClient;
         private readonly Random _random;
@@ -101,24 +100,6 @@ namespace OrderProcessorWorkflow.Controllers
 
             }
             
-            // string url= $"http://localhost:5780/v1.0-beta1/workflows/dapr/" + WorkflowName + "/start?instanceID=" + orderId; // sample url
-            // using (HttpClient client = new HttpClient())
-            // {
-            //     // TODO: SDK API CALL IN ALPHA, HTTP CALL RECOMMENDED, REPLACE IN THE FUTURE
-            //     // StartWorkflowResponse startResponse = await _daprClient.grpc(orderSummary.OrderId.ToString(), WorkflowComponent, WorkflowName, orderSummary);
-
-            //     var response =  await client.PostAsync(url, 
-            //                                         new StringContent(JsonSerializer.Serialize(orderSummary), 
-            //                                         Encoding.UTF8, 
-            //                                         "application/json"));
-
-            //     if (response.StatusCode != HttpStatusCode.Accepted){
-            //         _logger.LogError("Failed to s tart workflow {orderId}. {response}.", orderSummary.OrderId, response);
-            //         return BadRequest();     
-            //     }                                                   
-
-            //     return Ok();                
-            // }
             return BadRequest();
         }
 
