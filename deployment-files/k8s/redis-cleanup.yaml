@@ -1,0 +1,77 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: redis-full-wipe-cronjob
+  namespace: redis
+spec:
+  schedule: "0 5 * * *"
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 1
+  failedJobsHistoryLimit: 1
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: redis-cleaner
+            image: redis:8-alpine
+            command: ["/bin/sh", "-c"]
+            args:
+              - |
+                set -euo pipefail
+                
+                REDIS_CLI="redis-cli -h \"$REDIS_HOST\" -p \"$REDIS_PORT\" -a \"$REDIS_PASSWORD\""
+                
+                echo "Starting Redis key wipe at $(date) for ${REDIS_HOST}:${REDIS_PORT}"
+                
+                if ! eval "$REDIS_CLI ping" >/dev/null 2>&1; then
+                  echo "ERROR: Failed to connect to Redis." >&2
+                  exit 1
+                fi
+                echo "Successfully connected to Redis."
+                
+                INITIAL_KEYS=$(eval "$REDIS_CLI DBSIZE" 2>/dev/null || echo 0)
+                echo "Keys before wipe: $INITIAL_KEYS"
+                
+                if [ "$INITIAL_KEYS" -eq 0 ]; then
+                  echo "Redis is already empty. No keys to delete."
+                  exit 0
+                fi
+                
+                echo "Executing SCAN and DEL to wipe all keys..."
+                if ! eval "$REDIS_CLI --scan --pattern '*'" | xargs -r -n 500 eval "$REDIS_CLI DEL" >/dev/null 2>&1; then
+                  echo "ERROR: SCAN/DEL operation failed." >&2
+                  exit 1
+                fi
+                echo "SCAN/DEL operation completed."
+                
+                FINAL_KEYS=$(eval "$REDIS_CLI DBSIZE" 2>/dev/null || echo 0)
+                echo "Keys after wipe: $FINAL_KEYS"
+                
+                if [ "$FINAL_KEYS" -eq 0 ]; then
+                  echo "Redis wipe completed. Freed $INITIAL_KEYS keys."
+                  exit 0
+                else
+                  echo "WARNING: $FINAL_KEYS keys still remain after wipe attempt." >&2
+                  exit 1
+                fi
+            env:
+            - name: REDIS_HOST
+              value: "redis-master.redis.svc.cluster.local"
+            - name: REDIS_PORT
+              value: "6379"
+            - name: REDIS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: redis
+                  key: redis-password
+            resources:
+              requests:
+                memory: "32Mi"
+                cpu: "50m"
+              limits:
+                memory: "64Mi"
+                cpu: "100m"
+          restartPolicy: Never
+          activeDeadlineSeconds: 300
+      backoffLimit: 2
