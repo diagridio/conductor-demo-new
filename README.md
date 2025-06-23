@@ -92,7 +92,7 @@ helm repo update
 Install Redis, export the password and create a secret that will be accessed from the component files.
 
 ```bash
-helm install redis bitnami/redis --set-json='master.disableCommands=[]' --set-json='replica.disableCommands=[]'
+helm install redis bitnami/redis -n redis --set-json='master.disableCommands=[]' --set-json='replica.disableCommands=[]'
 export REDIS_PASSWORD=$(kubectl get secret --namespace redis redis -o jsonpath="{.data.redis-password}" | base64 -d) 
 
 kubectl create secret generic redis-password --from-literal=redis-password=$REDIS_PASSWORD -n order-system
