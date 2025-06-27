@@ -1,0 +1,17 @@
+resources:
+  - dapr-secret-reader.yaml
+  - oms.binding.cron.yaml
+  - oms.binding.receipt.yaml
+  - oms.config.loyalty.yaml
+  - oms.config.yaml
+  - oms.pubsub.yaml
+  - oms.resiliency.yaml
+  - oms.state.loyalty-fail.yaml
+  - oms.state.loyalty.yaml
+  - oms.state.makeline.yaml
+  - oms.state.orderprocessor.yaml
+  - oms.state.unscoped.yaml
+  - oms.state.workeractor.yaml
+  - oms.state.wrongscope.yaml
+  - oms.subscription.ordercompleted.yaml
+  - oms.subscription.orders.yaml

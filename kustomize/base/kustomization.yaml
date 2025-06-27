@@ -1,0 +1,76 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+helmCharts:
+  - name: redis
+    releaseName: redis
+    namespace: redis
+    repo: https://charts.bitnami.com/bitnami
+    includeCRDs: true
+    valuesInline:
+      master:
+        disableCommands: []
+      replica:
+        disableCommands: []
+      auth:
+        existingSecret: redis-password
+        existingSecretPasswordKey: redis-password
+
+  - name: kafka
+    releaseName: kafka
+    namespace: kafka
+    repo: https://charts.bitnami.com/bitnami
+    includeCRDs: true
+    valuesInline:
+      persistence:
+        enabled: false
+      zookeeper:
+        persistence:
+          enabled: false
+      auth:
+        clientProtocol: sasl
+      sasl:
+        existingSecret: kafka-user-password
+
+  - name: dapr
+    releaseName: dapr
+    namespace: dapr-system
+    repo: https://dapr.github.io/helm-charts
+    includeCRDs: true
+
+  - name: zipkin
+    releaseName: zipkin
+    namespace: zipkin
+    repo: https://zipkin.io/zipkin-helm
+    includeCRDs: true
+    valuesInline:
+      service:
+        type: LoadBalancer
+        port: 9411
+
+secretGenerator:
+  - name: redis-password
+    namespace: redis
+    literals:
+    - redis-password=your-secure-redis-password-here
+  - name: redis-password  
+    namespace: order-system
+    literals:
+    - redis-password=your-secure-redis-password-here
+  - name: kafka-user-password
+    namespace: kafka
+    literals:
+    - client-passwords=secure-kafka-password-123
+    - inter-broker-password=secure-kafka-interbroker-123
+    - controller-password=secure-kafka-controller-123
+    - system-user-password=secure-kafka-system-123
+  - name: kafka-password
+    namespace: order-system
+    literals:
+    - kafka-password=secure-kafka-password-123
+
+generatorOptions:
+  disableNameSuffixHash: true
+
+resources:
+  - namespace.yaml

@@ -1,0 +1,25 @@
+# namespaces.yaml
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: order-system
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: redis
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: kafka
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: zipkin
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: dapr-system

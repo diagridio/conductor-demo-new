@@ -1,0 +1,14 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - external-services.yaml
+  - virtual-customer.yaml
+  - loyalty-service.yaml
+  - make-line-service.yaml
+  - order-processor-workflow.yaml
+  - order-service.yaml
+  - receipt-generation-service.yaml
+  - redis-cleanup.yaml
+  - virtual-worker.yaml
+  - worker-actor.yaml
