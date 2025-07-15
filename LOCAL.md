@@ -122,7 +122,7 @@ kubectl get pods -n order-system
 
 ## Known issues
 
-There is a current issue with Redis where it constantly becomes full. To prevent that we have introduced a cronjob called`redis-full-wipe-cronjob` which flushes redis every 24hrs at 05:00 UTC.
+There is a current issue with Redis where constantly becomes full. To prevent that we have introduced a cronjob called`redis-full-wipe-cronjob` which flushes redis every 24hrs at 05:00 UTC.
 
 ```sh
 # View recent executions
