@@ -5,14 +5,19 @@ on:
     branches: [tidy-ci]
   workflow_dispatch:
 
-env:
-  SERVICES: |
-    [
-      "loyalty-service",
-    ]
-
 jobs:
+  setup:
+    runs-on: ubuntu-latest
+    outputs:
+      services: ${{ steps.services.outputs.services }}
+    steps:
+      - name: Define services
+        id: services
+        run: |
+          echo 'services=["loyalty-service"]' >> $GITHUB_OUTPUT
+
   build-and-push:
+    needs: setup
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -21,7 +26,7 @@ jobs:
     
     strategy:
       matrix:
-        service: ${{ fromJSON(env.SERVICES) }}
+        service: ${{ fromJSON(needs.setup.outputs.services) }}
       fail-fast: false
 
     env:
@@ -81,7 +86,7 @@ jobs:
             .
 
   deploy:
-    needs: build-and-push
+    needs: [setup, build-and-push]
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -142,11 +147,10 @@ jobs:
         working-directory: ./deployment-files/
         run: |
           rm -f kustomization.yaml
-          
           ./kustomize create
           
-          # Add all service resources and update their images
-          services='${{ env.SERVICES }}'
+          # Process services from the setup job output
+          services='${{ needs.setup.outputs.services }}'
           echo "$services" | jq -r '.[]' | while read service; do
             echo "Processing $service..."
             image_name="order-system/$service"
@@ -171,7 +175,7 @@ jobs:
       - name: Wait for all deployments
         run: |
           echo "Waiting for all deployments to complete on ${{ matrix.cluster }}..."
-          services='${{ env.SERVICES }}'
+          services='${{ needs.setup.outputs.services }}'
           echo "$services" | jq -r '.[]' | while read service; do
             echo "Waiting for $service deployment..."
             kubectl rollout status "deployment/$service" --timeout=600s
