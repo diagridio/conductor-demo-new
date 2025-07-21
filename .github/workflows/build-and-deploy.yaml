@@ -9,12 +9,16 @@ jobs:
   setup:
     runs-on: ubuntu-latest
     outputs:
-      services: ${{ steps.services.outputs.services }}
+      build-matrix: ${{ steps.matrix.outputs.build-matrix }}
     steps:
-      - name: Define services
-        id: services
+      - name: Define service matrix
+        id: matrix
         run: |
-          echo 'services=["loyalty-service"]' >> $GITHUB_OUTPUT
+          BUILD_MATRIX='[
+            {"service": "loyalty-service", "working_dir": "go/loyalty-service", "image_name": "order-system/loyalty-service"}
+          ]'
+          
+          echo "build-matrix=$BUILD_MATRIX" >> $GITHUB_OUTPUT
 
   build-and-push:
     needs: setup
@@ -26,7 +30,7 @@ jobs:
     
     strategy:
       matrix:
-        service: ${{ fromJSON(needs.setup.outputs.services) }}
+        include: ${{ fromJSON(needs.setup.outputs.build-matrix) }}
       fail-fast: false
 
     env:
@@ -37,24 +41,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
-      - name: Set service configuration
-        id: config
-        run: |
-          case "${{ matrix.service }}" in
-            loyalty-service|make-line-service|order-service|receipt-generation-service|virtual-customer|virtual-worker)
-              echo "working_dir=go/${{ matrix.service }}" >> $GITHUB_OUTPUT
-              echo "image_name=order-system/${{ matrix.service }}" >> $GITHUB_OUTPUT
-              ;;
-            order-processor-workflow)
-              echo "working_dir=dotnet/OrderProcessorWorkflow" >> $GITHUB_OUTPUT
-              echo "image_name=order-system/order-processor-workflow" >> $GITHUB_OUTPUT
-              ;;
-            worker-actor)
-              echo "working_dir=dotnet/WorkerActor" >> $GITHUB_OUTPUT
-              echo "image_name=order-system/worker-actor" >> $GITHUB_OUTPUT
-              ;;
-          esac
 
       - name: Authenticate to Google Cloud
         id: auth
@@ -75,9 +61,9 @@ jobs:
           password: ${{ steps.auth.outputs.access_token }}
 
       - name: Build and push Docker image
-        working-directory: ${{ steps.config.outputs.working_dir }}
+        working-directory: ${{ matrix.working_dir }}
         run: |
-          IMAGE_TAG="${{ env.GCP_CONTAINER_REGISTRY_HOST }}/${{ env.GCP_PROJECT_ID }}/${{ env.GCP_DOCKER_REPOSITORY }}/${{ steps.config.outputs.image_name }}:${{ github.sha }}"
+          IMAGE_TAG="${{ env.GCP_CONTAINER_REGISTRY_HOST }}/${{ env.GCP_PROJECT_ID }}/${{ env.GCP_DOCKER_REPOSITORY }}/${{ matrix.image_name }}:${{ github.sha }}"
           
           docker buildx build \
             --platform linux/amd64,linux/arm64 \
@@ -95,10 +81,13 @@ jobs:
     
     strategy:
       matrix:
-        cluster:
-          - staging
-          #- free-tier
-          #- enterprise
+        include:
+          - cluster: staging
+            gke_cluster: ${{ vars.GCP_DP_GKE_CLUSTER_NAME_0 }}
+          # - cluster: free-tier
+          #   gke_cluster: ${{ vars.GCP_DP_GKE_CLUSTER_NAME_1 }}
+          # - cluster: enterprise
+          #   gke_cluster: ${{ vars.GCP_DP_GKE_CLUSTER_NAME_2 }}
       fail-fast: false
 
     env:
@@ -108,21 +97,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
-      - name: Set cluster configuration
-        id: cluster
-        run: |
-          case "${{ matrix.cluster }}" in
-            staging)
-              echo "gke_cluster=${{ vars.GCP_DP_GKE_CLUSTER_NAME_0 }}" >> $GITHUB_OUTPUT
-              ;;
-            free-tier)
-              echo "gke_cluster=${{ vars.GCP_DP_GKE_CLUSTER_NAME_1 }}" >> $GITHUB_OUTPUT
-              ;;
-            enterprise)
-              echo "gke_cluster=${{ vars.GCP_DP_GKE_CLUSTER_NAME_2 }}" >> $GITHUB_OUTPUT
-              ;;
-          esac
 
       - name: Authenticate to Google Cloud
         id: auth
@@ -146,9 +120,8 @@ jobs:
       - name: Update all service manifests
         working-directory: ./deployment-files/
         run: |
-          # Process services from the setup job output
-          services='${{ needs.setup.outputs.services }}'
-          echo "$services" | jq -r '.[]' | while read service; do
+          build_matrix='${{ needs.setup.outputs.build-matrix }}'
+          echo "$build_matrix" | jq -r '.[].service' | while read service; do
             echo "Processing $service..."
             image_name="order-system/$service"
             
@@ -159,7 +132,7 @@ jobs:
       - name: Get GKE credentials
         run: |
           gcloud container clusters get-credentials \
-            ${{ steps.cluster.outputs.gke_cluster }} \
+            ${{ matrix.gke_cluster }} \
             --zone ${{ env.GKE_ZONE }} \
             --project ${{ env.GCP_PROJECT_ID }}
 
