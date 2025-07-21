@@ -5,6 +5,12 @@ on:
     branches: [tidy-ci]
   workflow_dispatch:
 
+env:
+  SERVICES: |
+    [
+      "loyalty-service",
+    ]
+
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
@@ -15,15 +21,7 @@ jobs:
     
     strategy:
       matrix:
-        service:
-          - loyalty-service
-          - make-line-service
-          - order-service
-          - receipt-generation-service
-          - virtual-customer
-          - virtual-worker
-          - order-processor-workflow
-          - worker-actor
+        service: ${{ fromJSON(env.SERVICES) }}
       fail-fast: false
 
     env:
@@ -92,21 +90,11 @@ jobs:
     
     strategy:
       matrix:
-        service:
-          - loyalty-service
-          #- make-line-service
-          #- order-service
-          #- receipt-generation-service
-          #- virtual-customer
-          #- virtual-worker
-          #- order-processor-workflow
-          #- worker-actor
         cluster:
           - staging
           #- free-tier
           #- enterprise
       fail-fast: false
-      max-parallel: 6
 
     env:
       GCP_PROJECT_ID: ${{ vars.GCP_DP_PROJECT_ID }}
@@ -131,24 +119,6 @@ jobs:
               ;;
           esac
 
-      - name: Set service configuration
-        id: service
-        run: |
-          case "${{ matrix.service }}" in
-            loyalty-service|make-line-service|order-service|receipt-generation-service|virtual-customer|virtual-worker)
-              echo "image_name=order-system/${{ matrix.service }}" >> $GITHUB_OUTPUT
-              echo "k8s_name=${{ matrix.service }}" >> $GITHUB_OUTPUT
-              ;;
-            order-processor-workflow)
-              echo "image_name=order-system/order-processor-workflow" >> $GITHUB_OUTPUT
-              echo "k8s_name=order-processor-workflow" >> $GITHUB_OUTPUT
-              ;;
-            worker-actor)
-              echo "image_name=order-system/worker-actor" >> $GITHUB_OUTPUT
-              echo "k8s_name=worker-actor" >> $GITHUB_OUTPUT
-              ;;
-          esac
-
       - name: Authenticate to Google Cloud
         id: auth
         uses: google-github-actions/auth@v2
@@ -168,10 +138,22 @@ jobs:
           curl -sfLo kustomize https://github.com/kubernetes-sigs/kustomize/releases/download/v3.1.0/kustomize_3.1.0_linux_amd64
           chmod u+x ./kustomize
 
-      - name: Replace the target image name in the kustomization.yaml
+      - name: Update all service manifests
         working-directory: ./deployment-files/
         run: |
-          ./kustomize edit add resource ./k8s/${{ steps.service.outputs.k8s_name }}.yaml && ./kustomize edit set image ${{ steps.service.outputs.image_name }}:tag=us-central1-docker.pkg.dev/prj-common-d-shared-89549/reg-d-common-docker-public/${{ steps.service.outputs.image_name }}:${{ github.sha }}
+          rm -f kustomization.yaml
+          
+          ./kustomize create
+          
+          # Add all service resources and update their images
+          services='${{ env.SERVICES }}'
+          echo "$services" | jq -r '.[]' | while read service; do
+            echo "Processing $service..."
+            image_name="order-system/$service"
+            
+            ./kustomize edit add resource "./k8s/$service.yaml"
+            ./kustomize edit set image "$image_name:tag=us-central1-docker.pkg.dev/prj-common-d-shared-89549/reg-d-common-docker-public/$image_name:${{ github.sha }}"
+          done
 
       - name: Get GKE credentials
         run: |
@@ -180,17 +162,17 @@ jobs:
             --zone ${{ env.GKE_ZONE }} \
             --project ${{ env.GCP_PROJECT_ID }}
 
-      - name: Deploy to GKE
+      - name: Deploy all services to GKE
         working-directory: ./deployment-files
         run: |
-          echo "Deploying ${{ matrix.service }} to ${{ matrix.cluster }} cluster..."
+          echo "Deploying all services to ${{ matrix.cluster }} cluster..."
           kubectl apply -k . --timeout=300s
-          
-          # Wait for rollout to complete
-          kubectl rollout status deployment/${{ steps.service.outputs.k8s_name }} --timeout=600s
 
-      - name: Verify deployment
+      - name: Wait for all deployments
         run: |
-          echo "Verifying deployment of ${{ matrix.service }} on ${{ matrix.cluster }}..."
-          kubectl get deployment ${{ steps.service.outputs.k8s_name }} -o jsonpath='{.status.conditions[?(@.type=="Available")].status}'
-          kubectl get pods -l app=${{ steps.service.outputs.k8s_name }} --no-headers | head -5
+          echo "Waiting for all deployments to complete on ${{ matrix.cluster }}..."
+          services='${{ env.SERVICES }}'
+          echo "$services" | jq -r '.[]' | while read service; do
+            echo "Waiting for $service deployment..."
+            kubectl rollout status "deployment/$service" --timeout=600s
+          done
