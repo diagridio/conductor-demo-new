@@ -42,6 +42,21 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Set cluster configuration
+        id: cluster
+        run: |
+          case "${{ matrix.cluster }}" in
+            staging)
+              echo "gke_cluster=${{ vars.GCP_DP_GKE_CLUSTER_NAME_0 }}" >> $GITHUB_OUTPUT
+              ;;
+            free-tier)
+              echo "gke_cluster=${{ vars.GCP_DP_GKE_CLUSTER_NAME_1 }}" >> $GITHUB_OUTPUT
+              ;;
+            enterprise)
+              echo "gke_cluster=${{ vars.GCP_DP_GKE_CLUSTER_NAME_2 }}" >> $GITHUB_OUTPUT
+              ;;
+          esac
+
       - name: Authenticate to Google Cloud
         id: auth
         uses: google-github-actions/auth@v2
@@ -83,11 +98,8 @@ jobs:
       matrix:
         include:
           - cluster: staging
-            gke_cluster: ${{ vars.GCP_DP_GKE_CLUSTER_NAME_0 }}
           # - cluster: free-tier
-          #   gke_cluster: ${{ vars.GCP_DP_GKE_CLUSTER_NAME_1 }}
           # - cluster: enterprise
-          #   gke_cluster: ${{ vars.GCP_DP_GKE_CLUSTER_NAME_2 }}
       fail-fast: false
 
     env:
@@ -132,7 +144,7 @@ jobs:
       - name: Get GKE credentials
         run: |
           gcloud container clusters get-credentials \
-            ${{ matrix.gke_cluster }} \
+            ${{ steps.cluster.outputs.gke_cluster }} \
             --zone ${{ env.GKE_ZONE }} \
             --project ${{ env.GCP_PROJECT_ID }}
 
