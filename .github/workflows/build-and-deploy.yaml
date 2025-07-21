@@ -146,17 +146,14 @@ jobs:
       - name: Update all service manifests
         working-directory: ./deployment-files/
         run: |
-          rm -f kustomization.yaml
-          ./kustomize create
-          
           # Process services from the setup job output
           services='${{ needs.setup.outputs.services }}'
           echo "$services" | jq -r '.[]' | while read service; do
             echo "Processing $service..."
             image_name="order-system/$service"
             
-            ./kustomize edit add resource "./k8s/$service.yaml"
-            ./kustomize edit set image "$image_name:tag=us-central1-docker.pkg.dev/prj-common-d-shared-89549/reg-d-common-docker-public/$image_name:${{ github.sha }}"
+            kustomize edit add resource "./k8s/$service.yaml"
+            kustomize edit set image "$image_name:tag=us-central1-docker.pkg.dev/prj-common-d-shared-89549/reg-d-common-docker-public/$image_name:${{ github.sha }}"
           done
 
       - name: Get GKE credentials
