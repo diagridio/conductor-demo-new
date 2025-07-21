@@ -11,13 +11,13 @@ jobs:
     outputs:
       build-matrix: ${{ steps.matrix.outputs.build-matrix }}
     steps:
-      - name: Define service matrix
+      - name: Checkout
+        uses: actions/checkout@v4
+        
+      - name: Load service matrix
         id: matrix
         run: |
-          BUILD_MATRIX='[
-            {"service": "loyalty-service", "working_dir": "go/loyalty-service", "image_name": "order-system/loyalty-service"}
-          ]'
-          
+          BUILD_MATRIX=$(cat .github/workflows/build.json)
           echo "build-matrix=$BUILD_MATRIX" >> $GITHUB_OUTPUT
 
   build-and-push:

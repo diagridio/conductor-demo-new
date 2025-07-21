@@ -1,0 +1,7 @@
+[
+  {
+    "service": "loyalty-service",
+    "working_dir": "go/loyalty-service",
+    "image_name": "order-system/loyalty-service"
+  }
+]
