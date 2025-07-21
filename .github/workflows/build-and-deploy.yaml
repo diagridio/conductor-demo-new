@@ -17,7 +17,7 @@ jobs:
       - name: Load service matrix
         id: matrix
         run: |
-          BUILD_MATRIX=$(cat .github/workflows/build.json)
+          BUILD_MATRIX=$(cat .github/workflows/build.json | jq -c .)
           echo "build-matrix=$BUILD_MATRIX" >> $GITHUB_OUTPUT
 
   build-and-push:
