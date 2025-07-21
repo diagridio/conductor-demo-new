@@ -168,12 +168,3 @@ jobs:
         run: |
           echo "Deploying all services to ${{ matrix.cluster }} cluster..."
           kubectl apply -k . --timeout=300s
-
-      - name: Wait for all deployments
-        run: |
-          echo "Waiting for all deployments to complete on ${{ matrix.cluster }}..."
-          services='${{ needs.setup.outputs.services }}'
-          echo "$services" | jq -r '.[]' | while read service; do
-            echo "Waiting for $service deployment..."
-            kubectl rollout status "deployment/$service" --timeout=600s
-          done
