@@ -1,0 +1,63 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: redis-full-wipe-cronjob
+  namespace: redis
+spec:
+  schedule: "0 5 * * *"
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 1
+  failedJobsHistoryLimit: 1
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: redis-cleaner
+            image: redis:8-alpine
+            command: ["/bin/sh", "-c"]
+            args:
+              - |
+                set -euo pipefail
+
+                REDIS_CLI="redis-cli -h \"$REDIS_HOST\" -p \"$REDIS_PORT\""
+
+                echo "Starting Redis wipe at $(date) for ${REDIS_HOST}:${REDIS_PORT}"
+
+                INITIAL_KEYS=$(eval "$REDIS_CLI DBSIZE" || echo 0)
+                echo "Keys before wipe: $INITIAL_KEYS"
+
+                echo "Executing FLUSHALL command..."
+                if ! eval "$REDIS_CLI FLUSHALL"; then
+                  echo "ERROR: FLUSHALL command failed."
+                  exit 1
+                fi
+                echo "FLUSHALL completed successfully"
+
+                FINAL_KEYS=$(eval "$REDIS_CLI DBSIZE" || echo 0)
+                echo "Keys after wipe: $FINAL_KEYS"
+
+                if [ "$FINAL_KEYS" -ne 0 ]; then
+                  echo "WARNING: $FINAL_KEYS keys still remain after wipe attempt."
+                  exit 1
+                fi
+            env:
+            - name: REDIS_HOST
+              value: "redis-master.redis.svc.cluster.local"
+            - name: REDIS_PORT
+              value: "6379"
+            - name: REDISCLI_AUTH
+              valueFrom:
+                secretKeyRef:
+                  name: redis
+                  key: redis-password
+            resources:
+              requests:
+                memory: "32Mi"
+                cpu: "50m"
+              limits:
+                memory: "64Mi"
+                cpu: "100m"
+          restartPolicy: Never
+          activeDeadlineSeconds: 60
+      backoffLimit: 1

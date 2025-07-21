@@ -1,0 +1,155 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  setup:
+    runs-on: ubuntu-latest
+    outputs:
+      build-matrix: ${{ steps.matrix.outputs.build-matrix }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        
+      - name: Load service matrix
+        id: matrix
+        run: |
+          BUILD_MATRIX=$(cat .github/workflows/build.json | jq -c .)
+          echo "build-matrix=$BUILD_MATRIX" >> $GITHUB_OUTPUT
+
+  build-and-push:
+    needs: setup
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    environment: development
+    
+    strategy:
+      matrix:
+        include: ${{ fromJSON(needs.setup.outputs.build-matrix) }}
+      fail-fast: false
+
+    env:
+      GCP_PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
+      GCP_DOCKER_REPOSITORY: ${{ secrets.GCP_DOCKER_REPOSITORY }}
+      GCP_CONTAINER_REGISTRY_HOST: ${{ secrets.GCP_CONTAINER_REGISTRY_HOST }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Authenticate to Google Cloud
+        id: auth
+        uses: google-github-actions/auth@v2
+        with:
+          token_format: access_token
+          workload_identity_provider: ${{ secrets.WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ secrets.SERVICE_ACCOUNT }}
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Login to Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.GCP_CONTAINER_REGISTRY_HOST }}
+          username: oauth2accesstoken
+          password: ${{ steps.auth.outputs.access_token }}
+
+      - name: Build and push Docker image
+        working-directory: ${{ matrix.working_dir }}
+        run: |
+          IMAGE_TAG="${{ env.GCP_CONTAINER_REGISTRY_HOST }}/${{ env.GCP_PROJECT_ID }}/${{ env.GCP_DOCKER_REPOSITORY }}/${{ matrix.image_name }}:${{ github.sha }}"
+          
+          docker buildx build \
+            --platform linux/amd64,linux/arm64 \
+            --tag "${IMAGE_TAG}" \
+            --push \
+            .
+
+  deploy:
+    needs: [setup, build-and-push]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    environment: demo
+    
+    strategy:
+      matrix:
+        include:
+          - cluster: staging
+          - cluster: free-tier
+          - cluster: enterprise
+      fail-fast: false
+
+    env:
+      GCP_PROJECT_ID: ${{ vars.GCP_DP_PROJECT_ID }}
+      GKE_ZONE: ${{ vars.GCP_DP_GKE_ZONE }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set cluster configuration
+        id: cluster
+        run: |
+          case "${{ matrix.cluster }}" in
+            staging)
+              echo "gke_cluster=${{ vars.GCP_DP_GKE_CLUSTER_NAME_0 }}" >> $GITHUB_OUTPUT
+              ;;
+            free-tier)
+              echo "gke_cluster=${{ vars.GCP_DP_GKE_CLUSTER_NAME_1 }}" >> $GITHUB_OUTPUT
+              ;;
+            enterprise)
+              echo "gke_cluster=${{ vars.GCP_DP_GKE_CLUSTER_NAME_2 }}" >> $GITHUB_OUTPUT
+              ;;
+          esac
+
+      - name: Authenticate to Google Cloud
+        id: auth
+        uses: google-github-actions/auth@v2
+        with:
+          token_format: access_token
+          workload_identity_provider: ${{ vars.WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ vars.SERVICE_ACCOUNT }}
+
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
+        with:
+          install_components: gke-gcloud-auth-plugin
+
+      - name: Set up Kustomize
+        working-directory: ./deployment-files/
+        run: |
+          curl -sfLo kustomize https://github.com/kubernetes-sigs/kustomize/releases/download/v3.1.0/kustomize_3.1.0_linux_amd64
+          chmod u+x ./kustomize
+
+      - name: Update all service manifests
+        working-directory: ./deployment-files/
+        run: |
+          build_matrix='${{ needs.setup.outputs.build-matrix }}'
+          echo "$build_matrix" | jq -r '.[].service' | while read service; do
+            echo "Processing $service..."
+            image_name="order-system/$service"
+            
+            kustomize edit add resource "./k8s/$service.yaml"
+            kustomize edit set image "$image_name:tag=us-central1-docker.pkg.dev/prj-common-d-shared-89549/reg-d-common-docker-public/$image_name:${{ github.sha }}"
+          done
+
+      - name: Get GKE credentials
+        run: |
+          gcloud container clusters get-credentials \
+            ${{ steps.cluster.outputs.gke_cluster }} \
+            --zone ${{ env.GKE_ZONE }} \
+            --project ${{ env.GCP_PROJECT_ID }}
+
+      - name: Deploy all services to GKE
+        working-directory: ./deployment-files
+        run: |
+          echo "Deploying all services to ${{ matrix.cluster }} cluster..."
+          kubectl apply -k . --timeout=300s

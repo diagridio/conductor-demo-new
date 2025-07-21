@@ -56,7 +56,7 @@ helm repo update
 Install Redis, export the password and create a secret that will be accessed from the component files.
 
 ```bash
-helm install redis bitnami/redis -n redis
+helm install redis bitnami/redis -n redis --set-json='master.disableCommands=[]' --set-json='replica.disableCommands=[]'
 export REDIS_PASSWORD=$(kubectl get secret --namespace redis redis -o jsonpath="{.data.redis-password}" | base64 -d) 
 
 kubectl create secret generic redis-password --from-literal=redis-password=$REDIS_PASSWORD -n order-system
@@ -122,9 +122,24 @@ kubectl get pods -n order-system
 
 ## Known issues
 
-There is a current issue with Redis where it constantly becomes full. We are working on mitigating this issue, but if you start seeing a errors related to Redis being unavailable, run the following commands to flush the state store:
+There is a current issue with Redis where constantly becomes full. To prevent that we have introduced a cronjob called`redis-full-wipe-cronjob` which flushes redis every 24hrs at 05:00 UTC.
 
+```sh
+# View recent executions
+kubectl get jobs -n redis
 
+# Check latest logs
+kubectl logs -n redis jobs/redis-full-wipe-cronjob-xxxx
+```
+**Sample execution**
+```
+Starting Redis wipe at Tue Jul 15 05:00:01 UTC 2025 for redis-master.redis.svc.cluster.local:6379
+Keys before wipe: 243906
+Executing FLUSHALL command...
+OK
+FLUSHALL completed successfully
+Keys after wipe: 0
+```
 
 ```bash
 export REDIS_PASSWORD=$(kubectl get secret --namespace redis redis -o jsonpath="{.data.redis-password}" | base64 -d) 
