@@ -3,7 +3,7 @@ name: Deploy Redis Cleaner CronJob
 on:
  push:
    branches:
-     - kustomize
+     - debug
  workflow_dispatch:
 
 jobs:
