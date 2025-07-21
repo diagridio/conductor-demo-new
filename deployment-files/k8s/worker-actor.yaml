@@ -22,7 +22,7 @@ spec:
         dapr.io/sidecar-cpu-request: "5m"
         dapr.io/sidecar-memory-request: "71.82Mi"
         dapr.io/sidecar-memory-limit: "71.82Mi"
-        dapr.io/env: "GOMEMLIMIT=64MiB
+        dapr.io/env: "GOMEMLIMIT=64MiB"
     spec:
       containers:
         - name: worker-actor
