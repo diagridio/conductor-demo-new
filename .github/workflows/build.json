@@ -1,0 +1,42 @@
+[
+  {
+    "service": "loyalty-service",
+    "working_dir": "go/loyalty-service",
+    "image_name": "order-system/loyalty-service"
+  },
+  {
+    "service": "make-line-service",
+    "working_dir": "go/make-line-service",
+    "image_name": "order-system/make-line-service"
+  },
+  {
+    "service": "order-service",
+    "working_dir": "go/order-service",
+    "image_name": "order-system/order-service"
+  },
+  {
+    "service": "receipt-generation-service",
+    "working_dir": "go/receipt-generation-service",
+    "image_name": "order-system/receipt-generation-service"
+  },
+  {
+    "service": "virtual-customer",
+    "working_dir": "go/virtual-customer",
+    "image_name": "order-system/virtual-customer"
+  },
+  {
+    "service": "virtual-worker",
+    "working_dir": "go/virtual-worker",
+    "image_name": "order-system/virtual-worker"
+  },
+  {
+    "service": "order-processor-workflow",
+    "working_dir": "dotnet/OrderProcessorWorkflow",
+    "image_name": "order-system/order-processor-workflow"
+  },
+  {
+    "service": "worker-actor",
+    "working_dir": "dotnet/WorkerActor",
+    "image_name": "order-system/worker-actor"
+  }
+]
