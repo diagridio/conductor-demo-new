@@ -2,7 +2,7 @@ name: CI/CD Pipeline
 
 on:
   push:
-    branches: [tidy-ci]
+    branches: [main]
   workflow_dispatch:
 
 jobs:
@@ -83,8 +83,8 @@ jobs:
       matrix:
         include:
           - cluster: staging
-          # - cluster: free-tier
-          # - cluster: enterprise
+          - cluster: free-tier
+          - cluster: enterprise
       fail-fast: false
 
     env:
