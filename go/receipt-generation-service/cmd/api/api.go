@@ -7,6 +7,7 @@ import (
 	"math/rand"
 	"net/http"
 	"os"
+	"strconv"
 
 	dapr "github.com/dapr/go-sdk/client"
 )
@@ -65,8 +66,18 @@ func (app *Config) HandleGenerateReceipt(w http.ResponseWriter, r *http.Request)
 	//append metadata with order id
 	metadata["key"] = keyValue
 
-	// ~35% of the time, induce error when using Redis. No key "key" in the request
-	if rand.Float64() < 0.35 {
+	failRateStr := os.Getenv("FAIL_RATE")
+	if failRateStr == "" {
+		failRateStr = "0.35"
+	}
+	failRate, err := strconv.ParseFloat(failRateStr, 64)
+	if err != nil {
+		log.Printf("Invalid FAIL_RATE value '%s'. Defaulting to 0.35. Error: %v", failRateStr, err)
+		failRate = 0.35
+	}
+
+	if rand.Float64() < failRate {
+		log.Printf("Inducing failure based on fail rate: %f", failRate)
 		metadata = make(map[string]string)
 		metadata["orderId"] = orderSummary.OrderID
 	}

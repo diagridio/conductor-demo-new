@@ -32,6 +32,8 @@ spec:
           env:
           - name: APP_PORT
             value: "80"
+          - name: FAIL_RATE
+            value: "0.35"
           resources:
             requests:
               memory: "256Mi"
