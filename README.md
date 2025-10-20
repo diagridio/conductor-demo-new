@@ -80,30 +80,27 @@ kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/late
 kubectl patch deployment metrics-server -n kube-system --type "json" -p '[{"op": "add", "path": "/spec/template/spec/containers/0/args/-", "value": "--kubelet-insecure-tls"}]'
 ```
 
-### Setup Helm
-
-```bash
-helm repo add bitnami https://charts.bitnami.com/bitnami
-helm repo update
-```
-
 ### Redis(Valkey) setup
 
 Install Valkey
 
 ```bash
-helm install valkey valkey/valkey
+helm repo add valkey https://valkey.io/valkey-helm/ 
+
+helm repo update
+
+helm install valkey valkey/valkey --set replicaCount=3 -n redis
 ```
 
 ### Kafka setup
 
-Install Kafka.
+Install Kafka
 
 ```bash
+# set up the strimzi operator
 helm install strimzi-kafka-operator oci://quay.io/strimzi-helm/strimzi-kafka-operator
 
-kubectl create -f 'https://strimzi.io/install/latest?namespace=kafka' -n kafka
-
+# Add CRD to spin up a single node kafka
 kubectl apply -f https://strimzi.io/examples/latest/kafka/kafka-single-node.yaml -n kafka 
 ```
 
