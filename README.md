@@ -87,33 +87,25 @@ helm repo add bitnami https://charts.bitnami.com/bitnami
 helm repo update
 ```
 
-### Redis setup
+### Redis(Valkey) setup
 
-Install Redis, export the password and create a secret that will be accessed from the component files.
+Install Valkey
 
 ```bash
-helm install redis bitnami/redis -n redis --set-json='master.disableCommands=[]' --set-json='replica.disableCommands=[]'
-export REDIS_PASSWORD=$(kubectl get secret --namespace redis redis -o jsonpath="{.data.redis-password}" | base64 -d) 
-
-kubectl create secret generic redis-password --from-literal=redis-password=$REDIS_PASSWORD -n order-system
+helm install valkey valkey/valkey
 ```
 
 ### Kafka setup
 
-Install Kafka, export the password and create a secret that will be accessed from the component files.
+Install Kafka.
 
 ```bash
-helm install --set persistence.enabled=false --set zookeeper.persistence.enabled=false --set auth.clientProtocol=sasl kafka bitnami/kafka -n kafka
+helm install strimzi-kafka-operator oci://quay.io/strimzi-helm/strimzi-kafka-operator
 
-export KAFKA_PASSWORD=$(kubectl get secret kafka-user-passwords --namespace kafka -o jsonpath='{.data.client-passwords}' | base64 -d | cut -d , -f 1)
-kubectl create secret generic kafka-password --from-literal=kafka-password=$KAFKA_PASSWORD -n order-system
+kubectl create -f 'https://strimzi.io/install/latest?namespace=kafka' -n kafka
+
+kubectl apply -f https://strimzi.io/examples/latest/kafka/kafka-single-node.yaml -n kafka 
 ```
-
-### Important
-
-Since we are inducing a component security advisory, update the content of `/components/k8s/oms.pubsub.yaml` with the new value for $KAFKA_PASSWORD. Redeploy the component.
-
-Run `echo $KAFKA_PASSWORD` to retrieve the value.
 
 ### Install Zipkin
 

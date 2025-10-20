@@ -43,7 +43,7 @@ spec:
                 fi
             env:
             - name: REDIS_HOST
-              value: "redis-master.redis.svc.cluster.local"
+              value: "valkey.redis.svc.cluster.local"
             - name: REDIS_PORT
               value: "6379"
             - name: REDISCLI_AUTH
