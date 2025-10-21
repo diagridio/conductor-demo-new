@@ -104,6 +104,19 @@ helm install strimzi-kafka-operator oci://quay.io/strimzi-helm/strimzi-kafka-ope
 kubectl apply -f https://strimzi.io/examples/latest/kafka/kafka-single-node.yaml -n kafka 
 ```
 
+### Install Jaeger
+
+```bash
+#install cert manager 
+kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.16.1/cert-manager.yaml -n cert-manager
+
+# install OpenTelemetry Operator
+kubectl apply -f https://github.com/open-telemetry/opentelemetry-operator/releases/latest/download/opentelemetry-operator.yaml
+
+# install instance of jaeger 
+kubectl apply -f ./deployment-files/k8s/jaeger.yaml -n observability
+```
+
 ### Install Zipkin
 
 Zipkin will be used for applicaiton tracing.

@@ -11,5 +11,9 @@ spec:
     samplingRate: "1"
     zipkin:
       endpointAddress: "http://zipkin.zipkin.svc.cluster.local:9411/api/v2/spans"
+    otel:
+      endpointAddress: "jaeger-inmemory-instance-collector.observability.svc.cluster.local:4317"
+      isSecure: false
+      protocol: grpc
   metric:
     enabled: true
