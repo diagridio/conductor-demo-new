@@ -16,7 +16,7 @@ namespace BasicActorSamples.Actors
         Task<string> SetDataAsync(MyData data);
         Task<MyData> GetDataAsync();
         Task RegisterReminder();
-        Task UnregisterReminder();
+        // Task UnregisterReminder();
         Task<IActorReminder> GetReminder();
         Task RegisterTimer();
         Task UnregisterTimer();
@@ -130,6 +130,9 @@ namespace BasicActorSamples.Actors
         /// </summary>
         public async Task RegisterReminder()
         {
+
+            Console.WriteLine("Registering MyReminder...");
+
             await this.RegisterReminderAsync(
                 "MyReminder",              // The name of the reminder
                 null,                      // User state passed to IRemindable.ReceiveReminderAsync()
@@ -144,6 +147,8 @@ namespace BasicActorSamples.Actors
         // /// </summary>
         public async Task<IActorReminder> GetReminder()
         {
+            Console.WriteLine("Getting MyReminder...");
+
             return await this.GetReminderAsync("MyReminder");
         }
 
@@ -170,6 +175,8 @@ namespace BasicActorSamples.Actors
         /// </summary>
         public Task RegisterTimer()
         {
+            Console.WriteLine("Registering Timer...");
+
             return this.RegisterTimerAsync(
                 "MyTimer",                  // The name of the timer
                 nameof(this.OnTimerCallBack),       // Timer callback
