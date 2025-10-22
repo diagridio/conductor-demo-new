@@ -89,7 +89,7 @@ helm repo add valkey https://valkey.io/valkey-helm/
 
 helm repo update
 
-helm install valkey valkey/valkey --set replicaCount=3 -n redis
+helm install valkey valkey/valkey -n redis
 ```
 
 ### Kafka setup
