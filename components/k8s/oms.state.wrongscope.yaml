@@ -8,6 +8,6 @@ spec:
   version: v1
   metadata:
   - name: redisHost
-    value: valkey.redis.svc.cluster.local:6379
+    value: valkeyy.redis.svc.cluster.local:6379
 scopes:
   - nonexistent-app-id
