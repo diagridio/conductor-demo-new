@@ -80,40 +80,42 @@ kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/late
 kubectl patch deployment metrics-server -n kube-system --type "json" -p '[{"op": "add", "path": "/spec/template/spec/containers/0/args/-", "value": "--kubelet-insecure-tls"}]'
 ```
 
-### Setup Helm
+### Redis(Valkey) setup
+
+Install Valkey
 
 ```bash
-helm repo add bitnami https://charts.bitnami.com/bitnami
+helm repo add valkey https://valkey.io/valkey-helm/ 
+
 helm repo update
-```
 
-### Redis setup
-
-Install Redis, export the password and create a secret that will be accessed from the component files.
-
-```bash
-helm install redis bitnami/redis -n redis --set-json='master.disableCommands=[]' --set-json='replica.disableCommands=[]'
-export REDIS_PASSWORD=$(kubectl get secret --namespace redis redis -o jsonpath="{.data.redis-password}" | base64 -d) 
-
-kubectl create secret generic redis-password --from-literal=redis-password=$REDIS_PASSWORD -n order-system
+helm install valkey valkey/valkey -n redis
 ```
 
 ### Kafka setup
 
-Install Kafka, export the password and create a secret that will be accessed from the component files.
+Install Kafka
 
 ```bash
-helm install --set persistence.enabled=false --set zookeeper.persistence.enabled=false --set auth.clientProtocol=sasl kafka bitnami/kafka -n kafka
+# set up the strimzi operator
+helm install strimzi-kafka-operator oci://quay.io/strimzi-helm/strimzi-kafka-operator
 
-export KAFKA_PASSWORD=$(kubectl get secret kafka-user-passwords --namespace kafka -o jsonpath='{.data.client-passwords}' | base64 -d | cut -d , -f 1)
-kubectl create secret generic kafka-password --from-literal=kafka-password=$KAFKA_PASSWORD -n order-system
+# Add CRD to spin up a single node kafka
+kubectl apply -f https://strimzi.io/examples/latest/kafka/kafka-single-node.yaml -n kafka 
 ```
 
-### Important
+### Install Jaeger
 
-Since we are inducing a component security advisory, update the content of `/components/k8s/oms.pubsub.yaml` with the new value for $KAFKA_PASSWORD. Redeploy the component.
+```bash
+#install cert manager 
+kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.16.1/cert-manager.yaml -n cert-manager
 
-Run `echo $KAFKA_PASSWORD` to retrieve the value.
+# install OpenTelemetry Operator
+kubectl apply -f https://github.com/open-telemetry/opentelemetry-operator/releases/latest/download/opentelemetry-operator.yaml
+
+# install instance of jaeger 
+kubectl apply -f ./deployment-files/k8s/jaeger.yaml -n observability
+```
 
 ### Install Zipkin
 

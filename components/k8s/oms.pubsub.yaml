@@ -8,13 +8,9 @@ spec:
   version: v1  
   metadata:
   - name: brokers
-    value: kafka.kafka.svc.cluster.local:9092
+    value: my-cluster-kafka-bootstrap.kafka.svc.cluster.local:9092 
   - name: authType
-    value: "password"
-  - name: saslUsername
-    value: "user1"
-  - name: saslPassword
-    value: V5qYJ96Etj #Update me!
+    value: "none"
   - name: disableTls 
     value: "true"
 scopes:

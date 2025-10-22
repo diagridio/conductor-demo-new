@@ -8,10 +8,6 @@ spec:
   version: v1
   metadata:
   - name: redisHost
-    value: redis-master.redis.svc.cluster.local:6379
-  - name: redisPassword
-    secretKeyRef:
-      name: redis-password
-      key: redis-password
+    value: valkeyy.redis.svc.cluster.local:6379
 scopes:
   - nonexistent-app-id
