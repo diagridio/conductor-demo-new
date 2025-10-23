@@ -2,7 +2,9 @@ using Dapr.Actors;
 using Dapr.Actors.Runtime;
 using Dapr.Client;
 using System.Threading.Tasks;
-
+using System.Net.Http;
+using System;
+using System.Threading;
 
 namespace BasicActorSamples.Actors
 {
@@ -16,7 +18,7 @@ namespace BasicActorSamples.Actors
         Task<string> SetDataAsync(MyData data);
         Task<MyData> GetDataAsync();
         Task RegisterReminder();
-        // Task UnregisterReminder();
+        Task UnregisterReminder();
         Task<IActorReminder> GetReminder();
         Task RegisterTimer();
         Task UnregisterTimer();
@@ -24,8 +26,8 @@ namespace BasicActorSamples.Actors
 
     public class MyData
     {
-        public string PropertyA { get; set; }
-        public string PropertyB { get; set; }
+        public string? PropertyA { get; set; }
+        public string? PropertyB { get; set; }
 
         public override string ToString()
         {
@@ -35,15 +37,20 @@ namespace BasicActorSamples.Actors
         }
     }
     
-    public class WorkerActor : Actor, IWorkerActor
+    public class WorkerActor : Actor, IWorkerActor, IRemindable
     {
         string STATESTORE = "oms.state.makeline";
         HttpClient httpClient = new HttpClient();
+
+        // log helper to get actor ID string
+        private string ActorLogId => $"ActorId: {this.Id}";
+
         public WorkerActor(ActorHost host) : base(host)
         {
         }
         public async Task SetState(string state)
         {
+            Console.WriteLine($"[{ActorLogId}] SetState called with value: '{state}'.");
             using var client = new DaprClientBuilder().Build();
 
             //Using Dapr SDK to save and get state
@@ -52,6 +59,7 @@ namespace BasicActorSamples.Actors
 
         public async Task<string> GetState()
         {
+            Console.WriteLine($"[{ActorLogId}] GetState called.");
             using var client = new DaprClientBuilder().Build();
             return await client.GetStateAsync<string>(STATESTORE, "order_1");
         }
@@ -59,33 +67,31 @@ namespace BasicActorSamples.Actors
          public async Task<bool> DeleteOrder(string orderId)
         {
             try {
+                Console.WriteLine($"[{ActorLogId}] Deleting order '{orderId}' from state store '{STATESTORE}'.");
                 using var client = new DaprClientBuilder().Build();
 
                 CancellationTokenSource source = new CancellationTokenSource();
                 CancellationToken cancellationToken = source.Token;
 
-                Console.WriteLine("Deleting order from state store: " + orderId);
+                Console.WriteLine($"[{ActorLogId}] Deleting order from state store: " + orderId);
                 
-                //await client.DeleteStateAsync(STATESTORE, orderId, cancellationToken: cancellationToken);    
                 var baseURL = (Environment.GetEnvironmentVariable("BASE_URL") ?? "http://localhost") + ":" + (Environment.GetEnvironmentVariable("DAPR_HTTP_PORT") ?? "3500");
                 await httpClient.DeleteAsync($"{baseURL}/v1.0/state/{STATESTORE}/{orderId}", cancellationToken);   
 
-                Console.WriteLine("Deleted:" + orderId);
+                Console.WriteLine($"[{ActorLogId}] Deleted:" + orderId);
 
                 return true;
             } catch (Exception ex){
-                Console.WriteLine("Exception: " + ex);
+                Console.WriteLine($"[{ActorLogId}] Exception: " + ex);
                 return false;
             }
             
         }
 
-        // Mock methods to be displayed on Conductor
-
         protected override Task OnActivateAsync()
         {
             // Provides opportunity to perform some optional setup.
-            Console.WriteLine($"Activating actor id: {this.Id}");
+            Console.WriteLine($"[{ActorLogId}] Activating actor id: {this.Id}");
             return Task.CompletedTask;
         }
 
@@ -95,7 +101,7 @@ namespace BasicActorSamples.Actors
         protected override Task OnDeactivateAsync()
         {
             // Provides Opporunity to perform optional cleanup.
-            Console.WriteLine($"Deactivating actor id: {this.Id}");
+            Console.WriteLine($"[{ActorLogId}] Deactivating actor id: {this.Id}");
             return Task.CompletedTask;
         }
 
@@ -108,9 +114,11 @@ namespace BasicActorSamples.Actors
             // Data is saved to configured state store implicitly after each method execution by Actor's runtime.
             // Data can also be saved explicitly by calling this.StateManager.SaveStateAsync();
             // State to be saved must be DataContract serializable.
+            Console.WriteLine($"[{ActorLogId}] SetDataAsync called with data: {data}");
             await this.StateManager.SetStateAsync<MyData>(
                 "my_data",  // state name
                 data);      // data saved for the named state "my_data"
+            Console.WriteLine($"[{ActorLogId}] Data saved to actor state 'my_data'.");
 
             return "Success";
         }
@@ -121,7 +129,8 @@ namespace BasicActorSamples.Actors
         /// <return>the user-defined MyData which is stored into state store as "my_data" state</return>
         public Task<MyData> GetDataAsync()
         {
-            // Gets state from the state store.
+             // Gets state from the state store.
+            Console.WriteLine($"[{ActorLogId}] GetDataAsync called.");
             return this.StateManager.GetStateAsync<MyData>("my_data");
         }
 
@@ -130,16 +139,16 @@ namespace BasicActorSamples.Actors
         /// </summary>
         public async Task RegisterReminder()
         {
-
-            Console.WriteLine("Registering MyReminder...");
+            Console.WriteLine($"[{ActorLogId}] Registering MyReminder...");
 
             await this.RegisterReminderAsync(
                 "MyReminder",              // The name of the reminder
                 null,                      // User state passed to IRemindable.ReceiveReminderAsync()
-                TimeSpan.FromSeconds(0),   
-                TimeSpan.FromSeconds(5),
-                TimeSpan.FromMinutes(2)    
+                TimeSpan.FromSeconds(1),   // Time to delay before invoking the reminder for the first time
+                TimeSpan.FromSeconds(30),  // Time interval between reminder invocations after the first invocation
+                TimeSpan.FromSeconds(10)   // TTL for the reminder
                 );  
+            Console.WriteLine($"[{ActorLogId}] MyReminder registered successfully.");
         }
 
         // /// <summary>
@@ -147,7 +156,7 @@ namespace BasicActorSamples.Actors
         // /// </summary>
         public async Task<IActorReminder> GetReminder()
         {
-            Console.WriteLine("Getting MyReminder...");
+            Console.WriteLine($"[{ActorLogId}] Getting MyReminder...");
 
             return await this.GetReminderAsync("MyReminder");
         }
@@ -157,7 +166,7 @@ namespace BasicActorSamples.Actors
         /// </summary>
         public Task UnregisterReminder()
         {
-            Console.WriteLine("Unregistering My Reminder...");
+            Console.WriteLine($"[{ActorLogId}] Unregistering My Reminder...");
             return this.UnregisterReminderAsync("MyReminder");
         }
 
@@ -166,7 +175,7 @@ namespace BasicActorSamples.Actors
         // </summary>
         public Task ReceiveReminderAsync(string reminderName, byte[] state, TimeSpan dueTime, TimeSpan period)
         {
-            Console.WriteLine("ReceiveReminderAsync is called!");
+            Console.WriteLine($"[{ActorLogId}] ReceiveReminderAsync is called for reminder: {reminderName}!");
             return Task.CompletedTask;
         }
 
@@ -175,7 +184,7 @@ namespace BasicActorSamples.Actors
         /// </summary>
         public Task RegisterTimer()
         {
-            Console.WriteLine("Registering Timer...");
+            Console.WriteLine($"[{ActorLogId}] Registering Timer...");
 
             return this.RegisterTimerAsync(
                 "MyTimer",                  // The name of the timer
@@ -192,7 +201,7 @@ namespace BasicActorSamples.Actors
         /// </summary>
         public Task UnregisterTimer()
         {
-            Console.WriteLine("Unregistering MyTimer...");
+            Console.WriteLine($"[{ActorLogId}] Unregistering MyTimer...");
             return this.UnregisterTimerAsync("MyTimer");
         }
 
@@ -201,7 +210,7 @@ namespace BasicActorSamples.Actors
         /// </summary>
         private Task OnTimerCallBack(byte[] data)
         {
-            Console.WriteLine("OnTimerCallBack is called!");
+            Console.WriteLine($"[{ActorLogId}] OnTimerCallBack is called!");
             return Task.CompletedTask;
         }
     }

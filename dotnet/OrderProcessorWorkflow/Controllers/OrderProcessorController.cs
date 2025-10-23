@@ -47,9 +47,9 @@ namespace OrderProcessorWorkflow.Controllers
 
                 _logger.LogInformation("Received Order. Initializing workflow {instanceId}.", instanceId);
 
-                    // Start the workflow using the order ID as the workflow ID
+                // Start the workflow using the order ID as the workflow ID
                 _logger.LogInformation("Starting order {orderId}", orderId);
-                    await _daprClient.ScheduleNewWorkflowAsync(
+                await _daprClient.ScheduleNewWorkflowAsync(
                     name: nameof(OrderProcessingWorkflow),
                     input: orderSummary,
                     instanceId: instanceId);
@@ -71,15 +71,21 @@ namespace OrderProcessorWorkflow.Controllers
                     catch (OperationCanceledException)
                     {
                         _logger.LogInformation("Waiting for {orderId} to complete.", orderId);
-                        return BadRequest();
+                        return BadRequest(); 
                     }
+                }
+                
+                if (state is null)
+                {
+                    _logger.LogError("Workflow state returned as null for instanceId {instanceId}.", instanceId);
+                    return StatusCode(500, "Workflow completion check failed.");
                 }
                 if (state.RuntimeStatus == WorkflowRuntimeStatus.Completed)
                 {
                     //await _daprClient.PurgeInstanceAsync(orderId);
 
-                    OrderResult result = state.ReadOutputAs<OrderResult>();
-                    if (result.Processed)
+                    OrderResult? result = state.ReadOutputAs<OrderResult>();
+                    if (result is not null && result.Processed) 
                     {
                         _logger.LogInformation("Order workflow is {state.RuntimeStatus} and was processed successfully ({result}).", state.RuntimeStatus, result);
                         return Ok();
