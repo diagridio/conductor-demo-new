@@ -136,9 +136,9 @@ namespace BasicActorSamples.Actors
             await this.RegisterReminderAsync(
                 "MyReminder",              // The name of the reminder
                 null,                      // User state passed to IRemindable.ReceiveReminderAsync()
-                TimeSpan.FromSeconds(1),   // Time to delay before invoking the reminder for the first time
-                TimeSpan.FromSeconds(30),  // Time interval between reminder invocations after the first invocation
-                TimeSpan.FromSeconds(10)   // TTL for the reminder
+                TimeSpan.FromSeconds(0),   
+                TimeSpan.FromSeconds(5),
+                TimeSpan.FromMinutes(2)    
                 );  
         }
 
