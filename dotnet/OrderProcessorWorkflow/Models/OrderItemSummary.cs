@@ -8,7 +8,7 @@ namespace OrderProcessorWorkflow.Models
         public int ProductId { get; set; }
         
         [JsonPropertyName("productName")]
-        public string ProductName { get; set; }
+        public string? ProductName { get; set; }
         
         [JsonPropertyName("quantity")]
         public int Quantity { get; set; }
@@ -20,6 +20,6 @@ namespace OrderProcessorWorkflow.Models
         public decimal UnitPrice { get; set; }
         
         [JsonPropertyName("imageUrl")]
-        public string ImageUrl { get; set; }
+        public string? ImageUrl { get; set; }
     }
 }

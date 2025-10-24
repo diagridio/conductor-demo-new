@@ -31,7 +31,6 @@ if (string.IsNullOrEmpty(Environment.GetEnvironmentVariable("DAPR_GRPC_PORT")))
 builder.Services.AddControllers();
 builder.Services.AddDaprClient();
 builder.Services.AddHttpClient();
-builder.Services.AddDaprWorkflowClient();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();

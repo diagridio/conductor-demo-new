@@ -19,8 +19,8 @@ namespace BasicActorSamples.Actors
 
     public class MyData
     {
-        public string PropertyA { get; set; }
-        public string PropertyB { get; set; }
+        public string? PropertyA { get; set; }
+        public string? PropertyB { get; set; }
 
         public override string ToString()
         {
