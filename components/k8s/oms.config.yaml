@@ -14,6 +14,10 @@ spec:
       protocol: grpc
   metric:
     enabled: true
+    http:
+      pathMatching:
+        - //v1.0/actors/WorkerActor/{ActorID}/reminders/MyReminder
+        - //v1.0/actors/WorkerActor/{ActorID}/timers/MyTimer
     rules:
     - name: dapr_http_client_roundtrip_latency
       labels:
