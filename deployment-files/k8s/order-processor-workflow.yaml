@@ -29,7 +29,7 @@ spec:
     spec:
       containers:
         - name: order-processor-workflow
-          image: "order-system/order-processor-workflow:tag"
+          image: "us-central1-docker.pkg.dev/prj-common-d-shared-89549/reg-d-common-docker-public/order-system/order-processor-workflow:latest"
           resources:
             requests:
               memory: "256Mi"

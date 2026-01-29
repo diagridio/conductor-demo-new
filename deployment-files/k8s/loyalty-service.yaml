@@ -23,7 +23,7 @@ spec:
     spec:
       containers:
         - name: loyalty-service
-          image: "order-system/loyalty-service:tag"
+          image: "us-central1-docker.pkg.dev/prj-common-d-shared-89549/reg-d-common-docker-public/order-system/loyalty-service:latest"
           env:
           - name: APP_PORT
             value: "80"

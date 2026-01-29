@@ -28,7 +28,7 @@ spec:
     spec:
       containers:
         - name: receipt-generation-service
-          image: "order-system/receipt-generation-service:tag"
+          image: "us-central1-docker.pkg.dev/strong-harbor-338418/elia-sb-debug-mirel/receipt-generation:latest"
           env:
           - name: APP_PORT
             value: "80"

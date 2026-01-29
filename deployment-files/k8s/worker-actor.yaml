@@ -26,7 +26,7 @@ spec:
     spec:
       containers:
         - name: worker-actor
-          image: "order-system/worker-actor:tag"
+          image: "us-central1-docker.pkg.dev/prj-common-d-shared-89549/reg-d-common-docker-public/order-system/worker-actor:latest"
           resources:
             requests:
               memory: "256Mi"

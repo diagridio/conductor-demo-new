@@ -64,10 +64,12 @@ jobs:
         working-directory: ${{ matrix.working_dir }}
         run: |
           IMAGE_TAG="${{ env.GCP_CONTAINER_REGISTRY_HOST }}/${{ env.GCP_PROJECT_ID }}/${{ env.GCP_DOCKER_REPOSITORY }}/${{ matrix.image_name }}:${{ github.sha }}"
+          LATEST_TAG="${{ env.GCP_CONTAINER_REGISTRY_HOST }}/${{ env.GCP_PROJECT_ID }}/${{ env.GCP_DOCKER_REPOSITORY }}/${{ matrix.image_name }}:latest"
           
           docker buildx build \
             --platform linux/amd64,linux/arm64 \
             --tag "${IMAGE_TAG}" \
+            --tag "${LATEST_TAG}" \
             --push \
             .
 
