@@ -13,7 +13,7 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-        
+
       - name: Load service matrix
         id: matrix
         run: |
@@ -27,7 +27,7 @@ jobs:
       contents: read
       id-token: write
     environment: development
-    
+
     strategy:
       matrix:
         include: ${{ fromJSON(needs.setup.outputs.build-matrix) }}
@@ -64,21 +64,21 @@ jobs:
         working-directory: ${{ matrix.working_dir }}
         run: |
           IMAGE_TAG="${{ env.GCP_CONTAINER_REGISTRY_HOST }}/${{ env.GCP_PROJECT_ID }}/${{ env.GCP_DOCKER_REPOSITORY }}/${{ matrix.image_name }}:${{ github.sha }}"
-          
+
           docker buildx build \
             --platform linux/amd64,linux/arm64 \
             --tag "${IMAGE_TAG}" \
             --push \
             .
 
-  deploy:
+  deploy-gke:
     needs: [setup, build-and-push]
     runs-on: ubuntu-latest
     permissions:
       contents: read
       id-token: write
     environment: demo
-    
+
     strategy:
       matrix:
         include:
@@ -136,7 +136,7 @@ jobs:
           echo "$build_matrix" | jq -r '.[].service' | while read service; do
             echo "Processing $service..."
             image_name="order-system/$service"
-            
+
             kustomize edit add resource "./k8s/$service.yaml"
             kustomize edit set image "$image_name:tag=us-central1-docker.pkg.dev/prj-common-d-shared-89549/reg-d-common-docker-public/$image_name:${{ github.sha }}"
           done
@@ -149,6 +149,67 @@ jobs:
             --project ${{ env.GCP_PROJECT_ID }}
 
       - name: Deploy all services to GKE
+        working-directory: ./deployment-files
+        run: |
+          echo "Deploying all services to ${{ matrix.cluster }} cluster..."
+          kubectl apply -k . --timeout=300s
+
+  deploy-azure:
+    needs: [setup, build-and-push]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    environment: demo-azure
+
+    strategy:
+      matrix:
+        include:
+          - cluster: demo-production-conductor
+            resource_group: demo-production-conductor-infra
+          - cluster: demo-sandbox-conductor
+            resource_group: demo-sandbox-conductor-infra
+          - cluster: demo-staging-conductor
+            resource_group: demo-staging-conductor-infra
+      fail-fast: false
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Azure Login
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Get AKS credentials
+        run: |
+          az aks get-credentials \
+            --resource-group ${{ matrix.resource_group }} \
+            --name ${{ matrix.cluster }} \
+            --overwrite-existing
+
+      - name: Set up Kustomize
+        working-directory: ./deployment-files/
+        run: |
+          curl -sfLo kustomize https://github.com/kubernetes-sigs/kustomize/releases/download/v3.1.0/kustomize_3.1.0_linux_amd64
+          chmod u+x ./kustomize
+
+      - name: Update all service manifests
+        working-directory: ./deployment-files/
+        run: |
+          build_matrix='${{ needs.setup.outputs.build-matrix }}'
+          echo "$build_matrix" | jq -r '.[].service' | while read service; do
+            echo "Processing $service..."
+            image_name="order-system/$service"
+
+            kustomize edit add resource "./k8s/$service.yaml"
+            kustomize edit set image "$image_name:tag=us-central1-docker.pkg.dev/prj-common-d-shared-89549/reg-d-common-docker-public/$image_name:${{ github.sha }}"
+          done
+
+      - name: Deploy all services to AKS
         working-directory: ./deployment-files
         run: |
           echo "Deploying all services to ${{ matrix.cluster }} cluster..."
