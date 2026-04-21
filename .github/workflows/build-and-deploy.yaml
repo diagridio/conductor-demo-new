@@ -167,8 +167,6 @@ jobs:
         include:
           - cluster: demo-production-conductor
             resource_group: demo-production-conductor-infra
-          - cluster: demo-sandbox-conductor
-            resource_group: demo-sandbox-conductor-infra
           - cluster: demo-staging-conductor
             resource_group: demo-staging-conductor-infra
       fail-fast: false
