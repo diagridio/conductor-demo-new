@@ -5,7 +5,7 @@ RUN go mod download
 ARG TARGETOS TARGETARCH
 RUN CGO_ENABLED=0 GOOS=$TARGETOS GOARCH=$TARGETARCH go build -a -installsuffix cgo -o orderServiceApp ./cmd/api
 
-FROM --platform=$BUILDPLATFORM alpine:latest AS final
+FROM alpine:latest AS final
 WORKDIR /root/
 
 COPY --from=build /src/orderServiceApp .
