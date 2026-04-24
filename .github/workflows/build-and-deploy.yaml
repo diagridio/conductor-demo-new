@@ -209,6 +209,10 @@ jobs:
             kustomize edit set image "$image_name:tag=us-central1-docker.pkg.dev/prj-common-d-shared-89549/reg-d-common-docker-public/$image_name:${{ github.sha }}"
           done
 
+      - name: Ensure order-system namespace
+        run: |
+          kubectl create namespace order-system --dry-run=client -o yaml | kubectl apply -f -
+
       - name: Deploy all services to AKS
         working-directory: ./deployment-files
         run: |
