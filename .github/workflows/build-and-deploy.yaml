@@ -229,10 +229,27 @@ jobs:
           kubectl get namespaces
           echo "::endgroup::"
 
+          echo "::group::Dapr control plane (dapr-system)"
+          kubectl get pods -n dapr-system 2>&1 || echo "No dapr-system namespace — Dapr not installed on this cluster"
+          echo "::endgroup::"
+
+          echo "::group::Dapr components in order-system"
+          kubectl get components.dapr.io -n order-system 2>&1 || echo "No Dapr Components CRD or no components installed"
+          echo "::endgroup::"
+
           echo "::group::Pods in order-system"
           kubectl get pods -n order-system -o wide
           echo "::endgroup::"
 
           echo "::group::Events in order-system (last 50, by timestamp)"
           kubectl get events -n order-system --sort-by=.lastTimestamp | tail -n 50
+          echo "::endgroup::"
+
+          echo "::group::Recent logs from failing pods"
+          for pod in $(kubectl get pods -n order-system -o jsonpath='{range .items[?(@.status.phase!="Running")]}{.metadata.name}{"\n"}{end}'); do
+            echo "--- $pod (current) ---"
+            kubectl logs -n order-system "$pod" --tail=30 2>&1 || true
+            echo "--- $pod (previous) ---"
+            kubectl logs -n order-system "$pod" --tail=30 --previous 2>&1 || true
+          done
           echo "::endgroup::"
