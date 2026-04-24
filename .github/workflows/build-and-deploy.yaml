@@ -13,7 +13,7 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-        
+
       - name: Load service matrix
         id: matrix
         run: |
@@ -27,7 +27,7 @@ jobs:
       contents: read
       id-token: write
     environment: development
-    
+
     strategy:
       matrix:
         include: ${{ fromJSON(needs.setup.outputs.build-matrix) }}
@@ -64,21 +64,21 @@ jobs:
         working-directory: ${{ matrix.working_dir }}
         run: |
           IMAGE_TAG="${{ env.GCP_CONTAINER_REGISTRY_HOST }}/${{ env.GCP_PROJECT_ID }}/${{ env.GCP_DOCKER_REPOSITORY }}/${{ matrix.image_name }}:${{ github.sha }}"
-          
+
           docker buildx build \
             --platform linux/amd64,linux/arm64 \
             --tag "${IMAGE_TAG}" \
             --push \
             .
 
-  deploy:
+  deploy-gke:
     needs: [setup, build-and-push]
     runs-on: ubuntu-latest
     permissions:
       contents: read
       id-token: write
     environment: demo
-    
+
     strategy:
       matrix:
         include:
@@ -136,7 +136,7 @@ jobs:
           echo "$build_matrix" | jq -r '.[].service' | while read service; do
             echo "Processing $service..."
             image_name="order-system/$service"
-            
+
             kustomize edit add resource "./k8s/$service.yaml"
             kustomize edit set image "$image_name:tag=us-central1-docker.pkg.dev/prj-common-d-shared-89549/reg-d-common-docker-public/$image_name:${{ github.sha }}"
           done
@@ -153,3 +153,103 @@ jobs:
         run: |
           echo "Deploying all services to ${{ matrix.cluster }} cluster..."
           kubectl apply -k . --timeout=300s
+
+  deploy-azure:
+    needs: [setup, build-and-push]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    environment: demo-azure
+
+    strategy:
+      matrix:
+        cluster:
+          - demo-production-conductor
+          - demo-staging-conductor
+      fail-fast: false
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Azure Login
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Install kubelogin
+        run: az aks install-cli
+
+      - name: Get AKS credentials
+        run: |
+          az aks get-credentials \
+            --resource-group demo \
+            --name ${{ matrix.cluster }} \
+            --overwrite-existing
+          kubelogin convert-kubeconfig -l azurecli
+
+      - name: Set up Kustomize
+        working-directory: ./deployment-files/
+        run: |
+          curl -sfLo kustomize https://github.com/kubernetes-sigs/kustomize/releases/download/v3.1.0/kustomize_3.1.0_linux_amd64
+          chmod u+x ./kustomize
+
+      - name: Update all service manifests
+        working-directory: ./deployment-files/
+        run: |
+          build_matrix='${{ needs.setup.outputs.build-matrix }}'
+          echo "$build_matrix" | jq -r '.[].service' | while read service; do
+            echo "Processing $service..."
+            image_name="order-system/$service"
+
+            kustomize edit add resource "./k8s/$service.yaml"
+            kustomize edit set image "$image_name:tag=us-central1-docker.pkg.dev/prj-common-d-shared-89549/reg-d-common-docker-public/$image_name:${{ github.sha }}"
+          done
+
+      - name: Ensure order-system namespace
+        run: |
+          kubectl create namespace order-system --dry-run=client -o yaml | kubectl apply -f -
+
+      - name: Deploy all services to AKS
+        working-directory: ./deployment-files
+        run: |
+          echo "Deploying all services to ${{ matrix.cluster }} cluster..."
+          kubectl apply -k . --timeout=300s
+
+      - name: Debug cluster state
+        if: always()
+        run: |
+          echo "Waiting 15s for pods to settle before collecting state..."
+          sleep 15
+
+          echo "::group::Namespaces"
+          kubectl get namespaces
+          echo "::endgroup::"
+
+          echo "::group::Dapr control plane (dapr-system)"
+          kubectl get pods -n dapr-system 2>&1 || echo "No dapr-system namespace — Dapr not installed on this cluster"
+          echo "::endgroup::"
+
+          echo "::group::Dapr components in order-system"
+          kubectl get components.dapr.io -n order-system 2>&1 || echo "No Dapr Components CRD or no components installed"
+          echo "::endgroup::"
+
+          echo "::group::Pods in order-system"
+          kubectl get pods -n order-system -o wide
+          echo "::endgroup::"
+
+          echo "::group::Events in order-system (last 50, by timestamp)"
+          kubectl get events -n order-system --sort-by=.lastTimestamp | tail -n 50
+          echo "::endgroup::"
+
+          echo "::group::Recent logs from failing pods"
+          for pod in $(kubectl get pods -n order-system -o jsonpath='{range .items[?(@.status.phase!="Running")]}{.metadata.name}{"\n"}{end}'); do
+            echo "--- $pod (current) ---"
+            kubectl logs -n order-system "$pod" --tail=30 2>&1 || true
+            echo "--- $pod (previous) ---"
+            kubectl logs -n order-system "$pod" --tail=30 --previous 2>&1 || true
+          done
+          echo "::endgroup::"
