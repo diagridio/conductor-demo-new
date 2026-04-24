@@ -218,3 +218,18 @@ jobs:
         run: |
           echo "Deploying all services to ${{ matrix.cluster }} cluster..."
           kubectl apply -k . --timeout=300s
+
+      - name: Debug cluster state
+        if: always()
+        run: |
+          echo "::group::Namespaces"
+          kubectl get namespaces
+          echo "::endgroup::"
+
+          echo "::group::Pods in order-system"
+          kubectl get pods -n order-system -o wide
+          echo "::endgroup::"
+
+          echo "::group::Events in order-system (last 50, by timestamp)"
+          kubectl get events -n order-system --sort-by=.lastTimestamp | tail -n 50
+          echo "::endgroup::"
