@@ -222,6 +222,9 @@ jobs:
       - name: Debug cluster state
         if: always()
         run: |
+          echo "Waiting 60s for pods to settle before collecting state..."
+          sleep 60
+
           echo "::group::Namespaces"
           kubectl get namespaces
           echo "::endgroup::"
