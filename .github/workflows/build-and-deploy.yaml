@@ -164,11 +164,9 @@ jobs:
 
     strategy:
       matrix:
-        include:
-          - cluster: demo-production-conductor
-            resource_group: demo-production-conductor-infra
-          - cluster: demo-staging-conductor
-            resource_group: demo-staging-conductor-infra
+        cluster:
+          - demo-production-conductor
+          - demo-staging-conductor
       fail-fast: false
 
     steps:
@@ -185,7 +183,7 @@ jobs:
       - name: Get AKS credentials
         run: |
           az aks get-credentials \
-            --resource-group ${{ matrix.resource_group }} \
+            --resource-group demo \
             --name ${{ matrix.cluster }} \
             --overwrite-existing
 
