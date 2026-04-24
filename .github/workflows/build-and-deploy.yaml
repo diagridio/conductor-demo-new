@@ -180,12 +180,16 @@ jobs:
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
+      - name: Install kubelogin
+        run: az aks install-cli
+
       - name: Get AKS credentials
         run: |
           az aks get-credentials \
             --resource-group demo \
             --name ${{ matrix.cluster }} \
             --overwrite-existing
+          kubelogin convert-kubeconfig -l azurecli
 
       - name: Set up Kustomize
         working-directory: ./deployment-files/
