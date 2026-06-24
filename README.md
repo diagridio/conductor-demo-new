@@ -107,6 +107,10 @@ kubectl apply -f https://strimzi.io/examples/latest/kafka/kafka-single-node.yaml
 ### Install Jaeger
 
 ```bash
+# create namespaces required by observability stack
+kubectl create ns cert-manager
+kubectl create ns observability
+
 #install cert manager 
 kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.16.1/cert-manager.yaml -n cert-manager
 
