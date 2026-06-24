@@ -47,30 +47,28 @@ kubectl patch deployment metrics-server -n kube-system --type "json" -p '[{"op":
 ## Setup Helm
 
 ```bash
-helm repo add bitnami https://charts.bitnami.com/bitnami
+helm repo add valkey https://valkey.io/valkey-helm/
 helm repo update
 ```
 
 ## Redis setup
 
-Install Redis, export the password and create a secret that will be accessed from the component files.
+Install Valkey (Redis-compatible).
 
 ```bash
-helm install redis bitnami/redis -n redis --set-json='master.disableCommands=[]' --set-json='replica.disableCommands=[]'
-export REDIS_PASSWORD=$(kubectl get secret --namespace redis redis -o jsonpath="{.data.redis-password}" | base64 -d) 
-
-kubectl create secret generic redis-password --from-literal=redis-password=$REDIS_PASSWORD -n order-system
+helm install valkey valkey/valkey -n redis
 ```
 
 ## Kafka setup
 
-Install Kafka, export the password and create a secret that will be accessed from the component files.
+Install Strimzi and create the single-node Kafka cluster used by the demo components.
 
 ```bash
-helm install --set persistence.enabled=false --set zookeeper.persistence.enabled=false --set auth.clientProtocol=sasl kafka bitnami/kafka -n kafka
+# Install the operator
+helm install strimzi-kafka-operator oci://quay.io/strimzi-helm/strimzi-kafka-operator -n kafka
 
-export KAFKA_PASSWORD=$(kubectl get secret kafka-user-passwords --namespace kafka -o jsonpath='{.data.client-passwords}' | base64 -d | cut -d , -f 1)
-kubectl create secret generic kafka-password --from-literal=kafka-password=$KAFKA_PASSWORD -n order-system
+# Create a Kafka cluster named "my-cluster"
+kubectl apply -f https://strimzi.io/examples/latest/kafka/kafka-single-node.yaml -n kafka
 ```
 
 ## Install Zipkin
@@ -88,11 +86,18 @@ export ZIPKIN_DASHBOARD=$(kubectl get svc --namespace zipkin zipkin -o jsonpath=
 echo "View tracing dashboard at $ZIPKIN_DASHBOARD"
 ```
 
-## Important
+## Optional: Jaeger/OpenTelemetry backend
 
-Since we are inducing a component security advisory, update the content of `/components/k8s/oms.pubsub.yaml` with the new value for $KAFKA_PASSWORD. Redeploy the component.
+If you skip this section, services still run, but logs may include periodic trace export timeout warnings.
 
-Run `echo $KAFKA_PASSWORD` to retrieve the value.
+```bash
+kubectl create ns cert-manager
+kubectl create ns observability
+
+kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.16.1/cert-manager.yaml -n cert-manager
+kubectl apply -f https://github.com/open-telemetry/opentelemetry-operator/releases/latest/download/opentelemetry-operator.yaml
+kubectl apply -f ./deployment-files/k8s/jaeger.yaml -n observability
+```
 
 ## Deploy Dapr components
 
@@ -133,7 +138,7 @@ kubectl logs -n redis jobs/redis-full-wipe-cronjob-xxxx
 ```
 **Sample execution**
 ```
-Starting Redis wipe at Tue Jul 15 05:00:01 UTC 2025 for redis-master.redis.svc.cluster.local:6379
+Starting Redis wipe at Tue Jul 15 05:00:01 UTC 2025 for valkey.redis.svc.cluster.local:6379
 Keys before wipe: 243906
 Executing FLUSHALL command...
 OK
@@ -142,14 +147,14 @@ Keys after wipe: 0
 ```
 
 ```bash
-export REDIS_PASSWORD=$(kubectl get secret --namespace redis redis -o jsonpath="{.data.redis-password}" | base64 -d) 
-k exec -it redis-master-0 -n redis -- /bin/bash
+VALKEY_POD=$(kubectl get pods -n redis -l app.kubernetes.io/name=valkey -o jsonpath='{.items[0].metadata.name}')
+kubectl exec -it "$VALKEY_POD" -n redis -- /bin/sh
 ```
 
 When the Redis prompt is available, run:
 
 ```bash
-redis-cli -a $REDIS_PASSWORD --scan --pattern '*' | xargs redis-cli -a $REDIS_PASSWORD DEL
+valkey-cli --scan --pattern '*' | xargs valkey-cli DEL
 ```
 
 Finally, run `exit` to leave the Redis prompt.
