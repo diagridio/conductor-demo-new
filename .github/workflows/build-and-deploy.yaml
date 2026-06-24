@@ -148,10 +148,6 @@ jobs:
             --zone ${{ env.GKE_ZONE }} \
             --project ${{ env.GCP_PROJECT_ID }}
 
-      - name: Ensure order-system namespace
-        run: |
-          kubectl create namespace order-system --dry-run=client -o yaml | kubectl apply -f -
-
       - name: Apply Dapr resources
         run: |
           kubectl apply \
