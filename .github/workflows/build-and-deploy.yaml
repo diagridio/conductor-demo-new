@@ -130,6 +130,26 @@ jobs:
         run: |
           kubectl create namespace order-system --dry-run=client -o yaml | kubectl apply -f -
 
+      - name: Apply Dapr resources (if CRDs exist)
+        run: |
+          if kubectl get crd components.dapr.io >/dev/null 2>&1; then
+            kubectl apply \
+              -f ./components/k8s/dapr-secret-reader.yaml \
+              -f ./components/k8s/oms.config.yaml \
+              -f ./components/k8s/oms.config.loyalty.yaml \
+              -f ./components/k8s/oms.pubsub.yaml \
+              -f ./components/k8s/oms.resiliency.yaml \
+              -f ./components/k8s/oms.state.loyalty.yaml \
+              -f ./components/k8s/oms.state.makeline.yaml \
+              -f ./components/k8s/oms.state.orderprocessor.yaml \
+              -f ./components/k8s/oms.state.workeractor.yaml \
+              -f ./components/k8s/oms.binding.receipt.yaml \
+              -f ./components/k8s/oms.binding.cron.yaml \
+              -f ./components/k8s/oms.subscription.ordercompleted.yaml
+          else
+            echo "Dapr CRDs not found on target cluster; skipping Dapr resource apply"
+          fi
+
       - name: Deploy all services to AKS
         working-directory: ./deployment-files
         run: |
