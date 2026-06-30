@@ -71,105 +71,6 @@ jobs:
             --push \
             .
 
-  deploy-gke:
-    needs: [setup, build-and-push]
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      id-token: write
-    environment: demo
-
-    strategy:
-      matrix:
-        include:
-          - cluster: staging
-          - cluster: free-tier
-          - cluster: enterprise
-      fail-fast: false
-
-    env:
-      GCP_PROJECT_ID: ${{ vars.GCP_DP_PROJECT_ID }}
-      GKE_ZONE: ${{ vars.GCP_DP_GKE_ZONE }}
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Set cluster configuration
-        id: cluster
-        run: |
-          case "${{ matrix.cluster }}" in
-            staging)
-              echo "gke_cluster=${{ vars.GCP_DP_GKE_CLUSTER_NAME_0 }}" >> $GITHUB_OUTPUT
-              ;;
-            free-tier)
-              echo "gke_cluster=${{ vars.GCP_DP_GKE_CLUSTER_NAME_1 }}" >> $GITHUB_OUTPUT
-              ;;
-            enterprise)
-              echo "gke_cluster=${{ vars.GCP_DP_GKE_CLUSTER_NAME_2 }}" >> $GITHUB_OUTPUT
-              ;;
-          esac
-
-      - name: Authenticate to Google Cloud
-        id: auth
-        uses: google-github-actions/auth@v2
-        with:
-          token_format: access_token
-          workload_identity_provider: ${{ vars.WORKLOAD_IDENTITY_PROVIDER }}
-          service_account: ${{ vars.SERVICE_ACCOUNT }}
-
-      - name: Set up Cloud SDK
-        uses: google-github-actions/setup-gcloud@v2
-        with:
-          install_components: gke-gcloud-auth-plugin
-
-      - name: Set up Kustomize
-        working-directory: ./deployment-files/
-        run: |
-          curl -sfLo kustomize https://github.com/kubernetes-sigs/kustomize/releases/download/v3.1.0/kustomize_3.1.0_linux_amd64
-          chmod u+x ./kustomize
-
-      - name: Update all service manifests
-        working-directory: ./deployment-files/
-        run: |
-          build_matrix='${{ needs.setup.outputs.build-matrix }}'
-          echo "$build_matrix" | jq -r '.[].service' | while read service; do
-            echo "Processing $service..."
-            image_name="order-system/$service"
-
-            kustomize edit add resource "./k8s/$service.yaml"
-            kustomize edit set image "$image_name:tag=us-central1-docker.pkg.dev/prj-common-d-shared-89549/reg-d-common-docker-public/$image_name:${{ github.sha }}"
-          done
-
-      - name: Get GKE credentials
-        run: |
-          gcloud container clusters get-credentials \
-            ${{ steps.cluster.outputs.gke_cluster }} \
-            --zone ${{ env.GKE_ZONE }} \
-            --project ${{ env.GCP_PROJECT_ID }}
-
-      - name: Apply Dapr resources
-        run: |
-          kubectl apply \
-            -f ./components/k8s/dapr-secret-reader.yaml \
-            -f ./components/k8s/oms.config.yaml \
-            -f ./components/k8s/oms.config.loyalty.yaml \
-            -f ./components/k8s/oms.pubsub.yaml \
-            -f ./components/k8s/oms.resiliency.yaml \
-            -f ./components/k8s/oms.state.loyalty.yaml \
-            -f ./components/k8s/oms.state.makeline.yaml \
-            -f ./components/k8s/oms.state.orderprocessor.yaml \
-            -f ./components/k8s/oms.state.workeractor.yaml \
-            -f ./components/k8s/oms.binding.receipt.yaml \
-            -f ./components/k8s/oms.binding.cron.yaml \
-            -f ./components/k8s/oms.subscription.ordercompleted.yaml
-
-      - name: Deploy all services to GKE
-        working-directory: ./deployment-files
-        run: |
-          echo "Deploying all services to ${{ matrix.cluster }} cluster..."
-          kubectl apply -k . --timeout=300s
-
   deploy-azure:
     needs: [setup, build-and-push]
     runs-on: ubuntu-latest
@@ -229,21 +130,25 @@ jobs:
         run: |
           kubectl create namespace order-system --dry-run=client -o yaml | kubectl apply -f -
 
-      - name: Apply Dapr resources
+      - name: Apply Dapr resources (if CRDs exist)
         run: |
-          kubectl apply \
-            -f ./components/k8s/dapr-secret-reader.yaml \
-            -f ./components/k8s/oms.config.yaml \
-            -f ./components/k8s/oms.config.loyalty.yaml \
-            -f ./components/k8s/oms.pubsub.yaml \
-            -f ./components/k8s/oms.resiliency.yaml \
-            -f ./components/k8s/oms.state.loyalty.yaml \
-            -f ./components/k8s/oms.state.makeline.yaml \
-            -f ./components/k8s/oms.state.orderprocessor.yaml \
-            -f ./components/k8s/oms.state.workeractor.yaml \
-            -f ./components/k8s/oms.binding.receipt.yaml \
-            -f ./components/k8s/oms.binding.cron.yaml \
-            -f ./components/k8s/oms.subscription.ordercompleted.yaml
+          if kubectl get crd components.dapr.io >/dev/null 2>&1; then
+            kubectl apply \
+              -f ./components/k8s/dapr-secret-reader.yaml \
+              -f ./components/k8s/oms.config.yaml \
+              -f ./components/k8s/oms.config.loyalty.yaml \
+              -f ./components/k8s/oms.pubsub.yaml \
+              -f ./components/k8s/oms.resiliency.yaml \
+              -f ./components/k8s/oms.state.loyalty.yaml \
+              -f ./components/k8s/oms.state.makeline.yaml \
+              -f ./components/k8s/oms.state.orderprocessor.yaml \
+              -f ./components/k8s/oms.state.workeractor.yaml \
+              -f ./components/k8s/oms.binding.receipt.yaml \
+              -f ./components/k8s/oms.binding.cron.yaml \
+              -f ./components/k8s/oms.subscription.ordercompleted.yaml
+          else
+            echo "Dapr CRDs not found on target cluster; skipping Dapr resource apply"
+          fi
 
       - name: Deploy all services to AKS
         working-directory: ./deployment-files
